@@ -22,53 +22,37 @@ public class EducationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Education> create(@RequestBody Education education) {
-        Education created = educationService.create(education);
-        if (created != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        }
-        return ResponseEntity.badRequest().build();
+    public Education create(@RequestBody Education education) {
+        return this.educationService.create(education);
     }
 
     @GetMapping("/read/{id}")
-    public ResponseEntity<Education> read(@PathVariable String id) {
-        Education education = educationService.read(id);
-        if (education != null) {
-            return ResponseEntity.ok(education);
-        }
-        return ResponseEntity.notFound().build();
+    public Education read(@PathVariable String id) {
+        return this.educationService.read(id);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Education> update(@RequestBody Education education) {
-        Education updated = educationService.update(education);
-        if (updated != null) {
-            return ResponseEntity.ok(updated);
-        }
-        return ResponseEntity.notFound().build();
+    public Education update(@RequestBody Education education) {
+        return this.educationService.update(education);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable String id) {
-        boolean deleted = educationService.delete(id);
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
+    public boolean delete(@PathVariable String id) {
+        return this.educationService.delete(id);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Education>> getAll() {
-        return ResponseEntity.ok(educationService.getAll());
+    public List<Education> getAll() {
+       return this.educationService.getAll();
     }
 
     @GetMapping("/findByInstitution")
-    public ResponseEntity<List<Education>> findByInstitution(@RequestParam String institution) {
-        return ResponseEntity.ok(educationService.findByInstitution(institution));
+    public List<Education> findByInstitution(@RequestParam String institution) {
+        return this.educationService.findByInstitution(institution);
     }
 
     @GetMapping("/findByDegree")
-    public ResponseEntity<List<Education>> findByDegree(@RequestParam String degree) {
-        return ResponseEntity.ok(educationService.findByDegree(degree));
+    public List<Education> findByDegree(@RequestParam String degree) {
+        return this.educationService.findByDegree(degree);
     }
 }

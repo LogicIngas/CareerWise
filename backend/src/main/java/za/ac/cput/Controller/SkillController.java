@@ -21,43 +21,27 @@ public class SkillController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Skill> create(@RequestBody Skill skill) {
-        Skill created = service.create(skill);
-        if (created != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        }
-        return ResponseEntity.badRequest().build();
+    public Skill create(@RequestBody Skill skill) {
+       return this.service.create(skill);
     }
 
     @GetMapping("/read/{skillId}")
-    public ResponseEntity<Skill> read(@PathVariable String skillId) {
-        Skill skill = service.read(skillId);
-        if (skill != null) {
-            return ResponseEntity.ok(skill);
-        }
-        return ResponseEntity.notFound().build();
+    public Skill read(@PathVariable String skillId) {
+      return this.service.read(skillId);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Skill> update(@RequestBody Skill skill) {
-        Skill updated = service.update(skill);
-        if (updated != null) {
-            return ResponseEntity.ok(updated);
-        }
-        return ResponseEntity.notFound().build();
+    public Skill update(@RequestBody Skill skill) {
+        return this.update(skill);
     }
 
     @DeleteMapping("/delete/{skillId}")
-    public ResponseEntity<Boolean> delete(@PathVariable String skillId) {
-        boolean deleted = service.delete(skillId);
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
+    public Boolean delete(@PathVariable String skillId) {
+       return this.delete(skillId);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Skill>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public List<Skill> getAll() {
+        return this.service.getAll();
     }
 }

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class SkillServiceImpTest {
+class wSkillServiceImpTest {
 
     @Autowired
     private SkillServiceImp skillService;
