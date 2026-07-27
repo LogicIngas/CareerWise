@@ -22,63 +22,47 @@ public class JobController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Job> create(@RequestBody Job job) {
-        Job created = jobService.create(job);
-        if (created != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        }
-        return ResponseEntity.badRequest().build();
+    public Job create(@RequestBody Job job) {
+        return this.jobService.create(job);
     }
 
     @GetMapping("/read/{id}")
-    public ResponseEntity<Job> read(@PathVariable String id) {
-        Job job = jobService.read(id);
-        if (job != null) {
-            return ResponseEntity.ok(job);
-        }
-        return ResponseEntity.notFound().build();
+    public Job read(@PathVariable String id) {
+        return this.jobService.read(id);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Job> update(@RequestBody Job job) {
-        Job updated = jobService.update(job);
-        if (updated != null) {
-            return ResponseEntity.ok(updated);
-        }
-        return ResponseEntity.notFound().build();
+    public Job update(@RequestBody Job job) {
+        return this.jobService.update(job);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable String id) {
-        boolean deleted = jobService.delete(id);
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
+    public boolean delete(@PathVariable String id) {
+        return this.jobService.delete(id);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Job>> getAll() {
-        return ResponseEntity.ok(jobService.getAll());
+    public List<Job> getAll() {
+        return this.jobService.getAll();
     }
 
     @GetMapping("/findOpenPositions")
-    public ResponseEntity<List<Job>> findOpenPositions() {
-        return ResponseEntity.ok(jobService.findOpenPositions());
+    public List<Job> findOpenPositions() {
+       return this.jobService.findOpenPositions();
     }
 
     @GetMapping("/findByLocation")
-    public ResponseEntity<List<Job>> findJobsByLocation(@RequestParam String location) {
-        return ResponseEntity.ok(jobService.findJobsByLocation(location));
+    public List<Job> findJobsByLocation(@RequestParam String location) {
+        return this.jobService.findJobsByLocation(location);
     }
 
     @GetMapping("/findByEmploymentType")
-    public ResponseEntity<List<Job>> findJobsByEmploymentType(@RequestParam String employmentType) {
-        return ResponseEntity.ok(jobService.findJobsByEmploymentType(employmentType));
+    public List<Job> findJobsByEmploymentType(@RequestParam String employmentType) {
+        return this.jobService.findJobsByEmploymentType(employmentType);
     }
 
     @GetMapping("/findByRemoteOption")
-    public ResponseEntity<List<Job>> findJobsByRemoteOption(@RequestParam Boolean remoteOption) {
-        return ResponseEntity.ok(jobService.findJobsByRemoteOption(remoteOption));
+    public List<Job>findJobsByRemoteOption(@RequestParam boolean remoteOption) {
+        return this.jobService.findJobsByRemoteOption(remoteOption);
     }
 }

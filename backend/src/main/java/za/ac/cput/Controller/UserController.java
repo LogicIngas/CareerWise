@@ -17,25 +17,4 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody User user) {
-        try {
-            User createdUser = userService.signUp(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody Map<String, String> loginRequest) {
-        try {
-            String email = loginRequest.get("email");
-            String password = loginRequest.get("password");
-            User user = userService.login(email, password);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
 }
