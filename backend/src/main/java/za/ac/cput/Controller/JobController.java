@@ -1,7 +1,6 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.IJobService;
@@ -23,7 +22,7 @@ public class JobController {
 
     @PostMapping("/create")
     public Job create(@RequestBody Job job) {
-        return this.jobService.create(job);
+         return this.jobService.create(job);
     }
 
     @GetMapping("/read/{id}")
