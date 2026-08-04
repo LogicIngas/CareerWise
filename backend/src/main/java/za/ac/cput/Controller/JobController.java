@@ -47,7 +47,7 @@ public class JobController {
 
     @GetMapping("/findOpenPositions")
     public List<Job> findOpenPositions() {
-        return this.jobService.findOpenPositions();
+       return this.jobService.findOpenPositions();
     }
 
     @GetMapping("/findByLocation")
@@ -61,7 +61,7 @@ public class JobController {
     }
 
     @GetMapping("/findByRemoteOption")
-    public List<Job> findJobsByRemoteOption(@RequestParam Boolean remoteOption) {
+    public List<Job>findJobsByRemoteOption(@RequestParam boolean remoteOption) {
         return this.jobService.findJobsByRemoteOption(remoteOption);
     }
 }

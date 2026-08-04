@@ -37,13 +37,13 @@ public class EducationController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public Boolean delete(@PathVariable String id) {
+    public boolean delete(@PathVariable String id) {
         return this.educationService.delete(id);
     }
 
     @GetMapping("/getAll")
     public List<Education> getAll() {
-        return this.educationService.getAll();
+       return this.educationService.getAll();
     }
 
     @GetMapping("/findByInstitution")

@@ -22,22 +22,22 @@ public class SkillController {
 
     @PostMapping("/create")
     public Skill create(@RequestBody Skill skill) {
-        return this.service.create(skill);
+       return this.service.create(skill);
     }
 
     @GetMapping("/read/{skillId}")
     public Skill read(@PathVariable String skillId) {
-        return this.service.read(skillId);
+      return this.service.read(skillId);
     }
 
     @PutMapping("/update")
     public Skill update(@RequestBody Skill skill) {
-        return this.service.update(skill);
+        return this.update(skill);
     }
 
     @DeleteMapping("/delete/{skillId}")
     public Boolean delete(@PathVariable String skillId) {
-        return this.service.delete(skillId);
+       return this.delete(skillId);
     }
 
     @GetMapping("/getAll")
