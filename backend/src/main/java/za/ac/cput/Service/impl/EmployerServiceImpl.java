@@ -20,13 +20,9 @@ public class EmployerServiceImpl implements IEmployerService {
 
     @Override
     public Employer create(Employer employer) {
-        // Fix: Check if employer exists before creating
-        if (employer.getUserId() != null &&
-                !employerRepository.existsById(employer.getUserId())) {
             return employerRepository.save(employer);
         }
-        return null;
-    }
+
 
     @Override
     public Employer read(String id) { // Fix: String not Integer
