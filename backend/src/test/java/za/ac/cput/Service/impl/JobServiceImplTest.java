@@ -3,8 +3,10 @@ package za.ac.cput.Service.impl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import za.ac.cput.domain.Employer;
 import za.ac.cput.domain.Job;
 import za.ac.cput.domain.JobStatus;
+import za.ac.cput.factory.EmployerFactory;
 import za.ac.cput.factory.JobFactory;
 
 import java.time.LocalDate;
@@ -19,7 +21,15 @@ class JobServiceImplTest {
     @Autowired
     private JobServiceImpl jobService;
 
+    // Problem: Job.employer is a required column (not null), but JobFactory does not
+    // set an employer. Saving this job with no employer breaks the database rule.
+    // How to fix it: use EmployerServiceImpl to make a real Employer and attach it to the job
+    // before it gets saved. See create() below.
+    @Autowired
+    private EmployerServiceImpl employerService;
+
     private static String generatedJobId;
+    private static String generatedEmployerId;
 
     private static Job job = JobFactory.createJob("Software Developer",
             "Build clean code using Java and Springboot",
@@ -30,7 +40,7 @@ class JobServiceImplTest {
 
 
     @AfterAll
-    static void cleanupAfterAll(@Autowired JobServiceImpl jobService) {
+    static void cleanupAfterAll(@Autowired JobServiceImpl jobService, @Autowired EmployerServiceImpl employerService) {
         if (generatedJobId != null) {
             try {
                 if (jobService.read(generatedJobId) != null) {
@@ -39,11 +49,27 @@ class JobServiceImplTest {
             } catch (Exception e) {
             }
         }
+        if (generatedEmployerId != null) {
+            try {
+                employerService.delete(generatedEmployerId);
+            } catch (Exception e) {
+            }
+        }
     }
 
     @Test
     @Order(1)
     void create() {
+        // Make a real Employer first, then attach it to the job.
+        // (the insert fails because employer_id can't be null.)
+        Employer employer = employerService.create(EmployerFactory.createEmployer(
+                "jobserviceimpltest@gmail.com", "password123",
+                "Jane", "Doe",
+                "CareerWise", "Information Technology"));
+        assertNotNull(employer);
+        generatedEmployerId = employer.getUserId();
+        job.setEmployer(employer);
+
         Job created = jobService.create(job);
         assertNotNull(created);
         assertNotNull(created.getJobId());
@@ -63,12 +89,16 @@ class JobServiceImplTest {
     @Test
     @Order(3)
     void update() {
+        // Problem: "new Job()" has no id and no location. JobServiceImpl.update() needs
+        // an id to find the row, and saving a mostly-empty Job would wipe out required
+        // columns like title and employer (they would be saved as null).
+        // How to fix it: fetch the real job first, then change fields on it, so everything else
+        // (id, employer, title, etc.) stays the same.
         Job current = jobService.read(generatedJobId);
+        current.setTitle("Software Dev");
+        current.setLocation("Durban");
 
-        Job updated = new Job();
-        updated.setTitle("Software Dev");
-
-        Job result = jobService.update(updated);
+        Job result = jobService.update(current);
 
         assertNotNull(result);
         assertEquals("Durban", result.getLocation());
