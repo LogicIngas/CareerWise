@@ -29,6 +29,31 @@ export const routes: Routes = [
         title: 'Dashboard | CareerWise'
       },
       {
+        path: 'saved-jobs',
+        loadComponent: () => import('./pages/saved-jobs/saved-jobs.component').then(m => m.SavedJobsComponent),
+        title: 'Saved Jobs | CareerWise'
+      },
+      {
+        path: 'applications',
+        loadComponent: () => import('./pages/applications/applications.component').then(m => m.ApplicationsComponent),
+        title: 'My Applications | CareerWise'
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent),
+        title: 'Notifications | CareerWise'
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
+        title: 'My Profile | CareerWise'
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent),
+        title: 'Settings | CareerWise'
+      },
+      {
         path: 'employer-home',
         loadComponent: () => import('./pages/employer-dashboard/employer-dashboard.component').then(m => m.EmployerDashboardComponent),
         title: 'Employer Dashboard | CareerWise'
