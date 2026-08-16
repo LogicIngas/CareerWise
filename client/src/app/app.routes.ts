@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router';
-import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
 import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-layout.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: BaseLayoutComponent,
+    component: DashboardLayoutComponent,
     children: [
       {
         path: '',
@@ -16,13 +15,7 @@ export const routes: Routes = [
         path: 'jobs',
         loadComponent: () => import('./pages/find-jobs/find-jobs.component').then(m => m.FindJobsComponent),
         title: 'Find Jobs | CareerWise'
-      }
-    ]
-  },
-  {
-    path: '',
-    component: DashboardLayoutComponent,
-    children: [
+      },
       {
         path: 'dashboard',
         loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
