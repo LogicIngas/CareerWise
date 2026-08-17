@@ -1,7 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+﻿import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MockDataService } from '../../services/mock-data.service';
+import { AuthService } from '../../services/auth.service';
 import { EmployerStat, EmployerPosting } from '../../models/models';
 
 @Component({
@@ -13,10 +14,10 @@ import { EmployerStat, EmployerPosting } from '../../models/models';
       <!-- Header -->
       <div class="flex justify-between items-center mb-8">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900">Employer Dashboard</h1>
-          <p class="text-gray-500 mt-1">Overview of your hiring pipeline</p>
+          <h1 class="text-2xl font-bold text-stone-900">{{ companyName() ? companyName() + ' · Hiring' : 'Employer Dashboard' }}</h1>
+          <p class="text-stone-500 mt-1">Overview of your hiring pipeline</p>
         </div>
-        <button routerLink="/post-job" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm flex items-center gap-2">
+        <button routerLink="/post-job" class="bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
           Post Job
         </button>
@@ -24,12 +25,12 @@ import { EmployerStat, EmployerPosting } from '../../models/models';
 
       <!-- Stats -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div *ngFor="let stat of stats()" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between h-32">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2"
+        <div *ngFor="let stat of stats()" class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-2"
                [ngClass]="{
                  'bg-blue-50 text-blue-600': stat.icon === 'briefcase',
                  'bg-purple-50 text-purple-600': stat.icon === 'users',
-                 'bg-indigo-50 text-indigo-600': stat.icon === 'eye',
+                 'bg-brand-50 text-brand-600': stat.icon === 'eye',
                  'bg-pink-50 text-pink-600': stat.icon === 'file'
                }">
             <ng-container [ngSwitch]="stat.icon">
@@ -40,41 +41,42 @@ import { EmployerStat, EmployerPosting } from '../../models/models';
             </ng-container>
           </div>
           <div>
-            <div class="text-3xl font-extrabold text-gray-900">{{stat.value}}</div>
-            <div class="text-sm text-gray-500 font-medium">{{stat.label}}</div>
+            <div class="text-3xl font-extrabold text-stone-900">{{stat.value}}</div>
+            <div class="text-sm text-stone-500 font-medium">{{stat.label}}</div>
           </div>
         </div>
-        <div *ngIf="loadingStats()" class="col-span-full py-8 text-center text-gray-500 animate-pulse">
+        <div *ngIf="loadingStats()" class="col-span-full py-8 text-center text-stone-500 animate-pulse">
           Loading statistics...
         </div>
       </div>
 
       <!-- Job Postings -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
-          <h2 class="text-lg font-bold text-gray-900">Your job postings</h2>
-          <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
-            Manage all <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          </a>
+      <div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+        <div class="p-6 border-b border-stone-100">
+          <h2 class="text-lg font-bold text-stone-900">Your job postings</h2>
         </div>
-        
-        <div class="divide-y divide-gray-50">
-          <div *ngFor="let post of postings()" class="p-6 flex justify-between items-center hover:bg-gray-50/50 transition-colors">
+
+        <div class="divide-y divide-stone-50">
+          <div *ngFor="let post of postings()" class="p-6 flex justify-between items-center hover:bg-stone-50/50 transition-colors">
             <div>
-              <h3 class="font-bold text-gray-900 mb-1">{{post.title}}</h3>
-              <p class="text-sm text-gray-500">{{post.applicantsCount}} applicants</p>
+              <h3 class="font-bold text-stone-900 mb-1">{{post.title}}</h3>
+              <p class="text-sm text-stone-500">{{post.applicantsCount}} applicants</p>
             </div>
-            <span class="px-4 py-1.5 text-xs font-bold rounded-full"
+            <span class="px-3 py-1.5 text-xs font-bold rounded-md"
               [ngClass]="{
-                'bg-indigo-600 text-white': post.status === 'Active',
-                'bg-gray-100 text-gray-600': post.status === 'Paused',
-                'bg-red-50 text-gray-600 border border-gray-200': post.status === 'Closed'
+                'bg-brand-600 text-white': post.status === 'Active',
+                'bg-stone-100 text-stone-600': post.status === 'Paused',
+                'bg-red-50 text-red-700 border border-red-100': post.status === 'Closed'
               }">
               {{post.status}}
             </span>
           </div>
-          <div *ngIf="loadingPostings()" class="p-8 text-center text-gray-500 animate-pulse">
+          <div *ngIf="loadingPostings()" class="p-8 text-center text-stone-500 animate-pulse">
             Loading postings...
+          </div>
+          <div *ngIf="!loadingPostings() && postings().length === 0" class="p-12 text-center">
+            <p class="text-stone-900 font-semibold mb-1">No job postings yet</p>
+            <p class="text-stone-500 text-sm">Post your first role to start receiving applicants.</p>
           </div>
         </div>
       </div>
@@ -83,12 +85,15 @@ import { EmployerStat, EmployerPosting } from '../../models/models';
 })
 export class EmployerDashboardComponent implements OnInit {
   private dataService = inject(MockDataService);
+  private auth = inject(AuthService);
 
   stats = signal<EmployerStat[]>([]);
   postings = signal<EmployerPosting[]>([]);
 
   loadingStats = signal(true);
   loadingPostings = signal(true);
+
+  companyName = () => this.auth.currentUser()?.companyName ?? null;
 
   ngOnInit() {
     this.dataService.getEmployerStats().subscribe(data => {

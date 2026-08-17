@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -8,11 +8,11 @@ import { FooterComponent } from '../../components/footer/footer.component';
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   template: `
-    <div class="flex flex-col min-h-screen font-sans text-gray-900 bg-gray-50/30">
+    <div class="flex flex-col min-h-screen font-sans text-stone-900 bg-[#fbfaf8]">
       <app-header></app-header>
-      <div class="flex-grow">
+      <main id="main-content" class="flex-grow">
         <router-outlet></router-outlet>
-      </div>
+      </main>
       <app-footer></app-footer>
     </div>
   `

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+﻿import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MockDataService } from '../../services/mock-data.service';
 
@@ -11,22 +11,22 @@ import { MockDataService } from '../../services/mock-data.service';
       <!-- Header -->
       <div class="flex justify-between items-center mb-8">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900">Notifications</h1>
-          <p class="text-gray-500 mt-1">Stay up to date with your job search</p>
+          <h1 class="text-2xl font-bold text-stone-900">Notifications</h1>
+          <p class="text-stone-500 mt-1">Stay up to date with your job search</p>
         </div>
-        <button class="border border-gray-200 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm">
+        <button (click)="markAllRead()" [disabled]="!hasUnread()" class="border border-stone-200 hover:bg-stone-50 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed text-stone-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm">
           Mark all read
         </button>
       </div>
 
       <!-- Notifications List -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="divide-y divide-gray-50">
-          <div *ngFor="let notif of notifications()" class="p-6 flex items-start gap-4 hover:bg-gray-50/50 transition-colors cursor-pointer" [class.bg-indigo-50]="notif.unread" [class.bg-opacity-20]="notif.unread">
+      <div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+        <div class="divide-y divide-stone-50">
+          <div *ngFor="let notif of notifications()" (click)="notif.unread = false" class="p-6 flex items-start gap-4 hover:bg-stone-50/50 transition-colors cursor-pointer" [class.bg-brand-50]="notif.unread">
             <!-- Icon -->
             <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                  [ngClass]="{
-                   'bg-indigo-50 text-indigo-600': notif.type === 'application_view' || notif.type === 'job_match',
+                   'bg-brand-50 text-brand-600': notif.type === 'application_view' || notif.type === 'job_match',
                    'bg-purple-50 text-purple-600': notif.type === 'message',
                    'bg-blue-50 text-blue-600': notif.type === 'profile_view'
                  }">
@@ -46,20 +46,20 @@ import { MockDataService } from '../../services/mock-data.service';
             <!-- Content -->
             <div class="flex-grow">
               <div class="flex justify-between items-start">
-                <h3 class="font-bold text-gray-900 text-sm mb-1">{{notif.title}}</h3>
-                <div *ngIf="notif.unread" class="w-2 h-2 rounded-full bg-blue-600 mt-1.5"></div>
+                <h3 class="font-bold text-stone-900 text-sm mb-1">{{notif.title}}</h3>
+                <div *ngIf="notif.unread" class="w-2 h-2 rounded-full bg-brand-600 mt-1.5 flex-shrink-0"></div>
               </div>
-              <p class="text-sm text-gray-600 mb-1.5">{{notif.message}}</p>
-              <p class="text-xs text-gray-400 font-medium">{{notif.time}}</p>
+              <p class="text-sm text-stone-600 mb-1.5">{{notif.message}}</p>
+              <p class="text-xs text-stone-400 font-medium">{{notif.time}}</p>
             </div>
           </div>
-          <div *ngIf="loading()" class="p-8 text-center text-gray-500 animate-pulse">
+          <div *ngIf="loading()" class="p-8 text-center text-stone-500 animate-pulse">
             Loading notifications...
           </div>
         </div>
       </div>
       
-      <div class="mt-8 flex justify-center items-center text-sm font-medium text-gray-400 gap-2">
+      <div class="mt-8 flex justify-center items-center text-sm font-medium text-stone-400 gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
         You're all caught up
       </div>
@@ -71,11 +71,16 @@ export class NotificationsComponent implements OnInit {
   
   notifications = signal<any[]>([]);
   loading = signal(true);
+  hasUnread = computed(() => this.notifications().some(n => n.unread));
 
   ngOnInit() {
     this.dataService.getNotifications().subscribe(data => {
       this.notifications.set(data);
       this.loading.set(false);
     });
+  }
+
+  markAllRead() {
+    this.notifications.update(list => list.map(n => ({ ...n, unread: false })));
   }
 }
