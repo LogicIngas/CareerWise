@@ -1,5 +1,6 @@
 package za.ac.cput.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -54,8 +55,14 @@ public class Job {
     @Column(name = "deadline_date")
     private LocalDate deadlineDate;
 
+
+    // Job <-> Employer is a bidirectional relationship, so serializing a Job walks into
+    // Employer.postedJobs and back into Job, looping forever (StackOverflowError). The lazy
+    // proxy also breaks Jackson with its extra Hibernate fields. How i fixed it: ignore those fields on
+    // Job.employer only, so Employer's own JSON output is unaffected.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id", nullable = false)
+    @JsonIgnoreProperties({"postedJobs", "hibernateLazyInitializer", "handler"})
     private Employer employer;
 
     @Enumerated(EnumType.STRING)
@@ -69,7 +76,7 @@ public class Job {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    //    Executes: Before an entity is saved for the first time (INSERT)
+    //    Runs: Before an entity is saved for the first time (INSERT)
     //    Purpose: Set initial values like createdAt and updatedAt
     @PrePersist
     public void prePersist() {
@@ -77,7 +84,7 @@ public class Job {
         this.updatedAt = LocalDateTime.now();
     }
 
-    //    Executes: Before an entity is updated (UPDATE)
+    //    Runs: Before an entity is updated (UPDATE)
     //    Purpose: Update timestamp fields like updatedAt
     @PreUpdate
     public void preUpdate() {

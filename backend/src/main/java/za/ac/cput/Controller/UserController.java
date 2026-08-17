@@ -18,24 +18,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody User user) {
-        try {
-            User createdUser = userService.signUp(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public User signUp(@RequestBody User user) throws Exception {
+        return this.userService.signUp(user);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody Map<String, String> loginRequest) {
-        try {
+    public User login(@RequestBody Map<String, String> loginRequest) throws Exception {
+
             String email = loginRequest.get("email");
             String password = loginRequest.get("password");
-            User user = userService.login(email, password);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+            return this.userService.login(email, password);
     }
 }

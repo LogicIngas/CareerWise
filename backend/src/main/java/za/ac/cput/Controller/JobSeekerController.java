@@ -22,43 +22,27 @@ public class JobSeekerController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<JobSeeker> create(@RequestBody JobSeeker jobSeeker) {
-        JobSeeker created = service.create(jobSeeker);
-        if (created != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        }
-        return ResponseEntity.badRequest().build();
+    public JobSeeker create(@RequestBody JobSeeker jobSeeker) {
+        return this.service.create(jobSeeker);
     }
 
     @GetMapping("/read/{userId}")
-    public ResponseEntity<JobSeeker> read(@PathVariable String userId) {
-        JobSeeker jobSeeker = service.read(userId);
-        if (jobSeeker != null) {
-            return ResponseEntity.ok(jobSeeker);
-        }
-        return ResponseEntity.notFound().build();
+    public JobSeeker read(@PathVariable String userId) {
+        return this.service.read(userId);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<JobSeeker> update(@RequestBody JobSeeker jobSeeker) {
-        JobSeeker updated = service.update(jobSeeker);
-        if (updated != null) {
-            return ResponseEntity.ok(updated);
-        }
-        return ResponseEntity.notFound().build();
+    public JobSeeker update(@RequestBody JobSeeker jobSeeker) {
+        return this.service.update(jobSeeker);
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Boolean> delete(@PathVariable String userId) {
-        boolean deleted = service.delete(userId);
-        if (deleted) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
+    public Boolean delete(@PathVariable String userId) {
+        return this.service.delete(userId);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<JobSeeker>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public List<JobSeeker> getAll() {
+        return this.service.getAll();
     }
 }

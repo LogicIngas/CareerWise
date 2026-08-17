@@ -1,0 +1,155 @@
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MockDataService } from '../../services/mock-data.service';
+
+@Component({
+  selector: 'app-profile',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  template: `
+    <div class="p-8 max-w-5xl mx-auto pb-20">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">My Profile</h1>
+        <p class="text-gray-500 mt-1">Manage your personal information and skills</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8" *ngIf="profile()">
+        
+        <!-- Left Column: Profile Card -->
+        <div class="md:col-span-1">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex flex-col items-center text-center">
+            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-3xl font-bold mb-4 shadow-md shadow-indigo-200">
+              AM
+            </div>
+            <h2 class="text-xl font-bold text-gray-900 mb-1">{{profile().firstName}} {{profile().lastName}}</h2>
+            <p class="text-gray-500 text-sm mb-6">{{profile().title}}</p>
+            
+            <div class="w-full space-y-3 text-sm text-gray-600 mb-8 text-left">
+              <div class="flex items-center gap-3">
+                <svg class="text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{profile().location}}
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                {{profile().email}}
+              </div>
+              <div class="flex items-center gap-3">
+                <svg class="text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                {{profile().phone}}
+              </div>
+            </div>
+            
+            <button class="w-full py-2.5 px-4 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors flex justify-center items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Edit photo
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Forms -->
+        <div class="md:col-span-2 space-y-6">
+          
+          <!-- Personal Information Form -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <h2 class="text-lg font-bold text-gray-900 mb-6">Personal information</h2>
+            
+            <form [formGroup]="profileForm" (ngSubmit)="onSave()" class="space-y-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">First name</label>
+                  <input type="text" formControlName="firstName" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 text-sm">
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">Last name</label>
+                  <input type="text" formControlName="lastName" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 text-sm">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                  <input type="email" formControlName="email" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 text-sm">
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                  <input type="text" formControlName="phone" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 text-sm">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Professional summary</label>
+                <textarea formControlName="summary" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 text-sm resize-y"></textarea>
+              </div>
+
+              <div>
+                <button type="submit" [disabled]="isSaving" class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-sm flex items-center gap-2">
+                  <span *ngIf="isSaving" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                  Save changes
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Skills Section -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-bold text-gray-900">Skills</h2>
+              <button class="text-sm font-medium text-gray-500 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                Add
+              </button>
+            </div>
+            
+            <div class="flex flex-wrap gap-2">
+              <span *ngFor="let skill of profile().skills" class="px-4 py-1.5 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full border border-indigo-100">
+                {{skill}}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      
+      <div *ngIf="loading()" class="py-12 text-center text-gray-500 animate-pulse">
+        Loading profile...
+      </div>
+    </div>
+  `
+})
+export class ProfileComponent implements OnInit {
+  private dataService = inject(MockDataService);
+  private fb = inject(FormBuilder);
+
+  profile = signal<any>(null);
+  loading = signal(true);
+  isSaving = false;
+
+  profileForm = this.fb.group({
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phone: [''],
+    summary: ['']
+  });
+
+  ngOnInit() {
+    this.dataService.getUserProfile().subscribe(data => {
+      this.profile.set(data);
+      this.profileForm.patchValue(data);
+      this.loading.set(false);
+    });
+  }
+
+  onSave() {
+    if (this.profileForm.valid) {
+      this.isSaving = true;
+      setTimeout(() => {
+        this.profile.update(p => ({ ...p, ...this.profileForm.value }));
+        this.isSaving = false;
+        alert('Profile saved (Mock)');
+      }, 800);
+    }
+  }
+}
