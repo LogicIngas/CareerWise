@@ -145,4 +145,39 @@ export class MockDataService {
       { id: '4', title: 'DevOps Engineer', applicantsCount: 29, status: 'Closed' }
     ]).pipe(delay(600));
   }
+
+  getNotifications(): Observable<any[]> {
+    return of([
+      { id: '1', type: 'application_view', title: 'Application viewed', message: 'Nimbus Labs viewed your application.', time: '5 min ago', unread: true },
+      { id: '2', type: 'message', title: 'New message', message: 'You have a new message from Auroria.', time: '1 hour ago', unread: true },
+      { id: '3', type: 'job_match', title: 'New job match', message: '3 new jobs match your profile.', time: '3 hours ago', unread: false },
+      { id: '4', type: 'profile_view', title: 'Profile view', message: 'A recruiter from Datastack viewed your profile.', time: 'Yesterday', unread: false }
+    ]).pipe(delay(400));
+  }
+
+  getDetailedApplications(): Observable<{stats: any, list: any[]}> {
+    return of({
+      stats: { total: 5, interviews: 1, offers: 1 },
+      list: [
+        { id: '1', jobTitle: 'Senior Frontend Engineer', company: 'Nimbus Labs', dateApplied: 'Jul 2, 2026', status: 'Interview' },
+        { id: '2', jobTitle: 'Product Designer', company: 'Auroria', dateApplied: 'Jun 28, 2026', status: 'Under Review' },
+        { id: '3', jobTitle: 'Backend Engineer', company: 'Datastack', dateApplied: 'Jun 25, 2026', status: 'Applied' },
+        { id: '4', jobTitle: 'Marketing Manager', company: 'BrightWave', dateApplied: 'Jun 20, 2026', status: 'Offer' },
+        { id: '5', jobTitle: 'Data Scientist', company: 'Quantify', dateApplied: 'Jun 15, 2026', status: 'Rejected' }
+      ]
+    }).pipe(delay(500));
+  }
+
+  getUserProfile(): Observable<any> {
+    return of({
+      firstName: 'Alex',
+      lastName: 'Morgan',
+      email: 'alex@email.com',
+      phone: '+1 (555) 012-3456',
+      title: 'Senior Frontend Engineer',
+      location: 'San Francisco, CA',
+      summary: 'Senior frontend engineer with 6 years building performant, accessible web apps.',
+      skills: ['React', 'TypeScript', 'Node.js', 'UI/UX', 'GraphQL', 'Tailwind']
+    }).pipe(delay(300));
+  }
 }
