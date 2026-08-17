@@ -1,9 +1,14 @@
 ﻿import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MockDataService } from '../../services/mock-data.service';
+import { EmployerService, BackendEmployerFull } from '../../services/employer.service';
+import { BackendJob } from '../../services/job.service';
 import { AuthService } from '../../services/auth.service';
 import { EmployerStat, EmployerPosting } from '../../models/models';
+
+function mapJobStatus(status: BackendJob['status']): EmployerPosting['status'] {
+  return status === 'OPEN' ? 'Active' : 'Closed';
+}
 
 @Component({
   selector: 'app-employer-dashboard',
@@ -84,7 +89,7 @@ import { EmployerStat, EmployerPosting } from '../../models/models';
   `
 })
 export class EmployerDashboardComponent implements OnInit {
-  private dataService = inject(MockDataService);
+  private employerService = inject(EmployerService);
   private auth = inject(AuthService);
 
   stats = signal<EmployerStat[]>([]);
@@ -96,13 +101,30 @@ export class EmployerDashboardComponent implements OnInit {
   companyName = () => this.auth.currentUser()?.companyName ?? null;
 
   ngOnInit() {
-    this.dataService.getEmployerStats().subscribe(data => {
-      this.stats.set(data);
+    const userId = this.auth.currentUser()?.userId;
+    if (!userId) {
       this.loadingStats.set(false);
-    });
+      this.loadingPostings.set(false);
+      return;
+    }
 
-    this.dataService.getEmployerPostings().subscribe(data => {
-      this.postings.set(data);
+    this.employerService.getById(userId).subscribe((employer: BackendEmployerFull | null) => {
+      const jobs = employer?.postedJobs ?? [];
+
+      this.stats.set([
+        { label: 'Active Jobs', value: jobs.filter(j => j.status === 'OPEN').length, icon: 'briefcase' },
+        { label: 'Total Applicants', value: 0, icon: 'users' },
+        { label: 'Job Views', value: 0, icon: 'eye' },
+        { label: 'New Today', value: 0, icon: 'file' }
+      ]);
+      this.loadingStats.set(false);
+
+      this.postings.set(jobs.map(j => ({
+        id: j.jobId!,
+        title: j.title,
+        applicantsCount: 0,
+        status: mapJobStatus(j.status)
+      })));
       this.loadingPostings.set(false);
     });
   }
