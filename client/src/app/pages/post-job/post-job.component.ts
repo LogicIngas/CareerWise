@@ -1,6 +1,9 @@
 ﻿import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { JobService } from '../../services/job.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-post-job',
@@ -103,6 +106,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
             Job published
           </span>
+          <span *ngIf="errorMessage()" class="text-sm font-medium text-red-600 mr-auto">{{ errorMessage() }}</span>
           <button type="button" class="px-6 py-2.5 rounded-xl border border-stone-200 text-sm font-bold text-stone-700 hover:bg-stone-50 active:scale-[0.98] transition-all">
             Save draft
           </button>
@@ -118,9 +122,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class PostJobComponent {
   private fb = inject(FormBuilder);
+  private jobService = inject(JobService);
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
   isSubmitting = false;
   justPublished = signal(false);
+  errorMessage = signal<string | null>(null);
 
   jobForm = this.fb.group({
     title: ['', Validators.required],
@@ -136,12 +144,40 @@ export class PostJobComponent {
   onSubmit() {
     if (this.jobForm.valid) {
       this.isSubmitting = true;
-      setTimeout(() => {
-        this.isSubmitting = false;
-        this.jobForm.reset();
-        this.justPublished.set(true);
-        setTimeout(() => this.justPublished.set(false), 3000);
-      }, 1000);
+      this.errorMessage.set(null);
+      const v = this.jobForm.value;
+      const requirements = (v.requirements ?? '')
+        .split(/\n|,/)
+        .map(r => r.trim())
+        .filter(Boolean);
+      // "Remote" is never stored as employmentType — remoteness is carried
+      // solely by remoteOption, matching how job browsing/filtering treats them.
+      this.jobService.create({
+        title: v.title!,
+        description: v.description!,
+        requirements,
+        responsibilities: [],
+        location: v.location!,
+        remoteOption: v.type === 'Remote',
+        salaryRange: v.salaryRange || '',
+        employmentType: v.type === 'Remote' ? 'Full-time' : v.type!,
+        employer: { userId: this.auth.currentUser()!.userId }
+      }).subscribe({
+        next: created => {
+          this.isSubmitting = false;
+          if (!created) {
+            this.errorMessage.set('Could not publish this job. Please try again.');
+            return;
+          }
+          this.jobForm.reset();
+          this.justPublished.set(true);
+          setTimeout(() => this.justPublished.set(false), 3000);
+        },
+        error: () => {
+          this.isSubmitting = false;
+          this.errorMessage.set('Could not publish this job. Please try again.');
+        }
+      });
     } else {
       this.jobForm.markAllAsTouched();
     }

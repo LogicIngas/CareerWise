@@ -1,8 +1,9 @@
 ﻿import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { JobCardComponent } from '../../components/job-card/job-card.component';
-import { MockDataService } from '../../services/mock-data.service';
+import { JobService } from '../../services/job.service';
 import { Job } from '../../models/models';
 
 @Component({
@@ -81,7 +82,7 @@ import { Job } from '../../models/models';
             <div *ngIf="!loadingJobs() && filteredJobs().length === 0" class="text-center py-16 border border-dashed border-stone-200 rounded-2xl">
               <p class="text-stone-900 font-semibold mb-1">No jobs match these filters</p>
               <p class="text-stone-500 text-sm mb-4">Try clearing a filter or searching a different keyword.</p>
-              <button (click)="selectedTypes.set([])" class="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">Clear filters</button>
+              <button (click)="clearAllFilters()" class="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">Clear filters</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <app-job-card *ngFor="let job of filteredJobs()" [job]="job"></app-job-card>
@@ -94,18 +95,36 @@ import { Job } from '../../models/models';
   `
 })
 export class FindJobsComponent implements OnInit {
-  private dataService = inject(MockDataService);
+  private jobService = inject(JobService);
   private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
 
   jobs = signal<Job[]>([]);
   loadingJobs = signal(true);
   isSearching = signal(false);
   selectedTypes = signal<string[]>([]);
+  appliedKeyword = signal('');
+  appliedLocation = signal('');
 
   filteredJobs = computed(() => {
     const types = this.selectedTypes();
-    if (!types.length) return this.jobs();
-    return this.jobs().filter(job => types.includes('Remote') && job.isRemote ? true : types.includes(job.type));
+    const keyword = this.appliedKeyword().trim().toLowerCase();
+    const location = this.appliedLocation().trim().toLowerCase();
+
+    return this.jobs().filter(job => {
+      const matchesType = !types.length
+        || types.includes(job.type)
+        || (types.includes('Remote') && job.isRemote);
+
+      const matchesKeyword = !keyword
+        || job.title.toLowerCase().includes(keyword)
+        || job.company.toLowerCase().includes(keyword)
+        || job.tags.some(tag => tag.toLowerCase().includes(keyword));
+
+      const matchesLocation = !location || job.location.toLowerCase().includes(location);
+
+      return matchesType && matchesKeyword && matchesLocation;
+    });
   });
 
   searchForm = this.fb.group({
@@ -119,8 +138,23 @@ export class FindJobsComponent implements OnInit {
     );
   }
 
+  clearAllFilters() {
+    this.selectedTypes.set([]);
+    this.appliedKeyword.set('');
+    this.appliedLocation.set('');
+    this.searchForm.reset({ keyword: '', location: '' });
+  }
+
   ngOnInit() {
-    this.dataService.getFeaturedJobs().subscribe(data => {
+    const keyword = this.route.snapshot.queryParamMap.get('keyword') ?? '';
+    const location = this.route.snapshot.queryParamMap.get('location') ?? '';
+    if (keyword || location) {
+      this.searchForm.patchValue({ keyword, location });
+      this.appliedKeyword.set(keyword);
+      this.appliedLocation.set(location);
+    }
+
+    this.jobService.getOpenPositions().subscribe(data => {
       this.jobs.set(data);
       this.loadingJobs.set(false);
     });
@@ -130,7 +164,8 @@ export class FindJobsComponent implements OnInit {
     this.isSearching.set(true);
     setTimeout(() => {
       this.isSearching.set(false);
-      console.log('Search mock sent:', this.searchForm.value);
+      this.appliedKeyword.set(this.searchForm.value.keyword ?? '');
+      this.appliedLocation.set(this.searchForm.value.location ?? '');
     }, 800); // Simulate network
   }
 }

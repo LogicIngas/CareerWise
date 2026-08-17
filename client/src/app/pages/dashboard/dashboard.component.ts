@@ -2,6 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MockDataService } from '../../services/mock-data.service';
+import { JobService } from '../../services/job.service';
 import { AuthService } from '../../services/auth.service';
 import { JobCardComponent } from '../../components/job-card/job-card.component';
 import { Job, Application } from '../../models/models';
@@ -147,6 +148,7 @@ import { Job, Application } from '../../models/models';
 })
 export class DashboardComponent implements OnInit {
   private dataService = inject(MockDataService);
+  private jobService = inject(JobService);
   private auth = inject(AuthService);
 
   stats = signal<any>(null);
@@ -170,7 +172,7 @@ export class DashboardComponent implements OnInit {
       this.loadingApps.set(false);
     });
 
-    this.dataService.getFeaturedJobs().subscribe(data => {
+    this.jobService.getOpenPositions().subscribe(data => {
       this.recommendedJobs.set(data.slice(0, 2)); // Just take 2 for dashboard
       this.loadingJobs.set(false);
     });

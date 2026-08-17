@@ -1,7 +1,7 @@
 ﻿import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MockDataService } from '../../services/mock-data.service';
+import { JobSeekerService } from '../../services/job-seeker.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -111,6 +111,21 @@ import { AuthService } from '../../services/auth.service';
               <span *ngFor="let skill of profile().skills" class="px-3 py-1.5 bg-brand-50 text-brand-700 text-xs font-semibold rounded-md border border-brand-100">
                 {{skill}}
               </span>
+              <p *ngIf="profile().skills.length === 0" class="text-sm text-stone-500">No skills added yet.</p>
+            </div>
+          </div>
+
+          <!-- Education Section -->
+          <div class="bg-white rounded-2xl shadow-sm border border-stone-100 p-8">
+            <h2 class="text-lg font-bold text-stone-900 mb-6">Education</h2>
+
+            <div class="space-y-5">
+              <div *ngFor="let edu of profile().educations" class="flex flex-col">
+                <h3 class="font-bold text-stone-900 text-sm">{{edu.degree}}<span *ngIf="edu.fieldOfStudy"> in {{edu.fieldOfStudy}}</span></h3>
+                <p class="text-sm text-stone-600">{{edu.institution}}</p>
+                <p class="text-xs text-stone-400" *ngIf="edu.startDate || edu.endDate">{{edu.startDate}} – {{edu.endDate || 'Present'}}</p>
+              </div>
+              <p *ngIf="profile().educations.length === 0" class="text-sm text-stone-500">No education added yet.</p>
             </div>
           </div>
 
@@ -124,7 +139,7 @@ import { AuthService } from '../../services/auth.service';
   `
 })
 export class ProfileComponent implements OnInit {
-  private dataService = inject(MockDataService);
+  private jobSeekerService = inject(JobSeekerService);
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
 
@@ -142,16 +157,31 @@ export class ProfileComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.dataService.getUserProfile().subscribe(mockData => {
+    const userId = this.auth.currentUser()?.userId;
+    if (!userId) {
+      this.loading.set(false);
+      return;
+    }
+
+    this.jobSeekerService.getById(userId).subscribe(jobSeeker => {
       const user = this.auth.currentUser();
-      const [firstName, ...rest] = (user?.name ?? mockData.firstName).trim().split(/\s+/);
+      let firstName = jobSeeker?.firstName ?? '';
+      let lastName = jobSeeker?.lastName ?? '';
+      if (user?.name) {
+        const [fn, ...rest] = user.name.trim().split(/\s+/);
+        firstName = fn || firstName;
+        lastName = rest.join(' ') || lastName;
+      }
       const data = {
-        ...mockData,
-        firstName: firstName || mockData.firstName,
-        lastName: rest.join(' ') || mockData.lastName,
-        email: user?.email ?? mockData.email,
-        location: user?.location || mockData.location,
-        title: user?.currentTitle || mockData.title
+        firstName,
+        lastName,
+        email: user?.email ?? jobSeeker?.email ?? '',
+        location: user?.location || jobSeeker?.location || '',
+        title: user?.currentTitle || jobSeeker?.headline || '',
+        phone: jobSeeker?.phoneNumber ?? '',
+        summary: jobSeeker?.summary ?? '',
+        skills: (jobSeeker?.skills ?? []).map(s => s.name),
+        educations: jobSeeker?.educations ?? []
       };
       this.profile.set(data);
       this.profileForm.patchValue(data);

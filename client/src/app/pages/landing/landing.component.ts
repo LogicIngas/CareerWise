@@ -1,9 +1,10 @@
 ﻿import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { JobCardComponent } from '../../components/job-card/job-card.component';
 import { MockDataService } from '../../services/mock-data.service';
+import { JobService } from '../../services/job.service';
 import { Category, Job } from '../../models/models';
 
 @Component({
@@ -44,10 +45,10 @@ import { Category, Job } from '../../models/models';
 
             <div class="flex items-center gap-3 flex-wrap">
               <span class="text-sm text-stone-500 font-medium">Popular:</span>
-              <button class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">Remote</button>
-              <button class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">React</button>
-              <button class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">Designer</button>
-              <button class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">Marketing</button>
+              <button type="button" (click)="searchPopular({ location: 'Remote' })" class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">Remote</button>
+              <button type="button" (click)="searchPopular({ keyword: 'React' })" class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">React</button>
+              <button type="button" (click)="searchPopular({ keyword: 'Designer' })" class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">Designer</button>
+              <button type="button" (click)="searchPopular({ keyword: 'Marketing' })" class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">Marketing</button>
             </div>
           </div>
         </div>
@@ -164,7 +165,9 @@ import { Category, Job } from '../../models/models';
 })
 export class LandingComponent implements OnInit {
   private dataService = inject(MockDataService);
+  private jobService = inject(JobService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
   // Signals for state management
   categories = signal<Category[]>([]);
@@ -191,8 +194,8 @@ export class LandingComponent implements OnInit {
       this.loadingCategories.set(false);
     });
 
-    this.dataService.getFeaturedJobs().subscribe(data => {
-      this.featuredJobs.set(data);
+    this.jobService.getOpenPositions().subscribe(data => {
+      this.featuredJobs.set(data.slice(0, 6));
       this.loadingJobs.set(false);
     });
   }
@@ -203,9 +206,20 @@ export class LandingComponent implements OnInit {
       // Simulate network request
       setTimeout(() => {
         this.isSearching.set(false);
-        console.log('Search criteria:', this.searchForm.value);
-        // In a real app, this would refresh the jobs list
+        const { keyword, location } = this.searchForm.value;
+        this.navigateToJobs({ keyword: keyword ?? undefined, location: location ?? undefined });
       }, 800);
     }
+  }
+
+  searchPopular(params: { keyword?: string; location?: string }) {
+    this.navigateToJobs(params);
+  }
+
+  private navigateToJobs(params: { keyword?: string; location?: string }) {
+    const queryParams: Record<string, string> = {};
+    if (params.keyword?.trim()) queryParams['keyword'] = params.keyword.trim();
+    if (params.location?.trim()) queryParams['location'] = params.location.trim();
+    this.router.navigate(['/jobs'], { queryParams });
   }
 }
