@@ -17,12 +17,6 @@ export interface Category {
   name: string;
 }
 
-export interface Stat {
-  label: string;
-  value: string;
-  icon: string;
-}
-
 export interface Application {
   id: string;
   jobTitle: string;

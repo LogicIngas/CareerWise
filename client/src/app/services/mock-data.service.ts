@@ -1,19 +1,11 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { delay, Observable, of } from 'rxjs';
-import { Category, Job, Stat } from '../models/models';
+import { Category, Job } from '../models/models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MockDataService {
-  getStats(): Observable<Stat[]> {
-    return of([
-      { label: 'Open Jobs', value: '50k+', icon: 'work' },
-      { label: 'Companies', value: '12k+', icon: 'business' },
-      { label: 'Candidates', value: '1.2M', icon: 'people' },
-      { label: 'Hire Rate', value: '94%', icon: 'trending_up' }
-    ]).pipe(delay(500));
-  }
 
   getCategories(): Observable<Category[]> {
     return of([
@@ -35,7 +27,7 @@ export class MockDataService {
         title: 'Senior Frontend Engineer',
         company: 'Nimbus Labs',
         companyInitial: 'N',
-        companyColor: 'bg-indigo-500',
+        companyColor: 'bg-slate-600',
         tags: ['React', 'TypeScript', 'Tailwind'],
         location: 'San Francisco, CA',
         salaryRange: '$140k - $180k',
@@ -48,7 +40,7 @@ export class MockDataService {
         title: 'Product Designer',
         company: 'Auroria',
         companyInitial: 'A',
-        companyColor: 'bg-blue-500',
+        companyColor: 'bg-blue-600',
         tags: ['Figma', 'UX', 'Design Systems'],
         location: 'Remote',
         salaryRange: '$90k - $120k',
@@ -61,7 +53,7 @@ export class MockDataService {
         title: 'Backend Engineer',
         company: 'Datastack',
         companyInitial: 'D',
-        companyColor: 'bg-purple-500',
+        companyColor: 'bg-rose-600',
         tags: ['Node.js', 'PostgreSQL', 'AWS'],
         location: 'Austin, TX',
         salaryRange: '$130k - $170k',
@@ -74,7 +66,7 @@ export class MockDataService {
         title: 'Marketing Manager',
         company: 'BrightWave',
         companyInitial: 'B',
-        companyColor: 'bg-pink-500',
+        companyColor: 'bg-pink-600',
         tags: ['SEO', 'Content', 'Growth'],
         location: 'New York, NY',
         salaryRange: '$85k - $110k',
@@ -87,7 +79,7 @@ export class MockDataService {
         title: 'Data Scientist',
         company: 'Quantify',
         companyInitial: 'Q',
-        companyColor: 'bg-teal-500',
+        companyColor: 'bg-violet-600',
         tags: ['Python', 'ML', 'Pandas'],
         location: 'Remote',
         salaryRange: '$70/hr',
@@ -100,7 +92,7 @@ export class MockDataService {
         title: 'DevOps Engineer',
         company: 'CloudForge',
         companyInitial: 'C',
-        companyColor: 'bg-orange-500',
+        companyColor: 'bg-orange-600',
         tags: ['Kubernetes', 'Terraform', 'CI/CD'],
         location: 'Seattle, WA',
         salaryRange: '$120k - $160k',

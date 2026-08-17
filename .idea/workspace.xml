@@ -28,6 +28,17 @@
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
     &quot;state&quot;: &quot;OPEN&quot;,
+<<<<<<< HEAD
+    &quot;assignee&quot;: &quot;PhumlaniMdlalo2&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/PhumlaniMdlalo2/CareerWise&quot;,
+    &quot;accountId&quot;: &quot;7532fbc7-4b8d-4f78-a20d-b14f124d3cc4&quot;
+  }
+}</component>
+=======
     &quot;assignee&quot;: &quot;PamMasina&quot;
   }
 }</component>
@@ -37,6 +48,7 @@
     "accountId": "63292884-860e-4330-a10d-94d160712f81"
   }
 }]]></component>
+>>>>>>> cc175d7266351bb5a6ce207c0924a36ea8b55817
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -54,6 +66,17 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+<<<<<<< HEAD
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "master",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+=======
     "JUnit.EmployerControllerTest.executor": "Run",
     "JUnit.EmployerServiceImplTest.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -68,11 +91,21 @@
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/mbobo/Documents/GitHub/CareerWise",
+>>>>>>> cc175d7266351bb5a6ce207c0924a36ea8b55817
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+<<<<<<< HEAD
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="CareerWise" />
+=======
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
@@ -101,10 +134,18 @@
       <option name="PACKAGE_NAME" value="za.ac.cput.Controller" />
       <option name="MAIN_CLASS_NAME" value="za.ac.cput.Controller.EmployerControllerTest" />
       <option name="TEST_OBJECT" value="class" />
+>>>>>>> cc175d7266351bb5a6ce207c0924a36ea8b55817
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+<<<<<<< HEAD
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="CareerWise" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+=======
     <configuration name="EmployerServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CareerFlow" />
       <extension name="coverage">
@@ -140,12 +181,18 @@
         <item itemvalue="Spring Boot.Main" />
       </list>
     </recent_temporary>
+>>>>>>> cc175d7266351bb5a6ce207c0924a36ea8b55817
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
+<<<<<<< HEAD
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+=======
         <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.337" />
         <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.337" />
+>>>>>>> cc175d7266351bb5a6ce207c0924a36ea8b55817
       </set>
     </attachedChunks>
   </component>
@@ -161,6 +208,11 @@
       <workItem from="1784627879588" duration="31000" />
       <workItem from="1784628203535" duration="15000" />
       <workItem from="1784656596996" duration="353000" />
+      <workItem from="1784807951098" duration="402000" />
+      <workItem from="1784811270875" duration="108000" />
+      <workItem from="1784811382004" duration="746000" />
+      <workItem from="1784816946393" duration="110000" />
+      <workItem from="1786431520007" duration="16000" />
     </task>
     <servers />
   </component>
