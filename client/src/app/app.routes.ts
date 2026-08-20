@@ -73,6 +73,12 @@ export const routes: Routes = [
         canActivate: [roleGuard('employer')],
         loadComponent: () => import('./pages/post-job/post-job.component').then(m => m.PostJobComponent),
         title: 'Post a Job | CareerWise'
+      },
+      {
+        path: 'employer-profile',
+        canActivate: [roleGuard('employer')],
+        loadComponent: () => import('./pages/employer-profile/employer-profile.component').then(m => m.EmployerProfileComponent),
+        title: 'Company Profile | CareerWise'
       }
     ]
   },

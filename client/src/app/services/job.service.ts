@@ -7,6 +7,7 @@ import { Job } from '../models/models';
 interface BackendEmployerRef {
   userId: string;
   companyName?: string;
+  companyWebsite?: string;
 }
 
 export interface BackendJob {
@@ -72,6 +73,18 @@ export class JobService {
     return this.http.post<BackendJob | null>(`${this.apiBaseUrl}/jobs/create`, payload).pipe(
       map(job => job ? this.mapJob(job) : null)
     );
+  }
+
+  getRawById(id: string): Observable<BackendJob | null> {
+    return this.http.get<BackendJob | null>(`${this.apiBaseUrl}/jobs/read/${id}`);
+  }
+
+  update(payload: BackendJob): Observable<BackendJob | null> {
+    return this.http.put<BackendJob | null>(`${this.apiBaseUrl}/jobs/update`, payload);
+  }
+
+  delete(jobId: string): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiBaseUrl}/jobs/delete/${jobId}`);
   }
 
   private mapJob(b: BackendJob): Job {
