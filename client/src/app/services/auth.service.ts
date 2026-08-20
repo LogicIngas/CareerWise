@@ -208,6 +208,13 @@ export class AuthService {
     return new Error(err?.error?.message ?? 'Something went wrong. Please try again.');
   }
 
+  refreshUser(partial: Partial<AuthUser>): void {
+    const current = this.userSignal();
+    if (!current) return;
+    const updated = { ...current, ...partial };
+    this.setUser(updated);
+  }
+
   private setUser(user: AuthUser): void {
     this.userSignal.set(user);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(user));

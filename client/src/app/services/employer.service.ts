@@ -29,4 +29,12 @@ export class EmployerService {
   getById(userId: string): Observable<BackendEmployerFull | null> {
     return this.http.get<BackendEmployerFull | null>(`${this.apiBaseUrl}/employers/read/${userId}`);
   }
+
+  update(employer: BackendEmployerFull): Observable<BackendEmployerFull | null> {
+    return this.http.put<BackendEmployerFull | null>(`${this.apiBaseUrl}/employers/update`, employer);
+  }
+
+  delete(userId: string): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiBaseUrl}/employers/delete/${userId}`);
+  }
 }
