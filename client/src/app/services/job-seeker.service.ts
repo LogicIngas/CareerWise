@@ -4,14 +4,14 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface BackendSkill {
-  skillId: string;
+  skillId?: string;
   name: string;
-  category: string;
-  yearsOfExperience: number;
+  category?: string;
+  yearsOfExperience?: number;
 }
 
 export interface BackendEducation {
-  educationId: string;
+  educationId?: string;
   institution: string;
   degree: string;
   fieldOfStudy?: string;
@@ -43,5 +43,10 @@ export class JobSeekerService {
 
   getById(userId: string): Observable<BackendJobSeekerFull | null> {
     return this.http.get<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/read/${userId}`);
+  }
+
+  // NEW: updateProfile
+  updateProfile(payload: Partial<BackendJobSeekerFull>): Observable<BackendJobSeekerFull | null> {
+    return this.http.put<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/profile`, payload);
   }
 }

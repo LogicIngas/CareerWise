@@ -10,6 +10,8 @@ export interface Job {
   postedTime: string;
   type: 'Full-time' | 'Contract' | 'Part-time' | 'Remote';
   isRemote: boolean;
+  isSaved?: boolean;
+  description?: string;
 }
 
 export interface Category {
@@ -19,9 +21,14 @@ export interface Category {
 
 export interface Application {
   id: string;
+  jobId?: string;
   jobTitle: string;
   company: string;
-  status: 'Interview' | 'Under Review' | 'Applied' | 'Rejected';
+  dateApplied?: string;
+  status: 'Interview' | 'Under Review' | 'Applied' | 'Offer' | 'Rejected' | string;
+  location?: string;
+  salaryRange?: string;
+  notes?: string;
 }
 
 export interface EmployerStat {
@@ -37,4 +44,3 @@ export interface EmployerPosting {
   applicantsCount: number;
   status: 'Active' | 'Paused' | 'Closed';
 }
-
