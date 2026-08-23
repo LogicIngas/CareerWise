@@ -5,6 +5,7 @@ import { Job } from '../../models/models';
 import { SavedJobService } from '../../services/saved-job.service';
 import { ApplicationService } from '../../services/application.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-job-card',
@@ -90,11 +91,6 @@ import { AuthService } from '../../services/auth.service';
           {{job.type}}
         </span>
       </div>
-
-      <!-- Quick Toast Feedback -->
-      <div *ngIf="toastMessage()" class="absolute bottom-16 left-1/2 -translate-x-1/2 bg-stone-900/90 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg pointer-events-none transition-all duration-300">
-        {{ toastMessage() }}
-      </div>
     </div>
   `
 })
@@ -105,9 +101,9 @@ export class JobCardComponent {
   private applicationService = inject(ApplicationService);
   private auth = inject(AuthService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   applying = signal(false);
-  toastMessage = signal<string | null>(null);
 
   isSaved = computed(() => {
     return this.savedJobService.isSaved(this.job?.id);
@@ -126,14 +122,14 @@ export class JobCardComponent {
     }
 
     if (user.role !== 'candidate') {
-      this.showToast('Log in as candidate to save jobs');
+      this.toast.info('Log in as a candidate to save jobs.');
       return;
     }
 
     const wasSaved = this.isSaved();
     this.savedJobService.toggleSave(this.job).subscribe(success => {
       if (success) {
-        this.showToast(!wasSaved ? 'Job pinned to Saved Jobs 📌' : 'Job removed from Saved');
+        this.toast.success(!wasSaved ? 'Job saved to your list.' : 'Job removed from your saved list.');
       }
     });
   }
@@ -147,7 +143,7 @@ export class JobCardComponent {
     }
 
     if (user.role !== 'candidate') {
-      this.showToast('Employers cannot apply to jobs');
+      this.toast.info('Employers cannot apply to jobs.');
       return;
     }
 
@@ -156,14 +152,14 @@ export class JobCardComponent {
       next: (app) => {
         this.applying.set(false);
         if (app) {
-          this.showToast('Application submitted successfully! 🎉');
+          this.toast.success('Application submitted successfully.');
         } else {
-          this.showToast('Unable to submit application.');
+          this.toast.error('Unable to submit application.');
         }
       },
       error: () => {
         this.applying.set(false);
-        this.showToast('Failed to apply. Please try again.');
+        this.toast.error('Failed to apply. Please try again.');
       }
     });
   }
@@ -171,12 +167,5 @@ export class JobCardComponent {
   viewApplication(event: MouseEvent) {
     event.stopPropagation();
     this.router.navigate(['/applications']);
-  }
-
-  private showToast(msg: string) {
-    this.toastMessage.set(msg);
-    setTimeout(() => {
-      this.toastMessage.set(null);
-    }, 2500);
   }
 }

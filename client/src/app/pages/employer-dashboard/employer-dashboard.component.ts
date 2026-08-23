@@ -2,9 +2,12 @@
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { EmployerService, BackendEmployerFull } from '../../services/employer.service';
 import { JobService, BackendJob } from '../../services/job.service';
+import { ApplicationService } from '../../services/application.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 import { EmployerStat, EmployerPosting } from '../../models/models';
 
 function mapJobStatus(status: BackendJob['status']): EmployerPosting['status'] {
@@ -148,7 +151,9 @@ function mapJobStatus(status: BackendJob['status']): EmployerPosting['status'] {
           <div *ngFor="let post of postings()" class="p-6 flex justify-between items-center hover:bg-stone-50/50 transition-colors">
             <div class="min-w-0 flex-1">
               <h3 class="font-bold text-stone-900 mb-1">{{post.title}}</h3>
-              <p class="text-sm text-stone-500">{{post.applicantsCount}} applicants</p>
+              <a [routerLink]="['/employer-applicants', post.id]" class="text-sm text-brand-600 hover:text-brand-700 font-medium hover:underline">
+                {{post.applicantsCount}} applicant{{post.applicantsCount === 1 ? '' : 's'}}
+              </a>
             </div>
             <div class="flex items-center gap-2 ml-4">
               <button (click)="startEdit(post.id)" class="p-2 text-stone-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-all" title="Edit">
@@ -182,8 +187,10 @@ function mapJobStatus(status: BackendJob['status']): EmployerPosting['status'] {
 export class EmployerDashboardComponent implements OnInit {
   private employerService = inject(EmployerService);
   private jobService = inject(JobService);
+  private applicationService = inject(ApplicationService);
   private auth = inject(AuthService);
   private fb = inject(FormBuilder);
+  private toast = inject(ToastService);
 
   stats = signal<EmployerStat[]>([]);
   postings = signal<EmployerPosting[]>([]);
@@ -226,21 +233,39 @@ export class EmployerDashboardComponent implements OnInit {
       const jobs = employer?.postedJobs ?? [];
       this.allJobs = jobs;
 
-      this.stats.set([
-        { label: 'Active Jobs', value: jobs.filter(j => j.status === 'OPEN').length, icon: 'briefcase' },
-        { label: 'Total Applicants', value: 0, icon: 'users' },
-        { label: 'Job Views', value: 0, icon: 'eye' },
-        { label: 'New Today', value: 0, icon: 'file' }
-      ]);
-      this.loadingStats.set(false);
+      if (jobs.length === 0) {
+        this.stats.set([
+          { label: 'Active Jobs', value: 0, icon: 'briefcase' },
+          { label: 'Total Applicants', value: 0, icon: 'users' },
+          { label: 'Job Views', value: 0, icon: 'eye' },
+          { label: 'New Today', value: 0, icon: 'file' }
+        ]);
+        this.postings.set([]);
+        this.loadingStats.set(false);
+        this.loadingPostings.set(false);
+        return;
+      }
 
-      this.postings.set(jobs.map(j => ({
-        id: j.jobId!,
-        title: j.title,
-        applicantsCount: 0,
-        status: mapJobStatus(j.status)
-      })));
-      this.loadingPostings.set(false);
+      const applicantRequests = jobs.map(j => this.applicationService.getApplicationsByJob(j.jobId!));
+      forkJoin(applicantRequests).subscribe(applicationsByJob => {
+        const totalApplicants = applicationsByJob.reduce((sum, apps) => sum + apps.length, 0);
+
+        this.stats.set([
+          { label: 'Active Jobs', value: jobs.filter(j => j.status === 'OPEN').length, icon: 'briefcase' },
+          { label: 'Total Applicants', value: totalApplicants, icon: 'users' },
+          { label: 'Job Views', value: 0, icon: 'eye' },
+          { label: 'New Today', value: 0, icon: 'file' }
+        ]);
+        this.loadingStats.set(false);
+
+        this.postings.set(jobs.map((j, i) => ({
+          id: j.jobId!,
+          title: j.title,
+          applicantsCount: applicationsByJob[i].length,
+          status: mapJobStatus(j.status)
+        })));
+        this.loadingPostings.set(false);
+      });
     });
   }
 
@@ -313,8 +338,11 @@ export class EmployerDashboardComponent implements OnInit {
     if (!confirm('Are you sure you want to delete this job posting? This cannot be undone.')) return;
 
     this.jobService.delete(jobId).subscribe({
-      next: () => this.loadData(),
-      error: () => alert('Could not delete the job. Please try again.')
+      next: () => {
+        this.loadData();
+        this.toast.success('Job posting deleted.');
+      },
+      error: () => this.toast.error('Could not delete the job. Please try again.')
     });
   }
 }

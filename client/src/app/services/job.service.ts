@@ -63,6 +63,24 @@ export class JobService {
     );
   }
 
+  findByLocation(location: string): Observable<Job[]> {
+    return this.http.get<BackendJob[]>(`${this.apiBaseUrl}/jobs/findByLocation`, { params: { location } }).pipe(
+      map(jobs => jobs.map(j => this.mapJob(j)))
+    );
+  }
+
+  findByEmploymentType(employmentType: string): Observable<Job[]> {
+    return this.http.get<BackendJob[]>(`${this.apiBaseUrl}/jobs/findByEmploymentType`, { params: { employmentType } }).pipe(
+      map(jobs => jobs.map(j => this.mapJob(j)))
+    );
+  }
+
+  findByRemoteOption(remoteOption: boolean): Observable<Job[]> {
+    return this.http.get<BackendJob[]>(`${this.apiBaseUrl}/jobs/findByRemoteOption`, { params: { remoteOption } }).pipe(
+      map(jobs => jobs.map(j => this.mapJob(j)))
+    );
+  }
+
   getById(id: string): Observable<Job | null> {
     return this.http.get<BackendJob | null>(`${this.apiBaseUrl}/jobs/read/${id}`).pipe(
       map(job => job ? this.mapJob(job) : null)

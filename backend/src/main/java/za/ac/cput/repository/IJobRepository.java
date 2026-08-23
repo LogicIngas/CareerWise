@@ -13,4 +13,7 @@ public interface IJobRepository extends JpaRepository<Job, String> {
     List<Job> findByLocationContainingIgnoreCase(String location);
     List<Job> findByEmploymentType(String employmentType);
     List<Job> findByRemoteOption(Boolean remoteOption);
+    List<Job> findByStatusAndLocationContainingIgnoreCase(JobStatus status, String location);
+    List<Job> findByStatusAndEmploymentType(JobStatus status, String employmentType);
+    List<Job> findByStatusAndRemoteOption(JobStatus status, Boolean remoteOption);
 }

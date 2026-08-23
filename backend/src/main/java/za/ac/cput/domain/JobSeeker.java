@@ -22,6 +22,9 @@ public class JobSeeker extends User {
     private String summary;
     private String resumePath;
 
+    @Builder.Default
+    private int profileViews = 0;
+
     @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Skill> skills = new ArrayList<>();

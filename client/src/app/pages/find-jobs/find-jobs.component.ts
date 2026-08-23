@@ -2,9 +2,26 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { JobCardComponent } from '../../components/job-card/job-card.component';
 import { JobService } from '../../services/job.service';
 import { Job } from '../../models/models';
+
+// Reads figures out of free-text salary strings like "R900,000 - R1,300,000/yr"
+// or "R450/hr", handling both comma-grouped and "k"-shorthand numbers.
+function parseSalaryFigures(salaryRange: string): { low: number; high: number } | null {
+  const isK = /\dk\b/i.test(salaryRange);
+  const rawMatches = salaryRange.match(/\d[\d,]*/g);
+  if (!rawMatches || rawMatches.length === 0) return null;
+
+  const nums = rawMatches.map(raw => {
+    let n = parseInt(raw.replace(/,/g, ''), 10);
+    if (isK) n *= 1000;
+    return n;
+  });
+
+  return { low: Math.min(...nums), high: Math.max(...nums) };
+}
 
 @Component({
   selector: 'app-find-jobs',
@@ -87,7 +104,7 @@ import { Job } from '../../models/models';
                 </div>
               </div>
 
-              <!-- Salary Range Filter -->
+              <!-- Minimum Salary Filter -->
               <div class="pt-4 border-t border-stone-100">
                 <div class="flex items-center justify-between mb-3">
                   <h3 class="text-sm font-bold text-stone-900">Minimum Salary</h3>
@@ -96,12 +113,31 @@ import { Job } from '../../models/models';
                 <div class="space-y-2">
                   <button
                     type="button"
-                    *ngFor="let option of salaryOptions"
+                    *ngFor="let option of minSalaryOptions"
                     (click)="selectedMinSalary.set(option.value)"
                     class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between"
                     [ngClass]="selectedMinSalary() === option.value ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'text-stone-600 hover:bg-stone-50 border border-transparent'">
                     <span>{{ option.label }}</span>
                     <span *ngIf="selectedMinSalary() === option.value" class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Maximum Salary Filter -->
+              <div class="pt-4 border-t border-stone-100">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-sm font-bold text-stone-900">Maximum Salary</h3>
+                  <button *ngIf="selectedMaxSalary() > 0" (click)="selectedMaxSalary.set(0)" class="text-xs font-medium text-brand-600 hover:text-brand-700">Clear</button>
+                </div>
+                <div class="space-y-2">
+                  <button
+                    type="button"
+                    *ngFor="let option of maxSalaryOptions"
+                    (click)="selectedMaxSalary.set(option.value)"
+                    class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between"
+                    [ngClass]="selectedMaxSalary() === option.value ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'text-stone-600 hover:bg-stone-50 border border-transparent'">
+                    <span>{{ option.label }}</span>
+                    <span *ngIf="selectedMaxSalary() === option.value" class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
                   </button>
                 </div>
               </div>
@@ -152,23 +188,36 @@ export class FindJobsComponent implements OnInit {
   isSearching = signal(false);
   selectedTypes = signal<string[]>([]);
   selectedMinSalary = signal<number>(0);
+  selectedMaxSalary = signal<number>(0);
   appliedKeyword = signal('');
   appliedLocation = signal('');
 
-  salaryOptions = [
+  minSalaryOptions = [
     { label: 'All Salaries', value: 0 },
-    { label: '$60,000+ / yr', value: 60000 },
-    { label: '$100,000+ / yr', value: 100000 },
-    { label: '$140,000+ / yr', value: 140000 }
+    { label: 'R400,000+ / yr', value: 400000 },
+    { label: 'R700,000+ / yr', value: 700000 },
+    { label: 'R1,000,000+ / yr', value: 1000000 }
+  ];
+
+  maxSalaryOptions = [
+    { label: 'No maximum', value: 0 },
+    { label: 'Up to R600,000 / yr', value: 600000 },
+    { label: 'Up to R900,000 / yr', value: 900000 },
+    { label: 'Up to R1,200,000 / yr', value: 1200000 }
   ];
 
   hasActiveFilters = computed(() => {
-    return this.selectedTypes().length > 0 || this.selectedMinSalary() > 0 || !!this.appliedKeyword() || !!this.appliedLocation();
+    return this.selectedTypes().length > 0
+      || this.selectedMinSalary() > 0
+      || this.selectedMaxSalary() > 0
+      || !!this.appliedKeyword()
+      || !!this.appliedLocation();
   });
 
   filteredJobs = computed(() => {
     const types = this.selectedTypes();
     const minSalary = this.selectedMinSalary();
+    const maxSalary = this.selectedMaxSalary();
     const keyword = this.appliedKeyword().trim().toLowerCase();
     const location = this.appliedLocation().trim().toLowerCase();
 
@@ -185,13 +234,11 @@ export class FindJobsComponent implements OnInit {
       const matchesLocation = !location || job.location.toLowerCase().includes(location);
 
       let matchesSalary = true;
-      if (minSalary > 0 && job.salaryRange) {
-        // Extract numbers from e.g. "$140k - $180k" or "$70/hr"
-        const match = job.salaryRange.match(/(\d+)/);
-        if (match) {
-          let num = parseInt(match[1], 10);
-          if (job.salaryRange.toLowerCase().includes('k')) num *= 1000;
-          if (num < minSalary) matchesSalary = false;
+      if ((minSalary > 0 || maxSalary > 0) && job.salaryRange) {
+        const range = parseSalaryFigures(job.salaryRange);
+        if (range) {
+          if (minSalary > 0 && range.low < minSalary) matchesSalary = false;
+          if (maxSalary > 0 && range.high > maxSalary) matchesSalary = false;
         }
       }
 
@@ -208,14 +255,17 @@ export class FindJobsComponent implements OnInit {
     this.selectedTypes.update(types =>
       types.includes(type) ? types.filter(t => t !== type) : [...types, type]
     );
+    this.loadBaseJobs();
   }
 
   clearAllFilters() {
     this.selectedTypes.set([]);
     this.selectedMinSalary.set(0);
+    this.selectedMaxSalary.set(0);
     this.appliedKeyword.set('');
     this.appliedLocation.set('');
     this.searchForm.reset({ keyword: '', location: '' });
+    this.loadBaseJobs();
   }
 
   ngOnInit() {
@@ -227,18 +277,41 @@ export class FindJobsComponent implements OnInit {
       this.appliedLocation.set(location);
     }
 
-    this.jobService.getOpenPositions().subscribe(data => {
-      this.jobs.set(data);
-      this.loadingJobs.set(false);
-    });
+    this.loadBaseJobs();
   }
 
   onSearch() {
     this.isSearching.set(true);
-    setTimeout(() => {
+    this.appliedKeyword.set(this.searchForm.value.keyword ?? '');
+    this.appliedLocation.set(this.searchForm.value.location ?? '');
+    this.loadBaseJobs();
+  }
+
+  // Fetches the most relevant server-side result set for the currently
+  // applied search/filter combination, then narrows further with the
+  // in-memory filters in `filteredJobs` (keyword, salary, extra types).
+  private loadBaseJobs() {
+    this.loadingJobs.set(true);
+    this.isSearching.set(true);
+
+    const location = this.appliedLocation().trim();
+    const types = this.selectedTypes();
+
+    let source$: Observable<Job[]>;
+    if (location) {
+      source$ = this.jobService.findByLocation(location);
+    } else if (types.length === 1 && types[0] === 'Remote') {
+      source$ = this.jobService.findByRemoteOption(true);
+    } else if (types.length === 1 && types[0] !== 'Remote') {
+      source$ = this.jobService.findByEmploymentType(types[0]);
+    } else {
+      source$ = this.jobService.getOpenPositions();
+    }
+
+    source$.subscribe(data => {
+      this.jobs.set(data);
+      this.loadingJobs.set(false);
       this.isSearching.set(false);
-      this.appliedKeyword.set(this.searchForm.value.keyword ?? '');
-      this.appliedLocation.set(this.searchForm.value.location ?? '');
-    }, 400);
+    });
   }
 }

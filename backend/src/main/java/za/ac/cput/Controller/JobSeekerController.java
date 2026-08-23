@@ -1,10 +1,16 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import za.ac.cput.Service.IJobSeekerService;
 import za.ac.cput.domain.JobSeeker;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -48,5 +54,34 @@ public class JobSeekerController {
     @GetMapping("/getAll")
     public List<JobSeeker> getAll() {
         return this.service.getAll();
+    }
+
+    @PostMapping(value = "/{userId}/resume", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public JobSeeker uploadResume(@PathVariable String userId, @RequestParam("file") MultipartFile file) throws IOException {
+        return this.service.uploadResume(userId, file);
+    }
+
+    @GetMapping("/{userId}/resume")
+    public ResponseEntity<Resource> downloadResume(@PathVariable String userId) {
+        Resource resource = this.service.loadResume(userId);
+        if (resource == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String filename = resource.getFilename() != null ? resource.getFilename() : "resume";
+        String displayName = filename.startsWith(userId + "_") ? filename.substring(userId.length() + 1) : filename;
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + displayName + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
+
+    @DeleteMapping("/{userId}/resume")
+    public boolean deleteResume(@PathVariable String userId) throws IOException {
+        return this.service.deleteResume(userId);
+    }
+
+    @PostMapping("/{userId}/view")
+    public JobSeeker incrementProfileViews(@PathVariable String userId) {
+        return this.service.incrementProfileViews(userId);
     }
 }

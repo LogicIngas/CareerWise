@@ -29,6 +29,9 @@ export interface Application {
   location?: string;
   salaryRange?: string;
   notes?: string;
+  jobSeekerId?: string;
+  applicantName?: string;
+  applicantEmail?: string;
 }
 
 export interface EmployerStat {

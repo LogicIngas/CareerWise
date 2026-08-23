@@ -30,6 +30,7 @@ export interface BackendJobSeekerFull {
   headline?: string;
   summary?: string;
   resumePath?: string;
+  profileViews?: number;
   skills: BackendSkill[];
   educations: BackendEducation[];
 }
@@ -48,5 +49,23 @@ export class JobSeekerService {
   // NEW: updateProfile
   updateProfile(payload: Partial<BackendJobSeekerFull>): Observable<BackendJobSeekerFull | null> {
     return this.http.put<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/profile`, payload);
+  }
+
+  uploadResume(userId: string, file: File): Observable<BackendJobSeekerFull | null> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/${userId}/resume`, formData);
+  }
+
+  deleteResume(userId: string): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiBaseUrl}/jobseekers/${userId}/resume`);
+  }
+
+  getResumeUrl(userId: string): string {
+    return `${this.apiBaseUrl}/jobseekers/${userId}/resume`;
+  }
+
+  incrementProfileViews(userId: string): Observable<BackendJobSeekerFull | null> {
+    return this.http.post<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/${userId}/view`, {});
   }
 }
