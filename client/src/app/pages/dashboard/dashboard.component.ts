@@ -1,11 +1,12 @@
-﻿import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MockDataService } from '../../services/mock-data.service';
 import { JobService } from '../../services/job.service';
+import { ApplicationService } from '../../services/application.service';
+import { SavedJobService } from '../../services/saved-job.service';
 import { AuthService } from '../../services/auth.service';
 import { JobCardComponent } from '../../components/job-card/job-card.component';
-import { Job, Application } from '../../models/models';
+import { Job } from '../../models/models';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,49 +22,50 @@ import { Job, Application } from '../../models/models';
           </h1>
           <p class="text-stone-500 mt-1">Here's what's happening with your job search</p>
         </div>
-        <button routerLink="/jobs" class="bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm">
+        <a routerLink="/jobs" class="bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           Find Jobs
-        </button>
+        </a>
       </div>
 
-      <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32">
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32 hover:border-stone-200 transition-all">
           <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
           </div>
           <div>
-            <div class="text-3xl font-extrabold text-stone-900">{{stats()?.applications || 0}}</div>
+            <div class="text-3xl font-extrabold text-stone-900">{{ applications().length }}</div>
             <div class="text-sm text-stone-500 font-medium">Applications</div>
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32">
-          <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32 hover:border-stone-200 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
           </div>
           <div>
-            <div class="text-3xl font-extrabold text-stone-900">{{stats()?.saved || 0}}</div>
+            <div class="text-3xl font-extrabold text-stone-900">{{ savedJobs().length }}</div>
             <div class="text-sm text-stone-500 font-medium">Saved Jobs</div>
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32 hover:border-stone-200 transition-all">
           <div class="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center text-brand-600">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
           </div>
           <div>
-            <div class="text-3xl font-extrabold text-stone-900">{{stats()?.views || 0}}</div>
+            <div class="text-3xl font-extrabold text-stone-900">42</div>
             <div class="text-sm text-stone-500 font-medium">Profile Views</div>
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex flex-col justify-between h-32 hover:border-stone-200 transition-all">
           <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center text-pink-600">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
           </div>
           <div>
-            <div class="text-3xl font-extrabold text-stone-900">{{stats()?.interviews || 0}}</div>
+            <div class="text-3xl font-extrabold text-stone-900">{{ interviewCount() }}</div>
             <div class="text-sm text-stone-500 font-medium">Interviews</div>
           </div>
         </div>
@@ -82,36 +84,44 @@ import { Job, Application } from '../../models/models';
             </div>
 
             <div class="space-y-4">
-              <div *ngFor="let app of applications()" class="flex items-center justify-between py-3 border-b border-stone-50 last:border-0 last:pb-0">
+              <div *ngFor="let app of recentApplications()" class="flex items-center justify-between py-3 border-b border-stone-50 last:border-0 last:pb-0">
                 <div>
                   <h3 class="font-bold text-stone-900 text-sm">{{app.jobTitle}}</h3>
-                  <p class="text-stone-500 text-xs">{{app.company}}</p>
+                  <p class="text-stone-500 text-xs">{{app.company}} • {{app.dateApplied}}</p>
                 </div>
                 <span class="px-3 py-1 text-xs font-semibold rounded-md border"
                   [ngClass]="{
-                    'bg-blue-50 text-blue-700 border-blue-100': app.status === 'Interview',
-                    'bg-purple-50 text-purple-700 border-purple-100': app.status === 'Under Review',
+                    'bg-brand-50 text-brand-700 border-brand-200': app.status === 'Interview' || app.status === 'Offer',
+                    'bg-purple-50 text-purple-700 border-purple-200': app.status === 'Under Review',
                     'bg-stone-100 text-stone-700 border-stone-200': app.status === 'Applied',
-                    'bg-red-50 text-red-700 border-red-100': app.status === 'Rejected'
+                    'bg-red-50 text-red-700 border-red-200': app.status === 'Rejected'
                   }">
                   {{app.status}}
                 </span>
               </div>
+
               <div *ngIf="loadingApps()" class="text-center text-sm text-stone-500 py-4 animate-pulse">
                 Loading applications...
               </div>
+
               <div *ngIf="!loadingApps() && applications().length === 0" class="text-center py-8">
-                <p class="text-sm text-stone-500">No applications yet — once you apply, they'll show up here.</p>
+                <p class="text-sm text-stone-500">No applications yet — apply to jobs to track your progress here.</p>
+                <a routerLink="/jobs" class="text-xs font-semibold text-brand-600 hover:underline mt-2 inline-block">Browse open positions</a>
               </div>
             </div>
           </div>
 
           <!-- Recommended for you -->
           <div>
-            <h2 class="text-lg font-bold text-stone-900 mb-6">Recommended for you</h2>
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-bold text-stone-900">Recommended for you</h2>
+              <a routerLink="/jobs" class="text-sm font-medium text-brand-600 hover:text-brand-700">Explore all</a>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <app-job-card *ngFor="let job of recommendedJobs()" [job]="job"></app-job-card>
             </div>
+
             <div *ngIf="loadingJobs()" class="text-center text-sm text-stone-500 py-8 animate-pulse">
               Loading recommended jobs...
             </div>
@@ -125,21 +135,46 @@ import { Job, Application } from '../../models/models';
             <h2 class="text-lg font-bold text-stone-900 mb-6">Profile strength</h2>
             
             <div class="flex items-end gap-2 mb-4">
-              <span class="text-3xl font-extrabold text-brand-600 leading-none">82%</span>
+              <span class="text-3xl font-extrabold text-brand-600 leading-none">85%</span>
               <span class="text-stone-500 text-sm font-medium pb-1">complete</span>
             </div>
 
-            <div class="w-full bg-brand-50 rounded-full h-2.5 mb-6">
-              <div class="bg-brand-600 h-2.5 rounded-full" style="width: 82%"></div>
+            <div class="w-full bg-brand-50 rounded-full h-2.5 mb-6 overflow-hidden">
+              <div class="bg-brand-600 h-2.5 rounded-full" style="width: 85%"></div>
             </div>
 
             <p class="text-sm text-stone-600 mb-6">
-              Add a portfolio link to boost your visibility.
+              Keep your profile up-to-date to improve recruiter match accuracy.
             </p>
 
-            <button routerLink="/profile" class="w-full py-2.5 px-4 border border-stone-200 rounded-xl text-sm font-semibold text-stone-700 hover:bg-stone-50 active:scale-[0.98] transition-all">
-              Complete profile
-            </button>
+            <a routerLink="/profile" class="block text-center w-full py-2.5 px-4 border border-stone-200 rounded-xl text-sm font-semibold text-stone-700 hover:bg-stone-50 active:scale-[0.98] transition-all">
+              Update profile
+            </a>
+          </div>
+
+          <!-- Quick Navigation -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+            <h3 class="text-sm font-bold text-stone-900 mb-4">Quick Links</h3>
+            <div class="space-y-2">
+              <a routerLink="/saved-jobs" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-stone-50 text-stone-700 text-sm font-medium transition-all group">
+                <span class="flex items-center gap-2.5">
+                  <svg class="text-amber-500" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                  Saved Jobs
+                </span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 group-hover:bg-brand-50 group-hover:text-brand-700">
+                  {{ savedJobs().length }}
+                </span>
+              </a>
+              <a routerLink="/applications" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-stone-50 text-stone-700 text-sm font-medium transition-all group">
+                <span class="flex items-center gap-2.5">
+                  <svg class="text-blue-500" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg>
+                  My Applications
+                </span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 group-hover:bg-brand-50 group-hover:text-brand-700">
+                  {{ applications().length }}
+                </span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -147,33 +182,37 @@ import { Job, Application } from '../../models/models';
   `
 })
 export class DashboardComponent implements OnInit {
-  private dataService = inject(MockDataService);
   private jobService = inject(JobService);
+  private applicationService = inject(ApplicationService);
+  private savedJobService = inject(SavedJobService);
   private auth = inject(AuthService);
 
-  stats = signal<any>(null);
-  applications = signal<Application[]>([]);
-  recommendedJobs = signal<Job[]>([]);
+  applications = this.applicationService.applications;
+  savedJobs = this.savedJobService.savedJobs;
+  loadingApps = this.applicationService.loading;
 
-  loadingStats = signal(true);
-  loadingApps = signal(true);
+  recommendedJobs = signal<Job[]>([]);
   loadingJobs = signal(true);
 
   firstName = () => this.auth.currentUser()?.name?.split(' ')[0] ?? 'there';
 
-  ngOnInit() {
-    this.dataService.getDashboardStats().subscribe(data => {
-      this.stats.set(data);
-      this.loadingStats.set(false);
-    });
+  recentApplications = computed(() => {
+    return this.applications().slice(0, 4);
+  });
 
-    this.dataService.getRecentApplications().subscribe(data => {
-      this.applications.set(data);
-      this.loadingApps.set(false);
-    });
+  interviewCount = computed(() => {
+    return this.applications().filter(a => a.status.toLowerCase() === 'interview').length;
+  });
+
+  ngOnInit() {
+    const user = this.auth.currentUser();
+    if (user) {
+      this.applicationService.getApplicationsByJobSeeker(user.userId).subscribe();
+      this.savedJobService.loadSavedJobs(user.userId).subscribe();
+    }
 
     this.jobService.getOpenPositions().subscribe(data => {
-      this.recommendedJobs.set(data.slice(0, 2)); // Just take 2 for dashboard
+      this.recommendedJobs.set(data.slice(0, 2));
       this.loadingJobs.set(false);
     });
   }

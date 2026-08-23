@@ -1,8 +1,6 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.IJobSeekerService;
 import za.ac.cput.domain.JobSeeker;
@@ -33,7 +31,13 @@ public class JobSeekerController {
 
     @PutMapping("/update")
     public JobSeeker update(@RequestBody JobSeeker jobSeeker) {
-        return this.service.update(jobSeeker);
+        return this.service.updateProfile(jobSeeker);
+    }
+
+    // NEW: PUT /api/jobseekers/profile
+    @PutMapping("/profile")
+    public JobSeeker updateProfile(@RequestBody JobSeeker jobSeeker) {
+        return this.service.updateProfile(jobSeeker);
     }
 
     @DeleteMapping("/delete/{userId}")

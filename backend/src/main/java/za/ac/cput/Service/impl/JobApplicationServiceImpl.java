@@ -1,0 +1,109 @@
+package za.ac.cput.Service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import za.ac.cput.Service.IJobApplicationService;
+import za.ac.cput.domain.Job;
+import za.ac.cput.domain.JobApplication;
+import za.ac.cput.domain.JobSeeker;
+import za.ac.cput.factory.JobApplicationFactory;
+import za.ac.cput.repository.IJobApplicationRepository;
+import za.ac.cput.repository.IJobRepository;
+import za.ac.cput.repository.IJobSeekerRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class JobApplicationServiceImpl implements IJobApplicationService {
+
+    private final IJobApplicationRepository applicationRepository;
+    private final IJobSeekerRepository jobSeekerRepository;
+    private final IJobRepository jobRepository;
+
+    @Autowired
+    public JobApplicationServiceImpl(IJobApplicationRepository applicationRepository,
+            IJobSeekerRepository jobSeekerRepository,
+            IJobRepository jobRepository) {
+        this.applicationRepository = applicationRepository;
+        this.jobSeekerRepository = jobSeekerRepository;
+        this.jobRepository = jobRepository;
+    }
+
+    @Override
+    public JobApplication create(JobApplication jobApplication) {
+        if (jobApplication == null)
+            return null;
+        return applicationRepository.save(jobApplication);
+    }
+
+    @Override
+    public JobApplication read(String id) {
+        return applicationRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public JobApplication update(JobApplication jobApplication) {
+        if (jobApplication != null && jobApplication.getApplicationId() != null
+                && applicationRepository.existsById(jobApplication.getApplicationId())) {
+            return applicationRepository.save(jobApplication);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean delete(String id) {
+        if (applicationRepository.existsById(id)) {
+            applicationRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<JobApplication> getAll() {
+        return applicationRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public JobApplication apply(String jobSeekerId, String jobId, String notes) {
+        Optional<JobApplication> existing = applicationRepository.findByJobSeekerUserIdAndJobJobId(jobSeekerId, jobId);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        Optional<JobSeeker> jobSeekerOpt = jobSeekerRepository.findByUserId(jobSeekerId);
+        Optional<Job> jobOpt = jobRepository.findById(jobId);
+
+        if (jobSeekerOpt.isPresent() && jobOpt.isPresent()) {
+            JobApplication app = JobApplicationFactory.buildJobApplication(jobSeekerOpt.get(), jobOpt.get(), notes);
+            return applicationRepository.save(app);
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<JobApplication> getApplicationsByJobSeeker(String jobSeekerId) {
+        return applicationRepository.findByJobSeekerUserId(jobSeekerId);
+    }
+
+    @Override
+    public List<JobApplication> getApplicationsByJob(String jobId) {
+        return applicationRepository.findByJobJobId(jobId);
+    }
+
+    @Override
+    @Transactional
+    public JobApplication updateStatus(String applicationId, String status) {
+        Optional<JobApplication> opt = applicationRepository.findById(applicationId);
+        if (opt.isPresent()) {
+            JobApplication app = opt.get();
+            app.setStatus(status);
+            return applicationRepository.save(app);
+        }
+        return null;
+    }
+}
