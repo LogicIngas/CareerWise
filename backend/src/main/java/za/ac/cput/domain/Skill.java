@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "skills")
+@Table(name = "skill")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,7 +34,7 @@ public class Skill {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_seeker_id", nullable = true)
-    @JsonIgnoreProperties({"skills", "educations", "experiences", "password", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({ "skills", "educations", "experiences", "password", "hibernateLazyInitializer", "handler" })
     private JobSeeker jobSeeker;
 
     @PrePersist

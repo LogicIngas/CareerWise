@@ -8,19 +8,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "job_seekers")
+// @Table(name = "job_seekers")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true, exclude = {"skills", "experiences", "educations"})
-@ToString(callSuper = true, exclude = {"skills", "experiences", "educations"})
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@EqualsAndHashCode(callSuper = true, exclude = { "skills", "experiences", "educations", "resume" })
+@ToString(callSuper = true, exclude = { "skills", "experiences", "educations", "resume" })
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class JobSeeker extends User {
 
     private String headline;
     private String summary;
-    private String resumePath;
+
+    @OneToOne(mappedBy = "jobSeeker", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({ "jobSeeker", "hibernateLazyInitializer", "handler" })
+    private Resume resume;
 
     @Builder.Default
     private int profileViews = 0;

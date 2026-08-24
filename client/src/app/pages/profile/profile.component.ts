@@ -4,11 +4,12 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { JobSeekerService, BackendSkill, BackendEducation } from '../../services/job-seeker.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, SanitizeUrlPipe],
   template: `
     <div class="p-8 max-w-5xl mx-auto pb-20">
       <!-- Header -->
@@ -147,11 +148,28 @@ import { ToastService } from '../../services/toast.service';
                 <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
                 </div>
-                <a [href]="resumeUrl()" target="_blank" rel="noopener" class="text-sm font-semibold text-stone-800 hover:text-brand-600 truncate transition-colors">{{ resumeFileName() }}</a>
+                <span class="text-sm font-semibold text-stone-800 truncate">{{ resumeFileName() }}</span>
               </div>
-              <button type="button" (click)="removeResume()" [disabled]="isDeletingResume" class="flex-shrink-0 text-xs font-semibold text-stone-500 hover:text-red-600 transition-colors disabled:opacity-50">
-                Remove
-              </button>
+              <div class="flex items-center gap-3 flex-shrink-0">
+                <button type="button" (click)="showResumePreview.set(!showResumePreview())" class="text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  {{ showResumePreview() ? 'Hide Preview' : 'View CV' }}
+                </button>
+                <button type="button" (click)="removeResume()" [disabled]="isDeletingResume" class="text-xs font-semibold text-stone-500 hover:text-red-600 transition-colors disabled:opacity-50">
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            <!-- Inline CV Preview -->
+            <div *ngIf="showResumePreview() && resumeUrl()" class="mb-4 rounded-xl overflow-hidden border border-stone-200">
+              <iframe
+                [src]="resumeUrl() | sanitizeUrl"
+                width="100%"
+                height="600"
+                class="block"
+                title="Resume Preview">
+              </iframe>
             </div>
 
             <label class="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-dashed border-stone-200 hover:border-brand-400 rounded-xl cursor-pointer transition-colors text-sm font-semibold text-stone-600 hover:text-brand-700">
@@ -245,15 +263,13 @@ export class ProfileComponent implements OnInit {
   isSaving = false;
   justSaved = signal(false);
 
-  resumePath = signal<string | null>(null);
+  resume = signal<{fileName: string; storedName: string} | null>(null);
   isUploadingResume = false;
   isDeletingResume = false;
+  showResumePreview = signal(false);
 
   resumeFileName = () => {
-    const path = this.resumePath();
-    if (!path) return null;
-    const userId = this.auth.currentUser()?.userId ?? '';
-    return path.startsWith(`${userId}_`) ? path.slice(userId.length + 1) : path;
+    return this.resume()?.fileName || null;
   };
 
   resumeUrl = () => {
@@ -309,7 +325,7 @@ export class ProfileComponent implements OnInit {
 
       this.skillsList.set(jobSeeker?.skills ?? []);
       this.educationsList.set(jobSeeker?.educations ?? []);
-      this.resumePath.set(jobSeeker?.resumePath ?? null);
+      this.resume.set(jobSeeker?.resume ?? null);
 
       this.profile.set(data);
       this.profileForm.patchValue(data);
@@ -358,6 +374,25 @@ export class ProfileComponent implements OnInit {
     const file = input.files?.[0];
     if (!file) return;
 
+    // Client-side validation
+    const allowedTypes = ['application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const allowedExts = ['.pdf', '.doc', '.docx'];
+    const fileName = file.name.toLowerCase();
+    const hasValidExt = allowedExts.some(ext => fileName.endsWith(ext));
+    if (!hasValidExt || (!allowedTypes.includes(file.type) && file.type !== '')) {
+      this.toast.error('Only PDF, DOC, or DOCX files are allowed.');
+      input.value = '';
+      return;
+    }
+    const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+    if (file.size > MAX_SIZE) {
+      this.toast.error('File is too large. Maximum allowed size is 5 MB.');
+      input.value = '';
+      return;
+    }
+
     const userId = this.auth.currentUser()?.userId;
     if (!userId) return;
 
@@ -367,7 +402,7 @@ export class ProfileComponent implements OnInit {
         this.isUploadingResume = false;
         input.value = '';
         if (res) {
-          this.resumePath.set(res.resumePath ?? null);
+          this.resume.set(res.resume ?? null);
           this.toast.success('Resume uploaded successfully.');
         } else {
           this.toast.error('Could not upload resume. Please try again.');
@@ -389,7 +424,7 @@ export class ProfileComponent implements OnInit {
     this.jobSeekerService.deleteResume(userId).subscribe({
       next: () => {
         this.isDeletingResume = false;
-        this.resumePath.set(null);
+        this.resume.set(null);
         this.toast.success('Resume removed.');
       },
       error: () => {

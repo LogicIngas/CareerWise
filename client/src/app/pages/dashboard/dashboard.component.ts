@@ -14,7 +14,7 @@ const PROFILE_STRENGTH_CHECKS: Array<(js: BackendJobSeekerFull) => boolean> = [
   js => !!js.summary,
   js => !!js.phoneNumber,
   js => !!js.location,
-  js => !!js.resumePath,
+  js => !!js.resume,
   js => (js.skills?.length ?? 0) > 0,
   js => (js.educations?.length ?? 0) > 0
 ];

@@ -28,33 +28,33 @@ function parseSalaryFigures(salaryRange: string): { low: number; high: number } 
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, JobCardComponent],
   template: `
-    <div class="bg-stone-50/50 min-h-screen pb-20">
-      <!-- Header Section -->
-      <div class="bg-brand-50/30 pt-12 pb-16 px-6 md:px-12 border-b border-stone-100">
-        <div class="max-w-7xl mx-auto">
-          <h1 class="text-3xl md:text-4xl font-extrabold text-stone-900 mb-2">Find your next role</h1>
-          <p class="text-stone-500 mb-8">Showing {{filteredJobs().length}} of {{jobs().length}} available opportunities</p>
-
-          <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="bg-white p-2 rounded-2xl shadow-sm border border-stone-200 flex flex-col md:flex-row gap-2">
-            <div class="flex-1 flex items-center gap-3 px-4 py-3 md:py-2 border-b md:border-b-0 md:border-r border-stone-100">
-              <svg class="text-stone-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-              <input formControlName="keyword" type="text" placeholder="Job title or company" class="w-full outline-none text-stone-900 placeholder-stone-400">
-            </div>
-            <div class="flex-1 flex items-center gap-3 px-4 py-3 md:py-2">
-              <svg class="text-stone-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-              <input formControlName="location" type="text" placeholder="Location" class="w-full outline-none text-stone-900 placeholder-stone-400">
-            </div>
-            <button type="submit" class="bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white font-medium py-3 px-10 rounded-xl transition-all m-1 md:m-0 shadow-sm">
-              Search
-            </button>
-          </form>
-          <div *ngIf="isSearching()" class="text-sm text-brand-600 mt-4 animate-pulse">Searching for jobs...</div>
+    <div class="p-8 max-w-6xl mx-auto pb-16">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-stone-900">Find your next role</h1>
+          <p class="text-stone-500 mt-1">Showing {{filteredJobs().length}} of {{jobs().length}} available opportunities</p>
         </div>
       </div>
 
-      <!-- Content Section with 280px Left Sidebar -->
-      <div class="max-w-7xl mx-auto px-6 md:px-12 py-10">
-        <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Search Bar -->
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="bg-white p-2 rounded-2xl shadow-sm border border-stone-200 flex flex-col md:flex-row gap-2 mb-8">
+        <div class="flex-1 flex items-center gap-3 px-4 py-3 md:py-2 border-b md:border-b-0 md:border-r border-stone-100">
+          <svg class="text-stone-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input formControlName="keyword" type="text" placeholder="Job title or company" class="w-full outline-none text-stone-900 placeholder-stone-400">
+        </div>
+        <div class="flex-1 flex items-center gap-3 px-4 py-3 md:py-2">
+          <svg class="text-stone-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <input formControlName="location" type="text" placeholder="Location" class="w-full outline-none text-stone-900 placeholder-stone-400">
+        </div>
+        <button type="submit" class="bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white font-medium py-3 px-10 rounded-xl transition-all m-1 md:m-0 shadow-sm">
+          Search
+        </button>
+      </form>
+      <div *ngIf="isSearching()" class="text-sm text-brand-600 -mt-6 mb-6 animate-pulse">Searching for jobs...</div>
+
+      <!-- Content: Filter Sidebar + Jobs Grid -->
+      <div class="flex flex-col lg:flex-row gap-8">
           
           <!-- Left Sidebar (width: 280px) -->
           <aside class="w-full lg:w-[280px] flex-shrink-0">
@@ -174,7 +174,6 @@ function parseSalaryFigures(salaryRange: string): { low: number; high: number } 
           </div>
 
         </div>
-      </div>
     </div>
   `
 })

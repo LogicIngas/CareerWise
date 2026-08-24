@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * ManyToOne relationship with JobSeeker
  */
 @Entity
-@Table(name = "experiences")
+// @Table(name = "experiences")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

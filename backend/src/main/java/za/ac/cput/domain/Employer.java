@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "employers")
+@Table(name = "employer")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder  // Use @SuperBuilder
+@SuperBuilder // Use @SuperBuilder
 @EqualsAndHashCode(callSuper = true, exclude = "postedJobs")
 @ToString(callSuper = true, exclude = "postedJobs")
 public class Employer extends User {

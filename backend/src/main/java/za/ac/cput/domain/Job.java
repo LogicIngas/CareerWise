@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "jobs")
+// @Table(name = "jobs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = {"requirements", "responsibilities", "employer"})
-@ToString(exclude = {"requirements", "responsibilities", "employer"})
+@EqualsAndHashCode(exclude = { "requirements", "responsibilities", "employer" })
+@ToString(exclude = { "requirements", "responsibilities", "employer" })
 public class Job {
 
     @Id
@@ -55,20 +55,22 @@ public class Job {
     @Column(name = "deadline_date")
     private LocalDate deadlineDate;
 
-
-    // Job <-> Employer is a bidirectional relationship, so serializing a Job walks into
-    // Employer.postedJobs and back into Job, looping forever (StackOverflowError). The lazy
-    // proxy also breaks Jackson with its extra Hibernate fields. How i fixed it: ignore those fields on
+    // Job <-> Employer is a bidirectional relationship, so serializing a Job walks
+    // into
+    // Employer.postedJobs and back into Job, looping forever (StackOverflowError).
+    // The lazy
+    // proxy also breaks Jackson with its extra Hibernate fields. How i fixed it:
+    // ignore those fields on
     // Job.employer only, so Employer's own JSON output is unaffected.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id", nullable = false)
-    @JsonIgnoreProperties({"postedJobs", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({ "postedJobs", "hibernateLazyInitializer", "handler" })
     private Employer employer;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private JobStatus status = JobStatus.OPEN; //cane be OPEN, CLOSED, FILLED, ARCHIVED
+    private JobStatus status = JobStatus.OPEN; // cane be OPEN, CLOSED, FILLED, ARCHIVED
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -76,19 +78,18 @@ public class Job {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    //    Runs: Before an entity is saved for the first time (INSERT)
-    //    Purpose: Set initial values like createdAt and updatedAt
+    // Runs: Before an entity is saved for the first time (INSERT)
+    // Purpose: Set initial values like createdAt and updatedAt
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    //    Runs: Before an entity is updated (UPDATE)
-    //    Purpose: Update timestamp fields like updatedAt
+    // Runs: Before an entity is updated (UPDATE)
+    // Purpose: Update timestamp fields like updatedAt
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }
-

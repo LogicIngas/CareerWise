@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "educations")
+// @Table(name = "educations")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,7 +38,7 @@ public class Education {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_seeker_id")
-    @JsonIgnoreProperties({"skills", "educations", "experiences", "password", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({ "skills", "educations", "experiences", "password", "hibernateLazyInitializer", "handler" })
     private JobSeeker jobSeeker;
 
     @PrePersist

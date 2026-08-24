@@ -1,8 +1,6 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.ISkillService;
 import za.ac.cput.domain.Skill;
@@ -22,12 +20,12 @@ public class SkillController {
 
     @PostMapping("/create")
     public Skill create(@RequestBody Skill skill) {
-       return this.service.create(skill);
+        return this.service.create(skill);
     }
 
     @GetMapping("/read/{skillId}")
     public Skill read(@PathVariable String skillId) {
-      return this.service.read(skillId);
+        return this.service.read(skillId);
     }
 
     @PutMapping("/update")
@@ -37,7 +35,7 @@ public class SkillController {
 
     @DeleteMapping("/delete/{skillId}")
     public Boolean delete(@PathVariable String skillId) {
-       return this.delete(skillId);
+        return this.delete(skillId);
     }
 
     @GetMapping("/getAll")

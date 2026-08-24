@@ -55,7 +55,8 @@ interface BackendUser {
 interface BackendJobSeeker extends BackendUser {
   headline?: string;
   summary?: string;
-  resumePath?: string;
+  resume?: any;
+  skills?: any[];
 }
 
 interface BackendEmployer extends BackendUser {

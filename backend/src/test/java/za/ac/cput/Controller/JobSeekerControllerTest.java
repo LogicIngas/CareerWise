@@ -45,8 +45,7 @@ class JobSeekerControllerTest {
                 "0712345678",
                 "Cape Town",
                 "Java Software Engineer",
-                "Passionate backend developer with 5 years of experience",
-                "inga_resume.pdf"
+                "Passionate backend developer with 5 years of experience"
         );
 
         assertNotNull(testJobSeeker);
@@ -88,7 +87,6 @@ class JobSeekerControllerTest {
         updatedJobSeeker.setLastName("Mbobo Updated");
         updatedJobSeeker.setHeadline("Senior Java Software Engineer");
         updatedJobSeeker.setSummary("Updated: Senior backend developer with 7 years of experience");
-        updatedJobSeeker.setResumePath("inga_resume_updated.pdf");
         updatedJobSeeker.setProfilePicture(testJobSeeker.getProfilePicture());
         updatedJobSeeker.setPhoneNumber(testJobSeeker.getPhoneNumber());
         updatedJobSeeker.setLocation(testJobSeeker.getLocation());

@@ -1,7 +1,6 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.IJobService;
 import za.ac.cput.domain.Job;
@@ -22,7 +21,7 @@ public class JobController {
 
     @PostMapping("/create")
     public Job create(@RequestBody Job job) {
-         return this.jobService.create(job);
+        return this.jobService.create(job);
     }
 
     @GetMapping("/read/{id}")
@@ -47,7 +46,7 @@ public class JobController {
 
     @GetMapping("/findOpenPositions")
     public List<Job> findOpenPositions() {
-       return this.jobService.findOpenPositions();
+        return this.jobService.findOpenPositions();
     }
 
     @GetMapping("/findByLocation")
@@ -61,7 +60,7 @@ public class JobController {
     }
 
     @GetMapping("/findByRemoteOption")
-    public List<Job>findJobsByRemoteOption(@RequestParam boolean remoteOption) {
+    public List<Job> findJobsByRemoteOption(@RequestParam boolean remoteOption) {
         return this.jobService.findJobsByRemoteOption(remoteOption);
     }
 }

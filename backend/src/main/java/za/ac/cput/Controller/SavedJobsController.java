@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping({"/api/saved-jobs", "/api/savedjobs"})
+@RequestMapping({ "/api/saved-jobs", "/api/savedjobs" })
 @CrossOrigin(origins = "*")
 public class SavedJobsController {
 
@@ -22,10 +22,11 @@ public class SavedJobsController {
 
     @PostMapping("/save")
     public SavedJobs saveJob(@RequestBody(required = false) Map<String, String> body,
-                             @RequestParam(required = false) String jobSeekerId,
-                             @RequestParam(required = false) String jobId) {
+            @RequestParam(required = false) String jobSeekerId,
+            @RequestParam(required = false) String jobId) {
         String jsId = (body != null && body.containsKey("jobSeekerId")) ? body.get("jobSeekerId") : jobSeekerId;
-        String jId = (body != null && body.containsKey("jobId")) ? body.get("jobId") : jobId;
+        String jId = (body != null && body.containsKey("jobId")) ? body.get("jobId")
+                : jobId;
 
         if (jsId == null || jId == null) {
             return null;
@@ -36,10 +37,11 @@ public class SavedJobsController {
 
     @DeleteMapping("/unsave")
     public boolean unsaveJob(@RequestBody(required = false) Map<String, String> body,
-                             @RequestParam(required = false) String jobSeekerId,
-                             @RequestParam(required = false) String jobId) {
+            @RequestParam(required = false) String jobSeekerId,
+            @RequestParam(required = false) String jobId) {
         String jsId = (body != null && body.containsKey("jobSeekerId")) ? body.get("jobSeekerId") : jobSeekerId;
-        String jId = (body != null && body.containsKey("jobId")) ? body.get("jobId") : jobId;
+        String jId = (body != null && body.containsKey("jobId")) ? body.get("jobId")
+                : jobId;
 
         if (jsId == null || jId == null) {
             return false;

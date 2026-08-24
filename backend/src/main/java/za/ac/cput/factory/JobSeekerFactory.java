@@ -45,8 +45,7 @@ public class JobSeekerFactory {
                                             String firstName, String lastName,
                                             String profilePicture, String phoneNumber,
                                             String location,
-                                            String headline, String summary,
-                                            String resumePath) {
+                                            String headline, String summary) {
         if (Helper.isNullOrEmpty(email) ||
                 !Helper.isValidEmail(email) ||
                 Helper.isNullOrEmpty(password) ||
@@ -67,7 +66,6 @@ public class JobSeekerFactory {
                 .location(location)
                 .headline(headline)
                 .summary(summary)
-                .resumePath(resumePath)
                 .skills(new ArrayList<>())
                 .experiences(new ArrayList<>())
                 .educations(new ArrayList<>())

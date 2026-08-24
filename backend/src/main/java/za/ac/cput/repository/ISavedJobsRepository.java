@@ -11,7 +11,10 @@ import java.util.Optional;
 @Repository
 public interface ISavedJobsRepository extends JpaRepository<SavedJobs, String> {
     List<SavedJobs> findByJobSeekerUserId(String jobSeekerId);
-    Optional<SavedJobs> findByJobSeekerUserIdAndJobJobId(String jobSeekerId, String jobId);
+
+    Optional<SavedJobs> findByJobSeekerUserIdAndJobJobId(String jobSeekerId,
+            String jobId);
+
     boolean existsByJobSeekerUserIdAndJobJobId(String jobSeekerId, String jobId);
 
     @Transactional

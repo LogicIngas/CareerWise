@@ -17,9 +17,8 @@ class JobSeekerFactoryTest {
                 "profile.jpg",
                 "0123456789",
                 "Cape Town",
-                "Java Developer",
-                "Backend enthusiast",
-                "resume.pdf"
+                "Java Software Engineer",
+                "Passionate backend developer with 5 years of experience"
         );
 
         assertNotNull(jobSeeker);
@@ -36,9 +35,8 @@ class JobSeekerFactoryTest {
                 null,
                 null,
                 null,
-                "Developer",
-                "Summary",
-                null
+                "Java Software Engineer",
+                "Passionate backend developer with 5 years of experience"
         );
 
         assertNull(jobSeeker); //is null? yes so pass the test
