@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JobSeekerService, BackendSkill, BackendEducation } from '../../services/job-seeker.service';
+import { JobSeekerService, BackendSkill, BackendEducation, BackendExperience } from '../../services/job-seeker.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
@@ -209,15 +209,23 @@ import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
                   <input type="text" [(ngModel)]="newEdu.institution" placeholder="e.g. Stanford University" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
                 </div>
               </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1">Field of Study</label>
+                <input type="text" [(ngModel)]="newEdu.fieldOfStudy" placeholder="e.g. Software Engineering" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
+              </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-xs font-semibold text-stone-700 mb-1">Field of Study</label>
-                  <input type="text" [(ngModel)]="newEdu.fieldOfStudy" placeholder="e.g. Software Engineering" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
+                  <label class="block text-xs font-semibold text-stone-700 mb-1">Start Date</label>
+                  <input type="date" [(ngModel)]="newEdu.startDate" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-stone-700 mb-1">Year / Dates</label>
-                  <input type="text" [(ngModel)]="newEdu.description" placeholder="e.g. 2018 – 2022" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
+                  <label class="block text-xs font-semibold text-stone-700 mb-1">End Date</label>
+                  <input type="date" [(ngModel)]="newEdu.endDate" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
                 </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1">Description</label>
+                <textarea rows="2" [(ngModel)]="newEdu.description" placeholder="Notable coursework, achievements, activities..." class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm resize-y"></textarea>
               </div>
               <div class="flex justify-end gap-2 pt-2">
                 <button type="button" (click)="showAddEduForm.set(false)" class="px-4 py-1.5 text-xs font-semibold text-stone-600 hover:bg-stone-200 rounded-lg">Cancel</button>
@@ -231,13 +239,84 @@ import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
                 <div>
                   <h3 class="font-bold text-stone-900 text-sm">{{edu.degree}} <span *ngIf="edu.fieldOfStudy" class="font-normal text-stone-600">in {{edu.fieldOfStudy}}</span></h3>
                   <p class="text-xs text-stone-600 mt-0.5">{{edu.institution}}</p>
-                  <p class="text-xs text-stone-400 mt-1" *ngIf="edu.description || edu.startDate">{{edu.description || edu.startDate}}</p>
+                  <p class="text-xs text-stone-400 mt-1" *ngIf="edu.startDate || edu.endDate">{{edu.startDate}}{{edu.startDate && edu.endDate ? ' – ' : ''}}{{edu.endDate}}</p>
+                  <p class="text-xs text-stone-500 mt-1" *ngIf="edu.description">{{edu.description}}</p>
                 </div>
                 <button type="button" (click)="removeEducation(i)" class="text-stone-400 hover:text-red-600 p-1 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
               </div>
               <p *ngIf="educationsList().length === 0" class="text-sm text-stone-400">No education entries added yet.</p>
+            </div>
+          </div>
+
+          <!-- Work Experience Section (Add / Remove) -->
+          <div class="bg-white rounded-2xl shadow-sm border border-stone-100 p-8">
+            <div class="flex justify-between items-center mb-6">
+              <div>
+                <h2 class="text-lg font-bold text-stone-900">Work Experience</h2>
+                <p class="text-xs text-stone-500 mt-0.5">Your professional work history</p>
+              </div>
+              <button
+                type="button"
+                (click)="showAddExpForm.set(!showAddExpForm())"
+                class="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                Add Experience
+              </button>
+            </div>
+
+            <!-- New Experience Form -->
+            <div *ngIf="showAddExpForm()" class="bg-stone-50 p-5 rounded-xl border border-stone-200 mb-6 space-y-4">
+              <h3 class="text-sm font-bold text-stone-800">New Experience Entry</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1">Job Title *</label>
+                  <input type="text" [(ngModel)]="newExp.jobTitle" placeholder="e.g. Senior Software Engineer" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1">Company *</label>
+                  <input type="text" [(ngModel)]="newExp.company" placeholder="e.g. Nimbus Labs" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1">Location</label>
+                <input type="text" [(ngModel)]="newExp.location" placeholder="e.g. Cape Town, South Africa" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1">Start Date</label>
+                  <input type="date" [(ngModel)]="newExp.startDate" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-stone-700 mb-1">End Date</label>
+                  <input type="date" [(ngModel)]="newExp.endDate" class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1">Description</label>
+                <textarea rows="2" [(ngModel)]="newExp.description" placeholder="Key responsibilities and achievements..." class="w-full px-3 py-2 bg-white rounded-lg border border-stone-200 text-sm resize-y"></textarea>
+              </div>
+              <div class="flex justify-end gap-2 pt-2">
+                <button type="button" (click)="showAddExpForm.set(false)" class="px-4 py-1.5 text-xs font-semibold text-stone-600 hover:bg-stone-200 rounded-lg">Cancel</button>
+                <button type="button" (click)="addExperience()" class="px-4 py-1.5 text-xs font-semibold bg-brand-600 text-white rounded-lg hover:bg-brand-700">Add Entry</button>
+              </div>
+            </div>
+
+            <!-- Experience List -->
+            <div class="space-y-4">
+              <div *ngFor="let exp of experiencesList(); let i = index" class="p-4 rounded-xl border border-stone-100 hover:border-stone-200 bg-stone-50/40 flex justify-between items-start transition-all">
+                <div>
+                  <h3 class="font-bold text-stone-900 text-sm">{{exp.jobTitle}}</h3>
+                  <p class="text-xs text-stone-600 mt-0.5">{{exp.company}}<span *ngIf="exp.location"> • {{exp.location}}</span></p>
+                  <p class="text-xs text-stone-400 mt-1" *ngIf="exp.startDate || exp.endDate">{{exp.startDate}}{{exp.startDate && exp.endDate ? ' – ' : ''}}{{exp.endDate}}</p>
+                  <p class="text-xs text-stone-500 mt-1" *ngIf="exp.description">{{exp.description}}</p>
+                </div>
+                <button type="button" (click)="removeExperience(i)" class="text-stone-400 hover:text-red-600 p-1 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+              <p *ngIf="experiencesList().length === 0" class="text-sm text-stone-400">No work experience added yet.</p>
             </div>
           </div>
 
@@ -283,6 +362,19 @@ export class ProfileComponent implements OnInit {
     institution: '',
     degree: '',
     fieldOfStudy: '',
+    startDate: '',
+    endDate: '',
+    description: ''
+  };
+
+  experiencesList = signal<BackendExperience[]>([]);
+  showAddExpForm = signal(false);
+  newExp: BackendExperience = {
+    jobTitle: '',
+    company: '',
+    location: '',
+    startDate: '',
+    endDate: '',
     description: ''
   };
 
@@ -325,6 +417,7 @@ export class ProfileComponent implements OnInit {
 
       this.skillsList.set(jobSeeker?.skills ?? []);
       this.educationsList.set(jobSeeker?.educations ?? []);
+      this.experiencesList.set(jobSeeker?.experiences ?? []);
       this.resume.set(jobSeeker?.resume ?? null);
 
       this.profile.set(data);
@@ -359,7 +452,7 @@ export class ProfileComponent implements OnInit {
   addEducation() {
     if (!this.newEdu.degree.trim() || !this.newEdu.institution.trim()) return;
     this.educationsList.set([...this.educationsList(), { ...this.newEdu }]);
-    this.newEdu = { institution: '', degree: '', fieldOfStudy: '', description: '' };
+    this.newEdu = { institution: '', degree: '', fieldOfStudy: '', startDate: '', endDate: '', description: '' };
     this.showAddEduForm.set(false);
   }
 
@@ -367,6 +460,19 @@ export class ProfileComponent implements OnInit {
     const list = [...this.educationsList()];
     list.splice(index, 1);
     this.educationsList.set(list);
+  }
+
+  addExperience() {
+    if (!this.newExp.jobTitle.trim() || !this.newExp.company.trim()) return;
+    this.experiencesList.set([...this.experiencesList(), { ...this.newExp }]);
+    this.newExp = { jobTitle: '', company: '', location: '', startDate: '', endDate: '', description: '' };
+    this.showAddExpForm.set(false);
+  }
+
+  removeExperience(index: number) {
+    const list = [...this.experiencesList()];
+    list.splice(index, 1);
+    this.experiencesList.set(list);
   }
 
   onResumeSelected(event: Event) {
@@ -455,7 +561,8 @@ export class ProfileComponent implements OnInit {
       headline: this.profileForm.value.headline ?? '',
       summary: this.profileForm.value.summary ?? '',
       skills: this.skillsList(),
-      educations: this.educationsList()
+      educations: this.educationsList(),
+      experiences: this.experiencesList()
     };
 
     this.jobSeekerService.updateProfile(payload).subscribe({
@@ -464,6 +571,7 @@ export class ProfileComponent implements OnInit {
         if (res) {
           this.skillsList.set(res.skills ?? this.skillsList());
           this.educationsList.set(res.educations ?? this.educationsList());
+          this.experiencesList.set(res.experiences ?? this.experiencesList());
         }
         this.auth.refreshUser({
           name: `${payload.firstName} ${payload.lastName}`.trim(),

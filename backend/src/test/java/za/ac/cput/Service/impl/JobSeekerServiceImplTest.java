@@ -34,7 +34,6 @@ class JobSeekerServiceImplTest {
                 "securePassword123",
                 "Test",
                 "User",
-                "profile_picture.png",
                 "0712345678",
                 "Cape Town",
                 "Java Software Engineer",
@@ -78,7 +77,6 @@ class JobSeekerServiceImplTest {
         updatedJobSeeker.setPassword(saved.getPassword());
         updatedJobSeeker.setFirstName("Name Updated");
         updatedJobSeeker.setLastName("Surname Updated");
-        updatedJobSeeker.setProfilePicture("updated_profile.png");
         updatedJobSeeker.setPhoneNumber("0823456789");
         updatedJobSeeker.setLocation("Johannesburg");
         updatedJobSeeker.setHeadline("Senior Java Software Engineer");
@@ -139,7 +137,6 @@ class JobSeekerServiceImplTest {
                 "password123",
                 "Auto",
                 "Generated",
-                "profile.png",
                 "0711111111",
                 "Cape Town",
                 "Software Developer",

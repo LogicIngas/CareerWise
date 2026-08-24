@@ -17,8 +17,7 @@ class UserFactoryTest {
                 "Hanyani",
                 "Masinge",
                 "profilepicture.jpg",
-                "0839659906",
-                "Cape Town"
+                "0839659906"
         );
 
         assertNotNull(user);
@@ -34,8 +33,7 @@ class UserFactoryTest {
                 "Hanyani",
                 "Masinge",
                 "profilepicture.jpg",
-                "0839659906",
-                "Cape Town"
+                "0839659906"
         );
 
         assertNull(user);

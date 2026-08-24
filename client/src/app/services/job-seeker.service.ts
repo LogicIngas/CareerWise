@@ -20,6 +20,16 @@ export interface BackendEducation {
   description?: string;
 }
 
+export interface BackendExperience {
+  experienceId?: string;
+  jobTitle: string;
+  company: string;
+  location?: string;
+  startDate?: string;
+  endDate?: string;
+  description?: string;
+}
+
 export interface BackendJobSeekerFull {
   userId: string;
   email: string;
@@ -39,6 +49,7 @@ export interface BackendJobSeekerFull {
   profileViews?: number;
   skills: BackendSkill[];
   educations: BackendEducation[];
+  experiences: BackendExperience[];
 }
 
 @Injectable({
@@ -71,7 +82,8 @@ export class JobSeekerService {
     return `${this.apiBaseUrl}/jobseekers/${userId}/resume`;
   }
 
-  incrementProfileViews(userId: string): Observable<BackendJobSeekerFull | null> {
-    return this.http.post<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/${userId}/view`, {});
+  incrementProfileViews(userId: string, viewerCompany?: string): Observable<BackendJobSeekerFull | null> {
+    const params: Record<string, string> = viewerCompany ? { viewerCompany } : {};
+    return this.http.post<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/${userId}/view`, {}, { params });
   }
 }

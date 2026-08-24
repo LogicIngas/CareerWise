@@ -14,11 +14,6 @@ export interface Job {
   description?: string;
 }
 
-export interface Category {
-  id: string;
-  name: string;
-}
-
 export interface Application {
   id: string;
   jobId?: string;

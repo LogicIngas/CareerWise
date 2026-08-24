@@ -63,20 +63,19 @@ export class JobService {
     );
   }
 
-  findByLocation(location: string): Observable<Job[]> {
-    return this.http.get<BackendJob[]>(`${this.apiBaseUrl}/jobs/findByLocation`, { params: { location } }).pipe(
+  getRecommended(jobSeekerId: string, limit = 6): Observable<Job[]> {
+    return this.http.get<BackendJob[]>(`${this.apiBaseUrl}/jobs/recommended/${jobSeekerId}`, { params: { limit } }).pipe(
       map(jobs => jobs.map(j => this.mapJob(j)))
     );
   }
 
-  findByEmploymentType(employmentType: string): Observable<Job[]> {
-    return this.http.get<BackendJob[]>(`${this.apiBaseUrl}/jobs/findByEmploymentType`, { params: { employmentType } }).pipe(
-      map(jobs => jobs.map(j => this.mapJob(j)))
-    );
-  }
-
-  findByRemoteOption(remoteOption: boolean): Observable<Job[]> {
-    return this.http.get<BackendJob[]>(`${this.apiBaseUrl}/jobs/findByRemoteOption`, { params: { remoteOption } }).pipe(
+  search(params: { keyword?: string; location?: string; employmentType?: string; remoteOption?: boolean }): Observable<Job[]> {
+    const httpParams: Record<string, string> = {};
+    if (params.keyword) httpParams['keyword'] = params.keyword;
+    if (params.location) httpParams['location'] = params.location;
+    if (params.employmentType) httpParams['employmentType'] = params.employmentType;
+    if (params.remoteOption !== undefined) httpParams['remoteOption'] = String(params.remoteOption);
+    return this.http.get<BackendJob[]>(`${this.apiBaseUrl}/jobs/search`, { params: httpParams }).pipe(
       map(jobs => jobs.map(j => this.mapJob(j)))
     );
   }

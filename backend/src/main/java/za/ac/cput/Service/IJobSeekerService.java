@@ -14,5 +14,5 @@ public interface IJobSeekerService extends IService<JobSeeker, String> {
     JobSeeker uploadResume(String userId, MultipartFile file) throws IOException;
     Resource loadResume(String userId);
     boolean deleteResume(String userId) throws IOException;
-    JobSeeker incrementProfileViews(String userId);
+    JobSeeker incrementProfileViews(String userId, String viewerCompany);
 }

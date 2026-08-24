@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { JobCardComponent } from '../../components/job-card/job-card.component';
-import { MockDataService } from '../../services/mock-data.service';
 import { JobService } from '../../services/job.service';
-import { Category, Job } from '../../models/models';
+import { Job } from '../../models/models';
 
 @Component({
   selector: 'app-landing',
@@ -51,22 +50,6 @@ import { Category, Job } from '../../models/models';
               <button type="button" (click)="searchPopular({ keyword: 'Marketing' })" class="px-4 py-1.5 bg-white border border-stone-200 text-stone-600 text-sm font-medium rounded-full hover:border-brand-300 hover:text-brand-700 active:scale-95 transition-all">Marketing</button>
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- Browse by Category -->
-      <section class="max-w-7xl mx-auto px-6 md:px-12 py-16">
-        <h2 class="text-2xl font-bold text-stone-900 mb-8">Browse by category</h2>
-        
-        <div *ngIf="loadingCategories()" class="py-8 text-center text-stone-500 animate-pulse">
-          Loading categories...
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <button *ngFor="let cat of categories()" class="bg-white border border-stone-200 rounded-xl p-5 flex items-center justify-between hover:border-brand-300 hover:-translate-y-0.5 active:scale-[0.98] transition-all group">
-            <span class="font-medium text-stone-900 group-hover:text-brand-600 transition-colors">{{cat.name}}</span>
-            <svg class="text-stone-400 group-hover:text-brand-600 transition-colors" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </button>
         </div>
       </section>
 
@@ -129,11 +112,11 @@ import { Category, Job } from '../../models/models';
 
               <div class="flex-1 bg-white rounded-2xl border border-stone-200 p-8 flex gap-5 items-start hover:border-stone-300 hover:-translate-y-0.5 transition-all duration-200">
                 <div class="w-11 h-11 flex-shrink-0 bg-brand-50 text-brand-700 rounded-lg flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="20.32,15.44 15.44,20.32 8.56,20.32 3.68,15.44 3.68,8.56 8.56,3.68 15.44,3.68 20.32,8.56"/><path d="m9 12 2 2 4-4"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-bold text-stone-900 mb-2">Verified employers</h3>
-                  <p class="text-stone-500 leading-relaxed text-sm">Every company on CareerWise is vetted, so you apply with total confidence.</p>
+                  <h3 class="text-lg font-bold text-stone-900 mb-2">Direct from employers</h3>
+                  <p class="text-stone-500 leading-relaxed text-sm">Every listing is posted straight from the hiring company's own account — nothing scraped or resold from other job boards.</p>
                 </div>
               </div>
             </div>
@@ -164,17 +147,14 @@ import { Category, Job } from '../../models/models';
   `
 })
 export class LandingComponent implements OnInit {
-  private dataService = inject(MockDataService);
   private jobService = inject(JobService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
   // Signals for state management
-  categories = signal<Category[]>([]);
   featuredJobs = signal<Job[]>([]);
 
   // Loading states
-  loadingCategories = signal(true);
   loadingJobs = signal(true);
   isSearching = signal(false);
 
@@ -189,11 +169,6 @@ export class LandingComponent implements OnInit {
   }
 
   private loadData() {
-    this.dataService.getCategories().subscribe(data => {
-      this.categories.set(data);
-      this.loadingCategories.set(false);
-    });
-
     this.jobService.getOpenPositions().subscribe(data => {
       this.featuredJobs.set(data.slice(0, 6));
       this.loadingJobs.set(false);

@@ -71,6 +71,12 @@ import { AuthService } from '../../services/auth.service';
                   class="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all text-stone-900 placeholder-stone-400">
               </div>
             </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-stone-700 mb-2">Application deadline</label>
+              <input type="date" formControlName="deadlineDate"
+                class="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all text-stone-900 placeholder-stone-400">
+            </div>
           </div>
         </div>
 
@@ -88,7 +94,13 @@ import { AuthService } from '../../services/auth.service';
 
             <div>
               <label class="block text-sm font-semibold text-stone-700 mb-2">Requirements</label>
-              <textarea formControlName="requirements" rows="4" placeholder="List the requirements..." 
+              <textarea formControlName="requirements" rows="4" placeholder="List the requirements..."
+                class="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all text-stone-900 placeholder-stone-400 resize-y"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-stone-700 mb-2">Responsibilities</label>
+              <textarea formControlName="responsibilities" rows="4" placeholder="List the day-to-day responsibilities..."
                 class="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all text-stone-900 placeholder-stone-400 resize-y"></textarea>
             </div>
 
@@ -136,8 +148,10 @@ export class PostJobComponent {
     location: ['', Validators.required],
     type: ['', Validators.required],
     salaryRange: [''],
+    deadlineDate: [''],
     description: ['', Validators.required],
     requirements: [''],
+    responsibilities: [''],
     skills: ['']
   });
 
@@ -150,17 +164,22 @@ export class PostJobComponent {
         .split(/\n|,/)
         .map(r => r.trim())
         .filter(Boolean);
+      const responsibilities = (v.responsibilities ?? '')
+        .split(/\n|,/)
+        .map(r => r.trim())
+        .filter(Boolean);
       // "Remote" is never stored as employmentType — remoteness is carried
       // solely by remoteOption, matching how job browsing/filtering treats them.
       this.jobService.create({
         title: v.title!,
         description: v.description!,
         requirements,
-        responsibilities: [],
+        responsibilities,
         location: v.location!,
         remoteOption: v.type === 'Remote',
         salaryRange: v.salaryRange || '',
         employmentType: v.type === 'Remote' ? 'Full-time' : v.type!,
+        deadlineDate: v.deadlineDate || undefined,
         employer: { userId: this.auth.currentUser()!.userId }
       }).subscribe({
         next: created => {

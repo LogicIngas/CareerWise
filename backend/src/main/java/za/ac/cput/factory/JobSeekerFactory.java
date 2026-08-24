@@ -43,7 +43,7 @@ public class JobSeekerFactory {
      */
     public static JobSeeker createJobSeeker(String email, String password,
                                             String firstName, String lastName,
-                                            String profilePicture, String phoneNumber,
+                                            String phoneNumber,
                                             String location,
                                             String headline, String summary) {
         if (Helper.isNullOrEmpty(email) ||
@@ -61,7 +61,6 @@ public class JobSeekerFactory {
                 .password(password)
                 .firstName(firstName)
                 .lastName(lastName)
-                .profilePicture(profilePicture)
                 .phoneNumber(phoneNumber)
                 .location(location)
                 .headline(headline)

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { JobSeekerService, BackendJobSeekerFull } from '../../services/job-seeker.service';
+import { AuthService } from '../../services/auth.service';
 import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
 
 @Component({
@@ -118,6 +119,7 @@ import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
 export class EmployerCandidateProfileComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private jobSeekerService = inject(JobSeekerService);
+  private auth = inject(AuthService);
 
   candidate = signal<BackendJobSeekerFull | null>(null);
   loading = signal(true);
@@ -136,7 +138,8 @@ export class EmployerCandidateProfileComponent implements OnInit {
     });
 
     // Fire-and-forget: records that an employer opened this candidate's profile.
-    this.jobSeekerService.incrementProfileViews(userId).subscribe();
+    const viewerCompany = this.auth.currentUser()?.companyName;
+    this.jobSeekerService.incrementProfileViews(userId, viewerCompany).subscribe();
   }
 
   initials(c: BackendJobSeekerFull): string {

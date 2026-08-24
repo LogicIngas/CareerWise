@@ -63,4 +63,18 @@ public class JobController {
     public List<Job> findJobsByRemoteOption(@RequestParam boolean remoteOption) {
         return this.jobService.findJobsByRemoteOption(remoteOption);
     }
+
+    @GetMapping("/recommended/{jobSeekerId}")
+    public List<Job> findRecommended(@PathVariable String jobSeekerId,
+            @RequestParam(defaultValue = "6") int limit) {
+        return this.jobService.findRecommendedForJobSeeker(jobSeekerId, limit);
+    }
+
+    @GetMapping("/search")
+    public List<Job> search(@RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String employmentType,
+            @RequestParam(required = false) Boolean remoteOption) {
+        return this.jobService.searchJobs(keyword, location, employmentType, remoteOption);
+    }
 }

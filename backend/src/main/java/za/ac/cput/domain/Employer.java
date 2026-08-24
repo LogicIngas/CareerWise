@@ -20,7 +20,6 @@ public class Employer extends User {
     private String companyWebsite;
     private String companySize;
     private String industry;
-    private String companyLogo;
     private String companyDescription;
     private String companyHeadquarters;
 
