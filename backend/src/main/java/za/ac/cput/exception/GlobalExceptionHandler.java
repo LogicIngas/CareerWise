@@ -17,6 +17,12 @@ public class GlobalExceptionHandler {
                 .body(Map.of("message", "An account with this email already exists."));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("message", ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception ex) {
         String message = ex.getMessage() == null ? "" : ex.getMessage();

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JobSeekerService, BackendSkill, BackendEducation } from '../../services/job-seeker.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -66,7 +67,8 @@ import { AuthService } from '../../services/auth.service';
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label class="block text-sm font-semibold text-stone-700 mb-2">Email</label>
-                  <input type="email" formControlName="email" [readonly]="true" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50 text-stone-500 text-sm cursor-not-allowed">
+                  <input type="email" formControlName="email" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-stone-900 text-sm">
+                  <p *ngIf="profileForm.get('email')?.touched && profileForm.get('email')?.invalid" class="text-xs text-red-600 mt-1">Please enter a valid email address</p>
                 </div>
                 <div>
                   <label class="block text-sm font-semibold text-stone-700 mb-2">Phone number</label>
@@ -133,6 +135,31 @@ import { AuthService } from '../../services/auth.service';
               </span>
               <p *ngIf="skillsList().length === 0" class="text-sm text-stone-400">No skills added yet.</p>
             </div>
+          </div>
+
+          <!-- Resume / CV Section -->
+          <div class="bg-white rounded-2xl shadow-sm border border-stone-100 p-8">
+            <h2 class="text-lg font-bold text-stone-900 mb-2">Resume / CV</h2>
+            <p class="text-xs text-stone-500 mb-4">Attach a PDF, DOC, or DOCX file so employers can review your resume (max 5MB)</p>
+
+            <div *ngIf="resumeFileName()" class="flex items-center justify-between gap-4 p-4 rounded-xl border border-stone-200 bg-stone-50/60 mb-4">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+                </div>
+                <a [href]="resumeUrl()" target="_blank" rel="noopener" class="text-sm font-semibold text-stone-800 hover:text-brand-600 truncate transition-colors">{{ resumeFileName() }}</a>
+              </div>
+              <button type="button" (click)="removeResume()" [disabled]="isDeletingResume" class="flex-shrink-0 text-xs font-semibold text-stone-500 hover:text-red-600 transition-colors disabled:opacity-50">
+                Remove
+              </button>
+            </div>
+
+            <label class="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-dashed border-stone-200 hover:border-brand-400 rounded-xl cursor-pointer transition-colors text-sm font-semibold text-stone-600 hover:text-brand-700">
+              <svg *ngIf="!isUploadingResume" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span *ngIf="isUploadingResume" class="w-4 h-4 border-2 border-stone-300 border-t-brand-600 rounded-full animate-spin"></span>
+              {{ isUploadingResume ? 'Uploading...' : (resumeFileName() ? 'Replace file' : 'Upload your CV') }}
+              <input type="file" class="hidden" accept=".pdf,.doc,.docx" [disabled]="isUploadingResume" (change)="onResumeSelected($event)">
+            </label>
           </div>
 
           <!-- Education Section (Add / Remove) -->
@@ -209,6 +236,7 @@ export class ProfileComponent implements OnInit {
   private jobSeekerService = inject(JobSeekerService);
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
+  private toast = inject(ToastService);
 
   profile = signal<any>(null);
   skillsList = signal<BackendSkill[]>([]);
@@ -216,6 +244,22 @@ export class ProfileComponent implements OnInit {
   loading = signal(true);
   isSaving = false;
   justSaved = signal(false);
+
+  resumePath = signal<string | null>(null);
+  isUploadingResume = false;
+  isDeletingResume = false;
+
+  resumeFileName = () => {
+    const path = this.resumePath();
+    if (!path) return null;
+    const userId = this.auth.currentUser()?.userId ?? '';
+    return path.startsWith(`${userId}_`) ? path.slice(userId.length + 1) : path;
+  };
+
+  resumeUrl = () => {
+    const userId = this.auth.currentUser()?.userId;
+    return userId ? this.jobSeekerService.getResumeUrl(userId) : '';
+  };
 
   newSkillName = '';
   showAddEduForm = signal(false);
@@ -265,6 +309,7 @@ export class ProfileComponent implements OnInit {
 
       this.skillsList.set(jobSeeker?.skills ?? []);
       this.educationsList.set(jobSeeker?.educations ?? []);
+      this.resumePath.set(jobSeeker?.resumePath ?? null);
 
       this.profile.set(data);
       this.profileForm.patchValue(data);
@@ -308,6 +353,52 @@ export class ProfileComponent implements OnInit {
     this.educationsList.set(list);
   }
 
+  onResumeSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const userId = this.auth.currentUser()?.userId;
+    if (!userId) return;
+
+    this.isUploadingResume = true;
+    this.jobSeekerService.uploadResume(userId, file).subscribe({
+      next: (res) => {
+        this.isUploadingResume = false;
+        input.value = '';
+        if (res) {
+          this.resumePath.set(res.resumePath ?? null);
+          this.toast.success('Resume uploaded successfully.');
+        } else {
+          this.toast.error('Could not upload resume. Please try again.');
+        }
+      },
+      error: (err) => {
+        this.isUploadingResume = false;
+        input.value = '';
+        this.toast.error(err?.error?.message || 'Could not upload resume. Please try again.');
+      }
+    });
+  }
+
+  removeResume() {
+    const userId = this.auth.currentUser()?.userId;
+    if (!userId) return;
+
+    this.isDeletingResume = true;
+    this.jobSeekerService.deleteResume(userId).subscribe({
+      next: () => {
+        this.isDeletingResume = false;
+        this.resumePath.set(null);
+        this.toast.success('Resume removed.');
+      },
+      error: () => {
+        this.isDeletingResume = false;
+        this.toast.error('Could not remove resume. Please try again.');
+      }
+    });
+  }
+
   onSave() {
     if (!this.profileForm.valid) {
       this.profileForm.markAllAsTouched();
@@ -323,6 +414,7 @@ export class ProfileComponent implements OnInit {
       userId,
       firstName: this.profileForm.value.firstName ?? '',
       lastName: this.profileForm.value.lastName ?? '',
+      email: this.profileForm.value.email ?? '',
       phoneNumber: this.profileForm.value.phoneNumber ?? '',
       location: this.profileForm.value.location ?? '',
       headline: this.profileForm.value.headline ?? '',
@@ -340,6 +432,7 @@ export class ProfileComponent implements OnInit {
         }
         this.auth.refreshUser({
           name: `${payload.firstName} ${payload.lastName}`.trim(),
+          email: payload.email,
           location: payload.location,
           currentTitle: payload.headline
         });
@@ -347,8 +440,8 @@ export class ProfileComponent implements OnInit {
         setTimeout(() => this.justSaved.set(false), 3000);
       },
       error: (err) => {
-        console.error('Failed to update profile', err);
         this.isSaving = false;
+        this.toast.error(err?.error?.message || 'Failed to save changes. Please try again.');
       }
     });
   }

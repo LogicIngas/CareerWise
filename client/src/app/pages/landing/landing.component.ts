@@ -99,25 +99,25 @@ import { Category, Job } from '../../models/models';
       <section class="bg-[#f5f4f1] py-20">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
           <div class="max-w-2xl mb-16">
-            <h2 class="text-3xl font-bold text-stone-900 mb-4">Why professionals choose CareerWise</h2>
-            <p class="text-stone-500 text-lg">Everything you need to find and land your next opportunity.</p>
+            <h2 class="text-3xl font-bold text-stone-900 mb-4 text-balance">Why professionals choose CareerWise</h2>
+            <p class="text-stone-500 text-lg text-balance">Everything you need to find and land your next opportunity.</p>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-7 relative overflow-hidden rounded-2xl bg-brand-800 text-white p-10 flex flex-col justify-end min-h-[380px] bg-grain">
-              <img src="https://picsum.photos/seed/careerwise-apply/900/700" alt="" class="absolute inset-0 w-full h-full object-cover opacity-25" />
-              <div class="absolute inset-0 bg-gradient-to-t from-brand-900 via-brand-900/50 to-transparent"></div>
+              <div class="absolute -top-16 -right-10 w-72 h-72 bg-brand-500/25 rounded-full blur-3xl pointer-events-none"></div>
+              <svg class="absolute -right-8 -bottom-12 text-white/[0.06] pointer-events-none" width="340" height="340" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4 4 15h9l-2 9 11-13h-9l3-7z"/></svg>
               <div class="relative z-10">
                 <div class="w-12 h-12 bg-white/10 backdrop-blur rounded-xl flex items-center justify-center mb-6 border border-white/10">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4 4 15h9l-2 9 11-13h-9l3-7z"/></svg>
                 </div>
                 <h3 class="text-2xl font-bold mb-3">One-click apply</h3>
-                <p class="text-brand-100 leading-relaxed max-w-sm">Apply to multiple jobs instantly with your smart CareerWise profile — no repetitive forms.</p>
+                <p class="text-brand-100 leading-relaxed max-w-sm">Apply to multiple jobs instantly with your CareerWise profile — no re-entering your details or re-uploading your resume for every listing.</p>
               </div>
             </div>
 
             <div class="lg:col-span-5 flex flex-col gap-6">
-              <div class="flex-1 bg-white rounded-2xl border border-stone-200 p-8 flex gap-5 items-start">
+              <div class="flex-1 bg-white rounded-2xl border border-stone-200 p-8 flex gap-5 items-start hover:border-stone-300 hover:-translate-y-0.5 transition-all duration-200">
                 <div class="w-11 h-11 flex-shrink-0 bg-brand-50 text-brand-700 rounded-lg flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.275 1.275L3 12l5.8 1.9a2 2 0 0 1 1.275 1.275L12 21l1.9-5.8a2 2 0 0 1 1.275-1.275L21 12l-5.8-1.9a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
                 </div>
@@ -127,9 +127,9 @@ import { Category, Job } from '../../models/models';
                 </div>
               </div>
 
-              <div class="flex-1 bg-white rounded-2xl border border-stone-200 p-8 flex gap-5 items-start">
+              <div class="flex-1 bg-white rounded-2xl border border-stone-200 p-8 flex gap-5 items-start hover:border-stone-300 hover:-translate-y-0.5 transition-all duration-200">
                 <div class="w-11 h-11 flex-shrink-0 bg-brand-50 text-brand-700 rounded-lg flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="20.32,15.44 15.44,20.32 8.56,20.32 3.68,15.44 3.68,8.56 8.56,3.68 15.44,3.68 20.32,8.56"/><path d="m9 12 2 2 4-4"/></svg>
                 </div>
                 <div>
                   <h3 class="text-lg font-bold text-stone-900 mb-2">Verified employers</h3>

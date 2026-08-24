@@ -30,7 +30,7 @@ export class MockDataService {
         companyColor: 'bg-slate-600',
         tags: ['React', 'TypeScript', 'Tailwind'],
         location: 'San Francisco, CA',
-        salaryRange: '$140k - $180k',
+        salaryRange: 'R950,000 - R1,300,000',
         postedTime: '2 days ago',
         type: 'Full-time',
         isRemote: false
@@ -43,7 +43,7 @@ export class MockDataService {
         companyColor: 'bg-blue-600',
         tags: ['Figma', 'UX', 'Design Systems'],
         location: 'Remote',
-        salaryRange: '$90k - $120k',
+        salaryRange: 'R550,000 - R750,000',
         postedTime: '5 days ago',
         type: 'Full-time',
         isRemote: true
@@ -56,7 +56,7 @@ export class MockDataService {
         companyColor: 'bg-rose-600',
         tags: ['Node.js', 'PostgreSQL', 'AWS'],
         location: 'Austin, TX',
-        salaryRange: '$130k - $170k',
+        salaryRange: 'R850,000 - R1,150,000',
         postedTime: '1 week ago',
         type: 'Full-time',
         isRemote: false
@@ -69,7 +69,7 @@ export class MockDataService {
         companyColor: 'bg-pink-600',
         tags: ['SEO', 'Content', 'Growth'],
         location: 'New York, NY',
-        salaryRange: '$85k - $110k',
+        salaryRange: 'R500,000 - R700,000',
         postedTime: '3 days ago',
         type: 'Full-time',
         isRemote: false
@@ -82,7 +82,7 @@ export class MockDataService {
         companyColor: 'bg-violet-600',
         tags: ['Python', 'ML', 'Pandas'],
         location: 'Remote',
-        salaryRange: '$70/hr',
+        salaryRange: 'R450/hr',
         postedTime: '6 days ago',
         type: 'Contract',
         isRemote: true
@@ -95,7 +95,7 @@ export class MockDataService {
         companyColor: 'bg-orange-600',
         tags: ['Kubernetes', 'Terraform', 'CI/CD'],
         location: 'Seattle, WA',
-        salaryRange: '$120k - $160k',
+        salaryRange: 'R800,000 - R1,050,000',
         postedTime: '4 days ago',
         type: 'Full-time',
         isRemote: false

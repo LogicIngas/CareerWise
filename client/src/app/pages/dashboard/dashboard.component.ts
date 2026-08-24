@@ -5,8 +5,25 @@ import { JobService } from '../../services/job.service';
 import { ApplicationService } from '../../services/application.service';
 import { SavedJobService } from '../../services/saved-job.service';
 import { AuthService } from '../../services/auth.service';
+import { JobSeekerService, BackendJobSeekerFull } from '../../services/job-seeker.service';
 import { JobCardComponent } from '../../components/job-card/job-card.component';
 import { Job } from '../../models/models';
+
+const PROFILE_STRENGTH_CHECKS: Array<(js: BackendJobSeekerFull) => boolean> = [
+  js => !!js.headline,
+  js => !!js.summary,
+  js => !!js.phoneNumber,
+  js => !!js.location,
+  js => !!js.resumePath,
+  js => (js.skills?.length ?? 0) > 0,
+  js => (js.educations?.length ?? 0) > 0
+];
+
+function computeProfileStrength(js: BackendJobSeekerFull | null): number {
+  if (!js) return 0;
+  const filled = PROFILE_STRENGTH_CHECKS.filter(check => check(js)).length;
+  return Math.round((filled / PROFILE_STRENGTH_CHECKS.length) * 100);
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -55,7 +72,7 @@ import { Job } from '../../models/models';
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
           </div>
           <div>
-            <div class="text-3xl font-extrabold text-stone-900">42</div>
+            <div class="text-3xl font-extrabold text-stone-900">{{ profileViews() }}</div>
             <div class="text-sm text-stone-500 font-medium">Profile Views</div>
           </div>
         </div>
@@ -135,12 +152,12 @@ import { Job } from '../../models/models';
             <h2 class="text-lg font-bold text-stone-900 mb-6">Profile strength</h2>
             
             <div class="flex items-end gap-2 mb-4">
-              <span class="text-3xl font-extrabold text-brand-600 leading-none">85%</span>
+              <span class="text-3xl font-extrabold text-brand-600 leading-none">{{ profileStrength() }}%</span>
               <span class="text-stone-500 text-sm font-medium pb-1">complete</span>
             </div>
 
             <div class="w-full bg-brand-50 rounded-full h-2.5 mb-6 overflow-hidden">
-              <div class="bg-brand-600 h-2.5 rounded-full" style="width: 85%"></div>
+              <div class="bg-brand-600 h-2.5 rounded-full transition-all duration-300" [style.width.%]="profileStrength()"></div>
             </div>
 
             <p class="text-sm text-stone-600 mb-6">
@@ -185,6 +202,7 @@ export class DashboardComponent implements OnInit {
   private jobService = inject(JobService);
   private applicationService = inject(ApplicationService);
   private savedJobService = inject(SavedJobService);
+  private jobSeekerService = inject(JobSeekerService);
   private auth = inject(AuthService);
 
   applications = this.applicationService.applications;
@@ -193,6 +211,8 @@ export class DashboardComponent implements OnInit {
 
   recommendedJobs = signal<Job[]>([]);
   loadingJobs = signal(true);
+  profileStrength = signal(0);
+  profileViews = signal(0);
 
   firstName = () => this.auth.currentUser()?.name?.split(' ')[0] ?? 'there';
 
@@ -209,6 +229,10 @@ export class DashboardComponent implements OnInit {
     if (user) {
       this.applicationService.getApplicationsByJobSeeker(user.userId).subscribe();
       this.savedJobService.loadSavedJobs(user.userId).subscribe();
+      this.jobSeekerService.getById(user.userId).subscribe(jobSeeker => {
+        this.profileStrength.set(computeProfileStrength(jobSeeker));
+        this.profileViews.set(jobSeeker?.profileViews ?? 0);
+      });
     }
 
     this.jobService.getOpenPositions().subscribe(data => {

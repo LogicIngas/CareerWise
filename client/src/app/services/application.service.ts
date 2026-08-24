@@ -77,6 +77,16 @@ export class ApplicationService {
     );
   }
 
+  getApplicationsByJob(jobId: string): Observable<Application[]> {
+    return this.http.get<BackendApplication[]>(`${this.apiBaseUrl}/applications/job/${jobId}`).pipe(
+      map(backendApps => backendApps.map(item => this.mapApplication(item))),
+      catchError(err => {
+        console.error('Failed to load applicants', err);
+        return of([]);
+      })
+    );
+  }
+
   apply(jobId: string, notes: string = ''): Observable<Application | null> {
     const user = this.auth.currentUser();
     if (!user || user.role !== 'candidate') {
@@ -116,7 +126,10 @@ export class ApplicationService {
       dateApplied: formatDate(b.appliedDate),
       location: b.job?.location,
       salaryRange: b.job?.salaryRange,
-      notes: b.notes
+      notes: b.notes,
+      jobSeekerId: b.jobSeeker?.userId,
+      applicantName: [b.jobSeeker?.firstName, b.jobSeeker?.lastName].filter(Boolean).join(' ').trim() || 'Applicant',
+      applicantEmail: b.jobSeeker?.email
     };
   }
 }

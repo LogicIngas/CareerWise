@@ -58,16 +58,16 @@ public class JobServiceImpl implements IJobService {
 
     @Override
     public List<Job> findJobsByLocation(String location) {
-        return repository.findByLocationContainingIgnoreCase(location);
+        return repository.findByStatusAndLocationContainingIgnoreCase(JobStatus.OPEN, location);
     }
 
     @Override
     public List<Job> findJobsByEmploymentType(String employmentType) {
-        return repository.findByEmploymentType(employmentType);
+        return repository.findByStatusAndEmploymentType(JobStatus.OPEN, employmentType);
     }
 
     @Override
     public List<Job> findJobsByRemoteOption(Boolean remoteOption) {
-        return repository.findByRemoteOption(remoteOption);
+        return repository.findByStatusAndRemoteOption(JobStatus.OPEN, remoteOption);
     }
 }

@@ -67,7 +67,7 @@ import { AuthService } from '../../services/auth.service';
 
               <div>
                 <label class="block text-sm font-semibold text-stone-700 mb-2">Salary range</label>
-                <input type="text" formControlName="salaryRange" placeholder="e.g. $120k - $150k"
+                <input type="text" formControlName="salaryRange" placeholder="e.g. R600,000 - R900,000"
                   class="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all text-stone-900 placeholder-stone-400">
               </div>
             </div>

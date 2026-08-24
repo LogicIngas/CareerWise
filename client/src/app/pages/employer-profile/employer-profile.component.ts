@@ -238,14 +238,15 @@ export class EmployerProfileComponent implements OnInit {
           this.profile.set(result);
           this.auth.refreshUser({
             name: [result.firstName, result.lastName].filter(Boolean).join(' ').trim(),
+            email: result.email,
             companyName: result.companyName
           } as Partial<AuthUser>);
           this.justSaved.set(true);
           setTimeout(() => this.justSaved.set(false), 3000);
         },
-        error: () => {
+        error: (err) => {
           this.isSaving = false;
-          this.errorMessage.set('Could not save changes. Please try again.');
+          this.errorMessage.set(err?.error?.message || 'Could not save changes. Please try again.');
         }
       });
     }
