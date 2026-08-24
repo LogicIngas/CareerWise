@@ -2,7 +2,6 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
 import { JobCardComponent } from '../../components/job-card/job-card.component';
 import { JobService } from '../../services/job.service';
 import { Job } from '../../models/models';
@@ -286,28 +285,26 @@ export class FindJobsComponent implements OnInit {
     this.loadBaseJobs();
   }
 
-  // Fetches the most relevant server-side result set for the currently
-  // applied search/filter combination, then narrows further with the
-  // in-memory filters in `filteredJobs` (keyword, salary, extra types).
+  // Fetches the server-side result set for the currently applied
+  // search/filter combination via the combined /jobs/search endpoint, then
+  // narrows further with the in-memory filters in `filteredJobs` (salary,
+  // and any additional employment types beyond the single one sent server-side).
   private loadBaseJobs() {
     this.loadingJobs.set(true);
     this.isSearching.set(true);
 
+    const keyword = this.appliedKeyword().trim();
     const location = this.appliedLocation().trim();
     const types = this.selectedTypes();
+    const nonRemoteTypes = types.filter(t => t !== 'Remote');
+    const remoteOnly = types.length === 1 && types[0] === 'Remote';
 
-    let source$: Observable<Job[]>;
-    if (location) {
-      source$ = this.jobService.findByLocation(location);
-    } else if (types.length === 1 && types[0] === 'Remote') {
-      source$ = this.jobService.findByRemoteOption(true);
-    } else if (types.length === 1 && types[0] !== 'Remote') {
-      source$ = this.jobService.findByEmploymentType(types[0]);
-    } else {
-      source$ = this.jobService.getOpenPositions();
-    }
-
-    source$.subscribe(data => {
+    this.jobService.search({
+      keyword: keyword || undefined,
+      location: location || undefined,
+      employmentType: nonRemoteTypes.length === 1 ? nonRemoteTypes[0] : undefined,
+      remoteOption: remoteOnly ? true : undefined
+    }).subscribe(data => {
       this.jobs.set(data);
       this.loadingJobs.set(false);
       this.isSearching.set(false);

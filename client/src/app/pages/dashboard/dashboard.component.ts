@@ -233,11 +233,16 @@ export class DashboardComponent implements OnInit {
         this.profileStrength.set(computeProfileStrength(jobSeeker));
         this.profileViews.set(jobSeeker?.profileViews ?? 0);
       });
-    }
 
-    this.jobService.getOpenPositions().subscribe(data => {
-      this.recommendedJobs.set(data.slice(0, 2));
-      this.loadingJobs.set(false);
-    });
+      this.jobService.getRecommended(user.userId, 2).subscribe(data => {
+        this.recommendedJobs.set(data);
+        this.loadingJobs.set(false);
+      });
+    } else {
+      this.jobService.getOpenPositions().subscribe(data => {
+        this.recommendedJobs.set(data.slice(0, 2));
+        this.loadingJobs.set(false);
+      });
+    }
   }
 }

@@ -29,6 +29,12 @@ export const routes: Routes = [
         title: 'Find Jobs | CareerWise'
       },
       {
+        path: 'jobs/:id',
+        canActivate: [roleGuard('candidate')],
+        loadComponent: () => import('./pages/job-detail/job-detail.component').then(m => m.JobDetailComponent),
+        title: 'Job Details | CareerWise'
+      },
+      {
         path: 'dashboard',
         canActivate: [roleGuard('candidate')],
         loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
@@ -48,7 +54,7 @@ export const routes: Routes = [
       },
       {
         path: 'notifications',
-        canActivate: [roleGuard('candidate')],
+        canActivate: [roleGuard('candidate', 'employer')],
         loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent),
         title: 'Notifications | CareerWise'
       },

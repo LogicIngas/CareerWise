@@ -112,6 +112,16 @@ function mapJobStatus(status: BackendJob['status']): EmployerPosting['status'] {
           </div>
 
           <div>
+            <label class="block text-sm font-semibold text-stone-700 mb-2">Responsibilities (comma separated)</label>
+            <input type="text" formControlName="responsibilities" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-stone-900 text-sm">
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-stone-700 mb-2">Application deadline</label>
+            <input type="date" formControlName="deadlineDate" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 text-stone-900 text-sm">
+          </div>
+
+          <div>
             <label class="block text-sm font-semibold text-stone-700 mb-2">Status</label>
             <div class="relative">
               <select formControlName="status" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all text-stone-900 text-sm appearance-none bg-white">
@@ -212,6 +222,8 @@ export class EmployerDashboardComponent implements OnInit {
     employmentType: ['Full-time'],
     description: ['', Validators.required],
     requirements: [''],
+    responsibilities: [''],
+    deadlineDate: [''],
     status: ['OPEN']
   });
 
@@ -282,6 +294,8 @@ export class EmployerDashboardComponent implements OnInit {
       employmentType: job.employmentType,
       description: job.description,
       requirements: (job.requirements ?? []).join(', '),
+      responsibilities: (job.responsibilities ?? []).join(', '),
+      deadlineDate: job.deadlineDate ?? '',
       status: job.status
     });
   }
@@ -303,6 +317,10 @@ export class EmployerDashboardComponent implements OnInit {
       .split(',')
       .map(r => r.trim())
       .filter(Boolean);
+    const responsibilities = (v.responsibilities ?? '')
+      .split(',')
+      .map(r => r.trim())
+      .filter(Boolean);
 
     const updated: BackendJob = {
       ...current,
@@ -312,6 +330,8 @@ export class EmployerDashboardComponent implements OnInit {
       employmentType: v.employmentType!,
       description: v.description!,
       requirements,
+      responsibilities,
+      deadlineDate: v.deadlineDate || undefined,
       status: v.status as BackendJob['status']
     };
 

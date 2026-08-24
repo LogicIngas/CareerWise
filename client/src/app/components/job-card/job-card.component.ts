@@ -12,7 +12,9 @@ import { ToastService } from '../../services/toast.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="bg-white rounded-xl p-6 border border-stone-200 hover:border-stone-300 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-12px_rgba(26,53,46,0.18)] transition-all duration-200 h-full flex flex-col relative group">
+    <div
+      (click)="goToDetail()"
+      class="bg-white rounded-xl p-6 border border-stone-200 hover:border-stone-300 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-12px_rgba(26,53,46,0.18)] transition-all duration-200 h-full flex flex-col relative group cursor-pointer">
       <div class="flex justify-between items-start mb-4">
         <div class="flex gap-4">
           <div class="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-xl {{job.companyColor}} shadow-sm">
@@ -167,5 +169,9 @@ export class JobCardComponent {
   viewApplication(event: MouseEvent) {
     event.stopPropagation();
     this.router.navigate(['/applications']);
+  }
+
+  goToDetail() {
+    this.router.navigate(['/jobs', this.job.id]);
   }
 }

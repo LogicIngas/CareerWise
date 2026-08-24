@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.ac.cput.Service.IApplicationsService;
+import za.ac.cput.Service.INotificationService;
 import za.ac.cput.domain.Job;
 import za.ac.cput.domain.JobApplication;
 import za.ac.cput.domain.JobSeeker;
@@ -21,14 +22,17 @@ public class ApplicationsServiceImpl implements IApplicationsService {
     private final IJobApplicationRepository applicationRepository;
     private final IJobSeekerRepository jobSeekerRepository;
     private final IJobRepository jobRepository;
+    private final INotificationService notificationService;
 
     @Autowired
     public ApplicationsServiceImpl(IJobApplicationRepository applicationRepository,
             IJobSeekerRepository jobSeekerRepository,
-            IJobRepository jobRepository) {
+            IJobRepository jobRepository,
+            INotificationService notificationService) {
         this.applicationRepository = applicationRepository;
         this.jobSeekerRepository = jobSeekerRepository;
         this.jobRepository = jobRepository;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -77,8 +81,23 @@ public class ApplicationsServiceImpl implements IApplicationsService {
         Optional<Job> jobOpt = jobRepository.findById(jobId);
 
         if (jobSeekerOpt.isPresent() && jobOpt.isPresent()) {
-            JobApplication app = JobApplicationFactory.buildJobApplication(jobSeekerOpt.get(), jobOpt.get(), notes);
-            return applicationRepository.save(app);
+            JobSeeker jobSeeker = jobSeekerOpt.get();
+            Job job = jobOpt.get();
+            JobApplication app = JobApplicationFactory.buildJobApplication(jobSeeker, job, notes);
+            JobApplication saved = applicationRepository.save(app);
+
+            if (job.getEmployer() != null) {
+                String applicantName = (jobSeeker.getFirstName() != null ? jobSeeker.getFirstName() : "")
+                        + " " + (jobSeeker.getLastName() != null ? jobSeeker.getLastName() : "");
+                notificationService.create(
+                        job.getEmployer().getUserId(),
+                        "NEW_APPLICANT",
+                        "New applicant",
+                        applicantName.trim() + " applied to " + job.getTitle() + "."
+                );
+            }
+
+            return saved;
         }
 
         return null;
@@ -101,7 +120,18 @@ public class ApplicationsServiceImpl implements IApplicationsService {
         if (opt.isPresent()) {
             JobApplication app = opt.get();
             app.setStatus(status);
-            return applicationRepository.save(app);
+            JobApplication saved = applicationRepository.save(app);
+
+            if (app.getJobSeeker() != null && app.getJob() != null) {
+                notificationService.create(
+                        app.getJobSeeker().getUserId(),
+                        "APPLICATION_STATUS",
+                        "Application updated",
+                        "Your application for " + app.getJob().getTitle() + " was updated to " + status + "."
+                );
+            }
+
+            return saved;
         }
         return null;
     }

@@ -11,4 +11,6 @@ public interface IJobService extends IService<Job,String> {
     List<Job> findJobsByLocation(String location);
     List<Job> findJobsByEmploymentType(String employmentType);
     List<Job> findJobsByRemoteOption(Boolean remoteOption);
+    List<Job> findRecommendedForJobSeeker(String jobSeekerId, int limit);
+    List<Job> searchJobs(String keyword, String location, String employmentType, Boolean remoteOption);
 }

@@ -41,7 +41,6 @@ class JobSeekerControllerTest {
                 "securePassword123",
                 "Inga",
                 "Mbobo",
-                "profile_picture.png",
                 "0712345678",
                 "Cape Town",
                 "Java Software Engineer",
@@ -87,7 +86,6 @@ class JobSeekerControllerTest {
         updatedJobSeeker.setLastName("Mbobo Updated");
         updatedJobSeeker.setHeadline("Senior Java Software Engineer");
         updatedJobSeeker.setSummary("Updated: Senior backend developer with 7 years of experience");
-        updatedJobSeeker.setProfilePicture(testJobSeeker.getProfilePicture());
         updatedJobSeeker.setPhoneNumber(testJobSeeker.getPhoneNumber());
         updatedJobSeeker.setLocation(testJobSeeker.getLocation());
 

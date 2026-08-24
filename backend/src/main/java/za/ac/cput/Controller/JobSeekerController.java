@@ -94,7 +94,8 @@ public class JobSeekerController {
     }
 
     @PostMapping("/{userId}/view")
-    public JobSeeker incrementProfileViews(@PathVariable String userId) {
-        return this.service.incrementProfileViews(userId);
+    public JobSeeker incrementProfileViews(@PathVariable String userId,
+            @RequestParam(required = false) String viewerCompany) {
+        return this.service.incrementProfileViews(userId, viewerCompany);
     }
 }

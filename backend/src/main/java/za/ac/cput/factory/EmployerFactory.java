@@ -39,11 +39,11 @@ public class EmployerFactory {
      */
     public static Employer createEmployer(String email, String password,
                                           String firstName, String lastName,
-                                          String profilePicture, String phoneNumber,
+                                          String phoneNumber,
                                           String location,
                                           String companyName, String companyWebsite,
                                           String companySize, String industry,
-                                          String companyLogo, String companyDescription,
+                                          String companyDescription,
                                           String companyHeadquarters) {
         if (Helper.isNullOrEmpty(email) ||
                 !Helper.isValidEmail(email) ||
@@ -60,14 +60,12 @@ public class EmployerFactory {
                 .password(password)
                 .firstName(firstName)
                 .lastName(lastName)
-                .profilePicture(profilePicture)
                 .phoneNumber(phoneNumber)
                 .location(location)
                 .companyName(companyName)
                 .companyWebsite(companyWebsite)
                 .companySize(companySize)
                 .industry(industry)
-                .companyLogo(companyLogo)
                 .companyDescription(companyDescription)
                 .companyHeadquarters(companyHeadquarters)
                 .postedJobs(new ArrayList<>())

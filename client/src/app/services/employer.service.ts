@@ -13,7 +13,6 @@ export interface BackendEmployerFull {
   companyWebsite?: string;
   companySize?: string;
   industry?: string;
-  companyLogo?: string;
   companyDescription?: string;
   companyHeadquarters?: string;
   postedJobs: BackendJob[];

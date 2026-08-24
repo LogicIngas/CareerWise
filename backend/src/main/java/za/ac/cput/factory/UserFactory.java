@@ -35,7 +35,7 @@ public class UserFactory {
      */
     public static User createUser(String userId, String email, String password,
                                   String firstName, String lastName, String phoneNumber,
-                                  String location, String profilePicture) {
+                                  String location) {
         if (Helper.isNullOrEmpty(userId) || !Helper.isValidEmail(email)) {
             return null;
         }
@@ -48,7 +48,6 @@ public class UserFactory {
                 .lastName(lastName)
                 .phoneNumber(phoneNumber)
                 .location(location)
-                .profilePicture(profilePicture)
                 .build();
     }
 }

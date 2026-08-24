@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import za.ac.cput.Service.IJobSeekerService;
+import za.ac.cput.Service.INotificationService;
 import za.ac.cput.domain.Education;
+import za.ac.cput.domain.Experience;
 import za.ac.cput.domain.JobSeeker;
 import za.ac.cput.domain.Resume;
 import za.ac.cput.domain.Skill;
@@ -29,10 +31,12 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
     private static final Set<String> ALLOWED_RESUME_EXTENSIONS = Set.of("pdf", "doc", "docx");
 
     private final IJobSeekerRepository repository;
+    private final INotificationService notificationService;
 
     @Autowired
-    public JobSeekerServiceImpl(IJobSeekerRepository repository) {
+    public JobSeekerServiceImpl(IJobSeekerRepository repository, INotificationService notificationService) {
         this.repository = repository;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -95,6 +99,13 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
                 for (Education e : jobSeeker.getEducations()) {
                     e.setJobSeeker(existing);
                     existing.getEducations().add(e);
+                }
+            }
+            if (jobSeeker.getExperiences() != null) {
+                existing.getExperiences().clear();
+                for (Experience ex : jobSeeker.getExperiences()) {
+                    ex.setJobSeeker(existing);
+                    existing.getExperiences().add(ex);
                 }
             }
             return repository.save(existing);
@@ -191,12 +202,19 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 
     @Override
     @Transactional
-    public JobSeeker incrementProfileViews(String userId) {
+    public JobSeeker incrementProfileViews(String userId, String viewerCompany) {
         JobSeeker existing = repository.findById(userId).orElse(null);
         if (existing == null) {
             return null;
         }
         existing.setProfileViews(existing.getProfileViews() + 1);
-        return repository.save(existing);
+        JobSeeker saved = repository.save(existing);
+
+        String message = (viewerCompany != null && !viewerCompany.isBlank())
+                ? "A recruiter from " + viewerCompany + " viewed your profile."
+                : "Your profile was viewed.";
+        notificationService.create(userId, "PROFILE_VIEW", "Profile viewed", message);
+
+        return saved;
     }
 }

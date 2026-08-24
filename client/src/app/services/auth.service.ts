@@ -31,7 +31,7 @@ export interface SignupPayload {
   companySize?: string;
   industry?: string;
   // Captured in the UI but not sent to the backend: Employer has no matching
-  // field (companyName/companyWebsite/companySize/industry/companyLogo/
+  // field (companyName/companyWebsite/companySize/industry/
   // companyDescription/companyHeadquarters — none fit "role at the company").
   companyRole?: string;
 }
@@ -47,7 +47,6 @@ interface BackendUser {
   password?: string;
   firstName?: string;
   lastName?: string;
-  profilePicture?: string;
   phoneNumber?: string;
   location?: string;
 }
@@ -64,7 +63,6 @@ interface BackendEmployer extends BackendUser {
   companyWebsite?: string;
   companySize?: string;
   industry?: string;
-  companyLogo?: string;
   companyDescription?: string;
   companyHeadquarters?: string;
 }
