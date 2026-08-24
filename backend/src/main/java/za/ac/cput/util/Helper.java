@@ -5,14 +5,11 @@ import org.apache.commons.validator.routines.EmailValidator;
 public class Helper {
 
     public static boolean isNullOrEmpty(String str) {
-        return str == null || str.trim().isEmpty();
+        return str == null || str.isEmpty();
     }
 
     public static boolean isValidEmail(String email) {
-        if (isNullOrEmpty(email)) {
-            return false;
-        }
-        EmailValidator validator = EmailValidator.getInstance();
+      EmailValidator validator = EmailValidator.getInstance();
         return validator.isValid(email);
     }
 

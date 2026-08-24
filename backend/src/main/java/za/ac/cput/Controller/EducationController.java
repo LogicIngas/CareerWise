@@ -1,8 +1,6 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.IEducationService;
 import za.ac.cput.domain.Education;
@@ -43,7 +41,7 @@ public class EducationController {
 
     @GetMapping("/getAll")
     public List<Education> getAll() {
-       return this.educationService.getAll();
+        return this.educationService.getAll();
     }
 
     @GetMapping("/findByInstitution")

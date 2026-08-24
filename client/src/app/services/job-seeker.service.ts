@@ -29,7 +29,13 @@ export interface BackendJobSeekerFull {
   location?: string;
   headline?: string;
   summary?: string;
-  resumePath?: string;
+  resume?: {
+    resumeId?: string;
+    fileName: string;
+    storedName: string;
+    contentType: string;
+    fileSize: number;
+  };
   profileViews?: number;
   skills: BackendSkill[];
   educations: BackendEducation[];

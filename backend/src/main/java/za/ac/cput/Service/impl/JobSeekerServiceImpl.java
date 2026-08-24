@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import za.ac.cput.Service.IJobSeekerService;
 import za.ac.cput.domain.Education;
 import za.ac.cput.domain.JobSeeker;
+import za.ac.cput.domain.Resume;
 import za.ac.cput.domain.Skill;
+import za.ac.cput.factory.ResumeFactory;
 import za.ac.cput.repository.IJobSeekerRepository;
 
 import java.io.IOException;
@@ -65,15 +67,21 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
         }
         JobSeeker existing = repository.findById(jobSeeker.getUserId()).orElse(null);
         if (existing != null) {
-            if (jobSeeker.getFirstName() != null) existing.setFirstName(jobSeeker.getFirstName());
-            if (jobSeeker.getLastName() != null) existing.setLastName(jobSeeker.getLastName());
+            if (jobSeeker.getFirstName() != null)
+                existing.setFirstName(jobSeeker.getFirstName());
+            if (jobSeeker.getLastName() != null)
+                existing.setLastName(jobSeeker.getLastName());
             if (jobSeeker.getEmail() != null && !jobSeeker.getEmail().equals(existing.getEmail())) {
                 existing.setEmail(jobSeeker.getEmail());
             }
-            if (jobSeeker.getPhoneNumber() != null) existing.setPhoneNumber(jobSeeker.getPhoneNumber());
-            if (jobSeeker.getLocation() != null) existing.setLocation(jobSeeker.getLocation());
-            if (jobSeeker.getHeadline() != null) existing.setHeadline(jobSeeker.getHeadline());
-            if (jobSeeker.getSummary() != null) existing.setSummary(jobSeeker.getSummary());
+            if (jobSeeker.getPhoneNumber() != null)
+                existing.setPhoneNumber(jobSeeker.getPhoneNumber());
+            if (jobSeeker.getLocation() != null)
+                existing.setLocation(jobSeeker.getLocation());
+            if (jobSeeker.getHeadline() != null)
+                existing.setHeadline(jobSeeker.getHeadline());
+            if (jobSeeker.getSummary() != null)
+                existing.setSummary(jobSeeker.getSummary());
 
             if (jobSeeker.getSkills() != null) {
                 existing.getSkills().clear();
@@ -125,7 +133,7 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
                 ? originalName.substring(originalName.lastIndexOf('.') + 1).toLowerCase()
                 : "";
         if (!ALLOWED_RESUME_EXTENSIONS.contains(extension)) {
-            throw new IllegalArgumentException("Only PDF, DOC, and DOCX files are supported.");
+            throw new IllegalArgumentException("Only PDF, DOC, and DOCX files are supported. Received extension: '" + extension + "' from file: '" + originalName + "'");
         }
 
         JobSeeker existing = repository.findById(userId).orElse(null);
@@ -138,28 +146,31 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
         String safeName = originalName.replaceAll("[^a-zA-Z0-9._-]", "_");
         String storedName = safeUserId + "_" + safeName;
 
-        Path destination = RESUME_DIR.resolve(storedName).normalize();
-        if (!destination.startsWith(RESUME_DIR.toAbsolutePath().normalize())) {
+        Path safeDir = RESUME_DIR.toAbsolutePath().normalize();
+        Path destination = safeDir.resolve(storedName).normalize();
+        if (!destination.startsWith(safeDir)) {
             throw new IllegalArgumentException("Invalid file name.");
         }
 
-        if (existing.getResumePath() != null && !existing.getResumePath().equals(storedName)) {
-            Files.deleteIfExists(RESUME_DIR.resolve(existing.getResumePath()));
+        if (existing.getResume() != null && !existing.getResume().getStoredName().equals(storedName)) {
+            Files.deleteIfExists(RESUME_DIR.resolve(existing.getResume().getStoredName()));
         }
 
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 
-        existing.setResumePath(storedName);
+        Resume newResume = ResumeFactory.createResume(originalName, storedName, file.getContentType(), file.getSize(),
+                existing);
+        existing.setResume(newResume);
         return repository.save(existing);
     }
 
     @Override
     public Resource loadResume(String userId) {
         JobSeeker existing = repository.findById(userId).orElse(null);
-        if (existing == null || existing.getResumePath() == null) {
+        if (existing == null || existing.getResume() == null) {
             return null;
         }
-        Path file = RESUME_DIR.resolve(existing.getResumePath());
+        Path file = RESUME_DIR.resolve(existing.getResume().getStoredName());
         if (!Files.exists(file)) {
             return null;
         }
@@ -169,11 +180,11 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
     @Override
     public boolean deleteResume(String userId) throws IOException {
         JobSeeker existing = repository.findById(userId).orElse(null);
-        if (existing == null || existing.getResumePath() == null) {
+        if (existing == null || existing.getResume() == null) {
             return false;
         }
-        Files.deleteIfExists(RESUME_DIR.resolve(existing.getResumePath()));
-        existing.setResumePath(null);
+        Files.deleteIfExists(RESUME_DIR.resolve(existing.getResume().getStoredName()));
+        existing.setResume(null);
         repository.save(existing);
         return true;
     }

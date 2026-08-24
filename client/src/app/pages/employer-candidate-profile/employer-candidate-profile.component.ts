@@ -2,11 +2,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { JobSeekerService, BackendJobSeekerFull } from '../../services/job-seeker.service';
+import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
 
 @Component({
   selector: 'app-employer-candidate-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, SanitizeUrlPipe],
   template: `
     <div class="p-8 max-w-4xl mx-auto pb-20">
       <a routerLink="/employer-home" class="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-500 hover:text-stone-700 transition-colors mb-6">
@@ -38,10 +39,10 @@ import { JobSeekerService, BackendJobSeekerFull } from '../../services/job-seeke
               </div>
             </div>
 
-            <a *ngIf="c.resumePath" [href]="resumeUrl(c.userId)" target="_blank" rel="noopener"
+            <button *ngIf="c.resume" type="button" (click)="showResumePreview.set(!showResumePreview())"
               class="block w-full text-center py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-sm font-semibold transition-all shadow-sm">
-              View Resume
-            </a>
+              {{ showResumePreview() ? 'Hide Resume' : 'View Resume' }}
+            </button>
           </div>
         </div>
 
@@ -72,6 +73,35 @@ import { JobSeekerService, BackendJobSeekerFull } from '../../services/job-seeke
               <p *ngIf="c.educations.length === 0" class="text-sm text-stone-400">No education listed.</p>
             </div>
           </div>
+          <!-- Resume / CV Viewer -->
+          <div *ngIf="c.resume" class="bg-white rounded-2xl shadow-sm border border-stone-100 p-8">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h2 class="text-lg font-bold text-stone-900">Resume / CV</h2>
+                <p class="text-xs text-stone-500 mt-0.5">{{ c.resume?.fileName }}</p>
+              </div>
+              <button type="button" (click)="showResumePreview.set(!showResumePreview())"
+                class="text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                {{ showResumePreview() ? 'Hide Preview' : 'Preview Resume' }}
+              </button>
+            </div>
+            <div *ngIf="showResumePreview()" class="rounded-xl overflow-hidden border border-stone-200">
+              <iframe
+                [src]="resumeUrl(c.userId) | sanitizeUrl"
+                width="100%"
+                height="700"
+                class="block"
+                title="Candidate Resume">
+              </iframe>
+            </div>
+            <div *ngIf="!showResumePreview()" class="flex items-center gap-3 p-4 rounded-xl bg-stone-50 border border-stone-200">
+              <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+              </div>
+              <span class="text-sm font-semibold text-stone-700">{{ c.resume?.fileName }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -91,6 +121,7 @@ export class EmployerCandidateProfileComponent implements OnInit {
 
   candidate = signal<BackendJobSeekerFull | null>(null);
   loading = signal(true);
+  showResumePreview = signal(false);
 
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('userId');

@@ -24,8 +24,8 @@ public class SavedJobsServiceImpl implements ISavedJobsService {
 
     @Autowired
     public SavedJobsServiceImpl(ISavedJobsRepository savedJobsRepository,
-                                IJobSeekerRepository jobSeekerRepository,
-                                IJobRepository jobRepository) {
+            IJobSeekerRepository jobSeekerRepository,
+            IJobRepository jobRepository) {
         this.savedJobsRepository = savedJobsRepository;
         this.jobSeekerRepository = jobSeekerRepository;
         this.jobRepository = jobRepository;
@@ -33,7 +33,8 @@ public class SavedJobsServiceImpl implements ISavedJobsService {
 
     @Override
     public SavedJobs create(SavedJobs savedJob) {
-        if (savedJob == null) return null;
+        if (savedJob == null)
+            return null;
         return savedJobsRepository.save(savedJob);
     }
 
@@ -44,7 +45,8 @@ public class SavedJobsServiceImpl implements ISavedJobsService {
 
     @Override
     public SavedJobs update(SavedJobs savedJob) {
-        if (savedJob != null && savedJob.getSavedJobId() != null && savedJobsRepository.existsById(savedJob.getSavedJobId())) {
+        if (savedJob != null && savedJob.getSavedJobId() != null &&
+                savedJobsRepository.existsById(savedJob.getSavedJobId())) {
             return savedJobsRepository.save(savedJob);
         }
         return null;
@@ -67,15 +69,18 @@ public class SavedJobsServiceImpl implements ISavedJobsService {
     @Override
     @Transactional
     public SavedJobs saveJob(String jobSeekerId, String jobId) {
-        if (savedJobsRepository.existsByJobSeekerUserIdAndJobJobId(jobSeekerId, jobId)) {
-            return savedJobsRepository.findByJobSeekerUserIdAndJobJobId(jobSeekerId, jobId).orElse(null);
+        if (savedJobsRepository.existsByJobSeekerUserIdAndJobJobId(jobSeekerId,
+                jobId)) {
+            return savedJobsRepository.findByJobSeekerUserIdAndJobJobId(jobSeekerId,
+                    jobId).orElse(null);
         }
 
         Optional<JobSeeker> jobSeekerOpt = jobSeekerRepository.findByUserId(jobSeekerId);
         Optional<Job> jobOpt = jobRepository.findById(jobId);
 
         if (jobSeekerOpt.isPresent() && jobOpt.isPresent()) {
-            SavedJobs savedJob = SavedJobsFactory.buildSavedJob(jobSeekerOpt.get(), jobOpt.get());
+            SavedJobs savedJob = SavedJobsFactory.buildSavedJob(jobSeekerOpt.get(),
+                    jobOpt.get());
             return savedJobsRepository.save(savedJob);
         }
 
@@ -85,7 +90,8 @@ public class SavedJobsServiceImpl implements ISavedJobsService {
     @Override
     @Transactional
     public boolean unsaveJob(String jobSeekerId, String jobId) {
-        if (savedJobsRepository.existsByJobSeekerUserIdAndJobJobId(jobSeekerId, jobId)) {
+        if (savedJobsRepository.existsByJobSeekerUserIdAndJobJobId(jobSeekerId,
+                jobId)) {
             savedJobsRepository.deleteByJobSeekerUserIdAndJobJobId(jobSeekerId, jobId);
             return true;
         }
@@ -99,6 +105,7 @@ public class SavedJobsServiceImpl implements ISavedJobsService {
 
     @Override
     public boolean isJobSaved(String jobSeekerId, String jobId) {
-        return savedJobsRepository.existsByJobSeekerUserIdAndJobJobId(jobSeekerId, jobId);
+        return savedJobsRepository.existsByJobSeekerUserIdAndJobJobId(jobSeekerId,
+                jobId);
     }
 }

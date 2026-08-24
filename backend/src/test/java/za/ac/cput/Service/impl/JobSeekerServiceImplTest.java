@@ -37,9 +37,8 @@ class JobSeekerServiceImplTest {
                 "profile_picture.png",
                 "0712345678",
                 "Cape Town",
-                "Software Engineer",
-                "Test summary for job seeker",
-                "test_resume.pdf"
+                "Java Software Engineer",
+                "Passionate backend developer with 5 years of experience"
         );
     }
 
@@ -83,8 +82,7 @@ class JobSeekerServiceImplTest {
         updatedJobSeeker.setPhoneNumber("0823456789");
         updatedJobSeeker.setLocation("Johannesburg");
         updatedJobSeeker.setHeadline("Senior Java Software Engineer");
-        updatedJobSeeker.setSummary("Updated summary");
-        updatedJobSeeker.setResumePath("updated_resume.pdf");
+        updatedJobSeeker.setSummary("Updated: Senior backend developer with 7 years of experience");
 
         JobSeeker updated = jobSeekerService.update(updatedJobSeeker);
         assertNotNull(updated);
@@ -145,8 +143,7 @@ class JobSeekerServiceImplTest {
                 "0711111111",
                 "Cape Town",
                 "Software Developer",
-                "Testing UUID generation",
-                "resume.pdf"
+                "Testing UUID generation"
         );
 
         assertNotNull(jobSeeker);

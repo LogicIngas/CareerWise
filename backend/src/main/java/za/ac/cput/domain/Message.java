@@ -9,12 +9,13 @@ import java.time.LocalDateTime;
  * Standalone entity for messaging between users
  */
 @Entity
-@Table(name = "messages")
+// @Table(name = "messages")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Message { //A job seeker can leave a message in the frontend it will be cover letter cover letter
+public class Message { // A job seeker can leave a message in the frontend it will be cover letter
+                       // cover letter
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

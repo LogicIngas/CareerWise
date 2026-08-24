@@ -69,9 +69,22 @@ public class JobSeekerController {
         }
         String filename = resource.getFilename() != null ? resource.getFilename() : "resume";
         String displayName = filename.startsWith(userId + "_") ? filename.substring(userId.length() + 1) : filename;
+
+        // Determine MIME type from extension so PDF opens inline in browser
+        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        String lower = displayName.toLowerCase();
+        if (lower.endsWith(".pdf")) {
+            mediaType = MediaType.APPLICATION_PDF;
+        } else if (lower.endsWith(".doc")) {
+            mediaType = MediaType.parseMediaType("application/msword");
+        } else if (lower.endsWith(".docx")) {
+            mediaType = MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        }
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + displayName + "\"")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)
+                .contentType(mediaType)
                 .body(resource);
     }
 

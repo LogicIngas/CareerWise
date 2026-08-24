@@ -24,8 +24,8 @@ public class ApplicationsServiceImpl implements IApplicationsService {
 
     @Autowired
     public ApplicationsServiceImpl(IJobApplicationRepository applicationRepository,
-                                   IJobSeekerRepository jobSeekerRepository,
-                                   IJobRepository jobRepository) {
+            IJobSeekerRepository jobSeekerRepository,
+            IJobRepository jobRepository) {
         this.applicationRepository = applicationRepository;
         this.jobSeekerRepository = jobSeekerRepository;
         this.jobRepository = jobRepository;
@@ -33,7 +33,7 @@ public class ApplicationsServiceImpl implements IApplicationsService {
 
     @Override
     public JobApplication create(JobApplication jobApplication) {
-        if (jobApplication == null) return null;
+        // if (jobApplication == null) return null;
         return applicationRepository.save(jobApplication);
     }
 
@@ -44,7 +44,8 @@ public class ApplicationsServiceImpl implements IApplicationsService {
 
     @Override
     public JobApplication update(JobApplication jobApplication) {
-        if (jobApplication != null && jobApplication.getApplicationId() != null && applicationRepository.existsById(jobApplication.getApplicationId())) {
+        if (jobApplication != null && jobApplication.getApplicationId() != null
+                && applicationRepository.existsById(jobApplication.getApplicationId())) {
             return applicationRepository.save(jobApplication);
         }
         return null;

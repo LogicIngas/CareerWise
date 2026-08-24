@@ -14,11 +14,6 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingComponent),
         title: 'CareerWise | Find the job that moves your career forward'
-      },
-      {
-        path: 'jobs',
-        loadComponent: () => import('./pages/find-jobs/find-jobs.component').then(m => m.FindJobsComponent),
-        title: 'Find Jobs | CareerWise'
       }
     ]
   },
@@ -27,6 +22,12 @@ export const routes: Routes = [
     component: DashboardLayoutComponent,
     canActivate: [authGuard],
     children: [
+      {
+        path: 'jobs',
+        canActivate: [roleGuard('candidate')],
+        loadComponent: () => import('./pages/find-jobs/find-jobs.component').then(m => m.FindJobsComponent),
+        title: 'Find Jobs | CareerWise'
+      },
       {
         path: 'dashboard',
         canActivate: [roleGuard('candidate')],

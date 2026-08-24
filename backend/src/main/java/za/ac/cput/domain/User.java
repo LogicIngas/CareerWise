@@ -5,12 +5,13 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder  // Use @SuperBuilder instead of @Builder to avoid complication on inheriting classes
+@SuperBuilder // Use @SuperBuilder instead of @Builder to avoid complication on inheriting
+              // classes
 public class User {
 
     @Id
