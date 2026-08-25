@@ -20,8 +20,12 @@ public class EmployerServiceImpl implements IEmployerService {
 
     @Override
     public Employer create(Employer employer) {
+        if (employer.getEmail() != null &&
+                !employerRepository.existsByEmail(employer.getEmail())) {
             return employerRepository.save(employer);
         }
+        return null;
+    }
 
 
     @Override

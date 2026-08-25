@@ -1,6 +1,7 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.IEducationService;
 import za.ac.cput.domain.Education;
@@ -25,13 +26,21 @@ public class EducationController {
     }
 
     @GetMapping("/read/{id}")
-    public Education read(@PathVariable String id) {
-        return this.educationService.read(id);
+    public ResponseEntity<Education> read(@PathVariable String id) {
+        Education education = this.educationService.read(id);
+        if (education == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(education);
     }
 
     @PutMapping("/update")
-    public Education update(@RequestBody Education education) {
-        return this.educationService.update(education);
+    public ResponseEntity<Education> update(@RequestBody Education education) {
+        Education updated = this.educationService.update(education);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/delete/{id}")

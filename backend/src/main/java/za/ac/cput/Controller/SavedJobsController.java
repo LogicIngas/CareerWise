@@ -1,6 +1,7 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.ISavedJobsService;
 import za.ac.cput.domain.SavedJobs;
@@ -21,7 +22,7 @@ public class SavedJobsController {
     }
 
     @PostMapping("/save")
-    public SavedJobs saveJob(@RequestBody(required = false) Map<String, String> body,
+    public ResponseEntity<SavedJobs> saveJob(@RequestBody(required = false) Map<String, String> body,
             @RequestParam(required = false) String jobSeekerId,
             @RequestParam(required = false) String jobId) {
         String jsId = (body != null && body.containsKey("jobSeekerId")) ? body.get("jobSeekerId") : jobSeekerId;
@@ -29,10 +30,14 @@ public class SavedJobsController {
                 : jobId;
 
         if (jsId == null || jId == null) {
-            return null;
+            return ResponseEntity.badRequest().build();
         }
 
-        return this.savedJobsService.saveJob(jsId, jId);
+        SavedJobs saved = this.savedJobsService.saveJob(jsId, jId);
+        if (saved == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(saved);
     }
 
     @DeleteMapping("/unsave")

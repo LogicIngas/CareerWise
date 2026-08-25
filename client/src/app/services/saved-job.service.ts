@@ -54,7 +54,7 @@ export class SavedJobService {
     return this.http.get<BackendSavedJob[]>(`${this.apiBaseUrl}/saved-jobs/jobseeker/${userId}`).pipe(
       map(savedItems => {
         const jobs = savedItems.map(item => this.mapBackendJob(item.job));
-        const ids = new Set(jobs.map(j => j.id));
+        const ids = new Set<string>(jobs.map(j => j.id));
         this.savedJobIdsSignal.set(ids);
         this.savedJobsSignal.set(jobs);
         this.loadingSignal.set(false);

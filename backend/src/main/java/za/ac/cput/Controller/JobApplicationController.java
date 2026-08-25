@@ -1,6 +1,7 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.IApplicationsService;
 import za.ac.cput.domain.JobApplication;
@@ -21,16 +22,20 @@ public class JobApplicationController {
     }
 
     @PostMapping("/apply")
-    public JobApplication apply(@RequestBody Map<String, String> payload) {
+    public ResponseEntity<JobApplication> apply(@RequestBody Map<String, String> payload) {
         String jobSeekerId = payload.get("jobSeekerId");
         String jobId = payload.get("jobId");
         String notes = payload.getOrDefault("notes", "");
 
         if (jobSeekerId == null || jobId == null) {
-            return null;
+            return ResponseEntity.badRequest().build();
         }
 
-        return this.applicationService.apply(jobSeekerId, jobId, notes);
+        JobApplication application = this.applicationService.apply(jobSeekerId, jobId, notes);
+        if (application == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(application);
     }
 
     @GetMapping("/jobseeker/{jobSeekerId}")
@@ -49,20 +54,28 @@ public class JobApplicationController {
     }
 
     @GetMapping("/read/{id}")
-    public JobApplication read(@PathVariable String id) {
-        return this.applicationService.read(id);
+    public ResponseEntity<JobApplication> read(@PathVariable String id) {
+        JobApplication application = this.applicationService.read(id);
+        if (application == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(application);
     }
 
     @PutMapping("/update-status")
-    public JobApplication updateStatus(@RequestBody Map<String, String> payload) {
+    public ResponseEntity<JobApplication> updateStatus(@RequestBody Map<String, String> payload) {
         String applicationId = payload.get("applicationId");
         String status = payload.get("status");
 
         if (applicationId == null || status == null) {
-            return null;
+            return ResponseEntity.badRequest().build();
         }
 
-        return this.applicationService.updateStatus(applicationId, status);
+        JobApplication updated = this.applicationService.updateStatus(applicationId, status);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/delete/{id}")

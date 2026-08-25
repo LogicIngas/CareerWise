@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface BackendSkill {
@@ -60,18 +61,24 @@ export class JobSeekerService {
   private apiBaseUrl = environment.apiBaseUrl;
 
   getById(userId: string): Observable<BackendJobSeekerFull | null> {
-    return this.http.get<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/read/${userId}`);
+    return this.http
+      .get<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/read/${userId}`)
+      .pipe(catchError(err => this.nullIfNotFound(err)));
   }
 
   // NEW: updateProfile
   updateProfile(payload: Partial<BackendJobSeekerFull>): Observable<BackendJobSeekerFull | null> {
-    return this.http.put<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/profile`, payload);
+    return this.http
+      .put<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/profile`, payload)
+      .pipe(catchError(err => this.nullIfNotFound(err)));
   }
 
   uploadResume(userId: string, file: File): Observable<BackendJobSeekerFull | null> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/${userId}/resume`, formData);
+    return this.http
+      .post<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/${userId}/resume`, formData)
+      .pipe(catchError(err => this.nullIfNotFound(err)));
   }
 
   deleteResume(userId: string): Observable<boolean> {
@@ -84,6 +91,17 @@ export class JobSeekerService {
 
   incrementProfileViews(userId: string, viewerCompany?: string): Observable<BackendJobSeekerFull | null> {
     const params: Record<string, string> = viewerCompany ? { viewerCompany } : {};
-    return this.http.post<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/${userId}/view`, {}, { params });
+    return this.http
+      .post<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/${userId}/view`, {}, { params })
+      .pipe(catchError(err => this.nullIfNotFound(err)));
+  }
+
+  // The backend now returns 404 instead of a null body; keep the old
+  // "null = not found" contract for callers.
+  private nullIfNotFound(err: HttpErrorResponse): Observable<never> | Observable<null> {
+    if (err.status === 404) {
+      return of(null);
+    }
+    return throwError(() => err);
   }
 }
