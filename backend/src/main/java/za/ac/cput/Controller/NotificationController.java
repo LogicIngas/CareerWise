@@ -1,6 +1,7 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.INotificationService;
 import za.ac.cput.domain.Notification;
@@ -25,8 +26,12 @@ public class NotificationController {
     }
 
     @PutMapping("/{id}/read")
-    public Notification markAsRead(@PathVariable String id) {
-        return notificationService.markAsRead(id);
+    public ResponseEntity<Notification> markAsRead(@PathVariable String id) {
+        Notification notification = notificationService.markAsRead(id);
+        if (notification == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(notification);
     }
 
     @PutMapping("/user/{userId}/read-all")

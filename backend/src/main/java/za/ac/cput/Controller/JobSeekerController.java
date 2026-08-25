@@ -3,6 +3,7 @@ package za.ac.cput.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import za.ac.cput.domain.JobSeeker;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/jobseekers")
@@ -26,24 +28,41 @@ public class JobSeekerController {
     }
 
     @PostMapping("/create")
-    public JobSeeker create(@RequestBody JobSeeker jobSeeker) {
-        return this.service.create(jobSeeker);
+    public ResponseEntity<?> create(@RequestBody JobSeeker jobSeeker) {
+        JobSeeker created = this.service.create(jobSeeker);
+        if (created == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "An account with this email already exists."));
+        }
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping("/read/{userId}")
-    public JobSeeker read(@PathVariable String userId) {
-        return this.service.read(userId);
+    public ResponseEntity<JobSeeker> read(@PathVariable String userId) {
+        JobSeeker jobSeeker = this.service.read(userId);
+        if (jobSeeker == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(jobSeeker);
     }
 
     @PutMapping("/update")
-    public JobSeeker update(@RequestBody JobSeeker jobSeeker) {
-        return this.service.updateProfile(jobSeeker);
+    public ResponseEntity<JobSeeker> update(@RequestBody JobSeeker jobSeeker) {
+        JobSeeker updated = this.service.updateProfile(jobSeeker);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
     }
 
     // NEW: PUT /api/jobseekers/profile
     @PutMapping("/profile")
-    public JobSeeker updateProfile(@RequestBody JobSeeker jobSeeker) {
-        return this.service.updateProfile(jobSeeker);
+    public ResponseEntity<JobSeeker> updateProfile(@RequestBody JobSeeker jobSeeker) {
+        JobSeeker updated = this.service.updateProfile(jobSeeker);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/delete/{userId}")
@@ -57,8 +76,12 @@ public class JobSeekerController {
     }
 
     @PostMapping(value = "/{userId}/resume", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public JobSeeker uploadResume(@PathVariable String userId, @RequestParam("file") MultipartFile file) throws IOException {
-        return this.service.uploadResume(userId, file);
+    public ResponseEntity<JobSeeker> uploadResume(@PathVariable String userId, @RequestParam("file") MultipartFile file) throws IOException {
+        JobSeeker updated = this.service.uploadResume(userId, file);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
     }
 
     @GetMapping("/{userId}/resume")
@@ -94,8 +117,12 @@ public class JobSeekerController {
     }
 
     @PostMapping("/{userId}/view")
-    public JobSeeker incrementProfileViews(@PathVariable String userId,
+    public ResponseEntity<JobSeeker> incrementProfileViews(@PathVariable String userId,
             @RequestParam(required = false) String viewerCompany) {
-        return this.service.incrementProfileViews(userId, viewerCompany);
+        JobSeeker updated = this.service.incrementProfileViews(userId, viewerCompany);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
     }
 }

@@ -158,13 +158,17 @@ export class AuthService {
   // The base /api/users/login response has no role field — role is implied
   // by which JOINED-inheritance subclass table the account lives in. Probe
   // both role-specific read endpoints to find which one has the account.
+  // Both probes return 404 when the id belongs to the other role, so map
+  // those to a null result and keep probing.
   private resolveRole(user: BackendUser): Observable<AuthUser> {
     return this.http.get<BackendJobSeeker | null>(`${this.apiBaseUrl}/jobseekers/read/${user.userId}`).pipe(
+      catchError(() => of(null)),
       switchMap(jobSeeker => {
         if (jobSeeker) {
           return of(this.mapJobSeeker(jobSeeker));
         }
         return this.http.get<BackendEmployer | null>(`${this.apiBaseUrl}/employers/read/${user.userId}`).pipe(
+          catchError(() => of(null)),
           map(employer => employer ? this.mapEmployer(employer) : this.mapJobSeeker(user))
         );
       })

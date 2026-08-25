@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, map, of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Job } from '../models/models';
 
@@ -82,7 +83,8 @@ export class JobService {
 
   getById(id: string): Observable<Job | null> {
     return this.http.get<BackendJob | null>(`${this.apiBaseUrl}/jobs/read/${id}`).pipe(
-      map(job => job ? this.mapJob(job) : null)
+      map(job => job ? this.mapJob(job) : null),
+      catchError(err => this.nullIfNotFound(err))
     );
   }
 
@@ -93,15 +95,28 @@ export class JobService {
   }
 
   getRawById(id: string): Observable<BackendJob | null> {
-    return this.http.get<BackendJob | null>(`${this.apiBaseUrl}/jobs/read/${id}`);
+    return this.http.get<BackendJob | null>(`${this.apiBaseUrl}/jobs/read/${id}`).pipe(
+      catchError(err => this.nullIfNotFound(err))
+    );
   }
 
   update(payload: BackendJob): Observable<BackendJob | null> {
-    return this.http.put<BackendJob | null>(`${this.apiBaseUrl}/jobs/update`, payload);
+    return this.http.put<BackendJob | null>(`${this.apiBaseUrl}/jobs/update`, payload).pipe(
+      catchError(err => this.nullIfNotFound(err))
+    );
   }
 
   delete(jobId: string): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiBaseUrl}/jobs/delete/${jobId}`);
+  }
+
+  // The backend now returns 404 instead of a null body; keep the old
+  // "null = not found" contract for callers.
+  private nullIfNotFound(err: HttpErrorResponse): Observable<never> | Observable<null> {
+    if (err.status === 404) {
+      return of(null);
+    }
+    return throwError(() => err);
   }
 
   private mapJob(b: BackendJob): Job {

@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface BackendNotification {
@@ -25,10 +26,21 @@ export class NotificationService {
   }
 
   markAsRead(notificationId: string): Observable<BackendNotification | null> {
-    return this.http.put<BackendNotification | null>(`${this.apiBaseUrl}/notifications/${notificationId}/read`, {});
+    return this.http
+      .put<BackendNotification | null>(`${this.apiBaseUrl}/notifications/${notificationId}/read`, {})
+      .pipe(catchError(err => this.nullIfNotFound(err)));
   }
 
   markAllAsRead(userId: string): Observable<number> {
     return this.http.put<number>(`${this.apiBaseUrl}/notifications/user/${userId}/read-all`, {});
+  }
+
+  // The backend now returns 404 instead of a null body; keep the old
+  // "null = not found" contract for callers.
+  private nullIfNotFound(err: HttpErrorResponse): Observable<never> | Observable<null> {
+    if (err.status === 404) {
+      return of(null);
+    }
+    return throwError(() => err);
   }
 }
