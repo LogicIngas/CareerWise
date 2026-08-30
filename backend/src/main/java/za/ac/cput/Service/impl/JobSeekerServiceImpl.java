@@ -213,7 +213,13 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
         String message = (viewerCompany != null && !viewerCompany.isBlank())
                 ? "A recruiter from " + viewerCompany + " viewed your profile."
                 : "Your profile was viewed.";
-        notificationService.create(userId, "PROFILE_VIEW", "Profile viewed", message);
+        notificationService.create(
+                userId,
+                "PROFILE_VIEW",
+                "Profile viewed",
+                message,
+                null
+        );
 
         return saved;
     }

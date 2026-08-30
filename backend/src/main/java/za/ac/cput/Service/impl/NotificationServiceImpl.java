@@ -19,13 +19,15 @@ public class NotificationServiceImpl implements INotificationService {
     }
 
     @Override
-    public Notification create(String userId, String type, String title, String message) {
+    public Notification create(String userId, String type, String title, String message, String jobId) {
         Notification notification = Notification.builder()
                 .userId(userId)
+                .jobId(jobId)
                 .type(type)
                 .title(title)
                 .message(message)
                 .build();
+
         return repository.save(notification);
     }
 

@@ -25,10 +25,12 @@ public class ApplicationsServiceImpl implements IApplicationsService {
     private final INotificationService notificationService;
 
     @Autowired
-    public ApplicationsServiceImpl(IJobApplicationRepository applicationRepository,
+    public ApplicationsServiceImpl(
+            IJobApplicationRepository applicationRepository,
             IJobSeekerRepository jobSeekerRepository,
             IJobRepository jobRepository,
             INotificationService notificationService) {
+
         this.applicationRepository = applicationRepository;
         this.jobSeekerRepository = jobSeekerRepository;
         this.jobRepository = jobRepository;
@@ -37,7 +39,6 @@ public class ApplicationsServiceImpl implements IApplicationsService {
 
     @Override
     public JobApplication create(JobApplication jobApplication) {
-        // if (jobApplication == null) return null;
         return applicationRepository.save(jobApplication);
     }
 
@@ -48,10 +49,13 @@ public class ApplicationsServiceImpl implements IApplicationsService {
 
     @Override
     public JobApplication update(JobApplication jobApplication) {
-        if (jobApplication != null && jobApplication.getApplicationId() != null
+        if (jobApplication != null
+                && jobApplication.getApplicationId() != null
                 && applicationRepository.existsById(jobApplication.getApplicationId())) {
+
             return applicationRepository.save(jobApplication);
         }
+
         return null;
     }
 
@@ -61,6 +65,7 @@ public class ApplicationsServiceImpl implements IApplicationsService {
             applicationRepository.deleteById(id);
             return true;
         }
+
         return false;
     }
 
@@ -71,29 +76,67 @@ public class ApplicationsServiceImpl implements IApplicationsService {
 
     @Override
     @Transactional
-    public JobApplication apply(String jobSeekerId, String jobId, String notes) {
-        Optional<JobApplication> existing = applicationRepository.findByJobSeekerUserIdAndJobJobId(jobSeekerId, jobId);
+    public JobApplication apply(
+            String jobSeekerId,
+            String jobId,
+            String notes) {
+
+        // Prevent the same job seeker from applying twice
+        Optional<JobApplication> existing =
+                applicationRepository.findByJobSeekerUserIdAndJobJobId(
+                        jobSeekerId,
+                        jobId
+                );
+
         if (existing.isPresent()) {
             return existing.get();
         }
 
-        Optional<JobSeeker> jobSeekerOpt = jobSeekerRepository.findByUserId(jobSeekerId);
-        Optional<Job> jobOpt = jobRepository.findById(jobId);
+        // Find the job seeker
+        Optional<JobSeeker> jobSeekerOpt =
+                jobSeekerRepository.findByUserId(jobSeekerId);
+
+        // Find the job
+        Optional<Job> jobOpt =
+                jobRepository.findById(jobId);
 
         if (jobSeekerOpt.isPresent() && jobOpt.isPresent()) {
+
             JobSeeker jobSeeker = jobSeekerOpt.get();
             Job job = jobOpt.get();
-            JobApplication app = JobApplicationFactory.buildJobApplication(jobSeeker, job, notes);
-            JobApplication saved = applicationRepository.save(app);
 
+            // Create application
+            JobApplication app =
+                    JobApplicationFactory.buildJobApplication(
+                            jobSeeker,
+                            job,
+                            notes
+                    );
+
+            JobApplication saved =
+                    applicationRepository.save(app);
+
+            // Notify employer that a new applicant has applied
             if (job.getEmployer() != null) {
-                String applicantName = (jobSeeker.getFirstName() != null ? jobSeeker.getFirstName() : "")
-                        + " " + (jobSeeker.getLastName() != null ? jobSeeker.getLastName() : "");
+
+                String applicantName =
+                        (jobSeeker.getFirstName() != null
+                                ? jobSeeker.getFirstName()
+                                : "")
+                                + " "
+                                + (jobSeeker.getLastName() != null
+                                ? jobSeeker.getLastName()
+                                : "");
+
                 notificationService.create(
                         job.getEmployer().getUserId(),
                         "NEW_APPLICANT",
                         "New applicant",
-                        applicantName.trim() + " applied to " + job.getTitle() + "."
+                        applicantName.trim()
+                                + " applied to "
+                                + job.getTitle()
+                                + ".",
+                        job.getJobId()
                 );
             }
 
@@ -115,24 +158,42 @@ public class ApplicationsServiceImpl implements IApplicationsService {
 
     @Override
     @Transactional
-    public JobApplication updateStatus(String applicationId, String status) {
-        Optional<JobApplication> opt = applicationRepository.findById(applicationId);
-        if (opt.isPresent()) {
-            JobApplication app = opt.get();
-            app.setStatus(status);
-            JobApplication saved = applicationRepository.save(app);
+    public JobApplication updateStatus(
+            String applicationId,
+            String status) {
 
-            if (app.getJobSeeker() != null && app.getJob() != null) {
+        Optional<JobApplication> opt =
+                applicationRepository.findById(applicationId);
+
+        if (opt.isPresent()) {
+
+            JobApplication app = opt.get();
+
+            app.setStatus(status);
+
+            JobApplication saved =
+                    applicationRepository.save(app);
+
+            // Notify job seeker that their application status changed
+            if (app.getJobSeeker() != null
+                    && app.getJob() != null) {
+
                 notificationService.create(
                         app.getJobSeeker().getUserId(),
                         "APPLICATION_STATUS",
                         "Application updated",
-                        "Your application for " + app.getJob().getTitle() + " was updated to " + status + "."
+                        "Your application for "
+                                + app.getJob().getTitle()
+                                + " was updated to "
+                                + status
+                                + ".",
+                        app.getJob().getJobId()
                 );
             }
 
             return saved;
         }
+
         return null;
     }
 }

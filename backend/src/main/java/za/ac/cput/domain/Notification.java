@@ -2,6 +2,7 @@ package za.ac.cput.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,8 +20,11 @@ public class Notification {
     @Column(name = "user_id", nullable = false)
     private String userId;
 
+    @Column(name = "job_id")
+    private String jobId;
+
     @Column(nullable = false)
-    private String type; // APPLICATION_STATUS, NEW_APPLICANT, PROFILE_VIEW
+    private String type;
 
     @Column(nullable = false)
     private String title;
@@ -29,6 +33,7 @@ public class Notification {
     private String message;
 
     @Builder.Default
+    @Column(name = "is_read", nullable = false)
     private boolean read = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -1,68 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AIDiffSettings">
-    <option name="showAIDiff" value="false" />
-  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="71be2843-5749-4a61-8983-fd95df7c928f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="aebe094b-23c6-46a9-b85d-712761dfde06" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/client/src/app/pages/messages/messages.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/app/services/chat.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/INotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/INotificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/ApplicationsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/ApplicationsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/JobSeekerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/JobSeekerServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/JobServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/JobServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/NotificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/NotificationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/domain/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/domain/Notification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/app.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/components/sidebar/sidebar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/components/sidebar/sidebar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/pages/employer-candidate-profile/employer-candidate-profile.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/pages/employer-candidate-profile/employer-candidate-profile.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/pages/job-detail/job-detail.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/pages/job-detail/job-detail.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/pages/notifications/notifications.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/pages/notifications/notifications.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/pages/post-job/post-job.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/pages/post-job/post-job.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/app/services/notification.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/services/notification.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="JUnit5 Test Class" />
-      </list>
-    </option>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/elvin/IdeaProjects/CareerWise" value="3IVOmbzf9tKy4a340lxkUE3n8dF" />
+    </persistenceIdMap>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;PhumlaniMdlalo2&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/PhumlaniMdlalo2/CareerWise&quot;,
-    &quot;accountId&quot;: &quot;7532fbc7-4b8d-4f78-a20d-b14f124d3cc4&quot;
-  }
-}</component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 2
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
 }</component>
-  <component name="ProjectId" id="3GnyOj2iQxzbYCJ5FZ8QbJ7baBz" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="3IVOmbzf9tKy4a340lxkUE3n8dF" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "Spring Boot.Main.executor": "Run",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "Rebasing master",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -70,7 +63,9 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\elvin\\IdeaProjects\\CareerWise\\client\\node_modules\\prettier",
     "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Users\\elvin\\IdeaProjects\\CareerWise\\client\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -97,39 +92,28 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
       </set>
     </attachedChunks>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="71be2843-5749-4a61-8983-fd95df7c928f" name="Changes" comment="" />
-      <created>1784621598376</created>
+      <changelist id="aebe094b-23c6-46a9-b85d-712761dfde06" name="Changes" comment="" />
+      <created>1787846431368</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1784621598376</updated>
-      <workItem from="1784621601374" duration="1847000" />
-      <workItem from="1784627879588" duration="31000" />
-      <workItem from="1784628203535" duration="15000" />
-      <workItem from="1784656596996" duration="353000" />
-      <workItem from="1784807951098" duration="402000" />
-      <workItem from="1784811270875" duration="108000" />
-      <workItem from="1784811382004" duration="746000" />
-      <workItem from="1784816946393" duration="110000" />
-      <workItem from="1786431520007" duration="16000" />
+      <updated>1787846431368</updated>
+      <workItem from="1787846435196" duration="17564000" />
+      <workItem from="1787918669993" duration="4480000" />
+      <workItem from="1788005660916" duration="12377000" />
+      <workItem from="1788090543179" duration="3089000" />
+      <workItem from="1788094217254" duration="222000" />
+      <workItem from="1788094489840" duration="3668000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>
