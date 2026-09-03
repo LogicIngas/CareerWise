@@ -27,12 +27,11 @@ public class UserController {
         return this.userService.login(email, password);
     }
 
-    // NEW: POST /api/users/change-password and /api/auth/change-password
     @PostMapping("/change-password")
     public boolean changePassword(@RequestBody Map<String, String> payload) throws Exception {
         String userId = payload.get("userId");
-        String oldPassword = payload.get("oldPassword") != null ? payload.get("oldPassword") : payload.get("oldPass");
-        String newPassword = payload.get("newPassword") != null ? payload.get("newPassword") : payload.get("newPass");
+        String oldPassword = payload.get("oldPassword");
+        String newPassword = payload.get("newPassword");
         return this.userService.changePassword(userId, oldPassword, newPassword);
     }
 }

@@ -1,7 +1,6 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.IExperienceService;
 import za.ac.cput.domain.Experience;
@@ -26,21 +25,13 @@ public class ExperienceController {
     }
 
     @GetMapping("/read/{id}")
-    public ResponseEntity<Experience> read(@PathVariable String id) {
-        Experience experience = this.experienceService.read(id);
-        if (experience == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(experience);
+    public Experience read(@PathVariable String id) {
+        return this.experienceService.read(id);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Experience> update(@RequestBody Experience experience) {
-        Experience updated = this.experienceService.update(experience);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
+    public Experience update(@RequestBody Experience experience) {
+        return this.experienceService.update(experience);
     }
 
     @DeleteMapping("/delete/{id}")
