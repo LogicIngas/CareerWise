@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aebe094b-23c6-46a9-b85d-712761dfde06" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/app/pages/messages/messages.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/app/services/chat.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/INotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/INotificationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/ApplicationsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/ApplicationsServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/JobSeekerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/JobSeekerServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/JobServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/JobServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/NotificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/Service/impl/NotificationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/domain/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/za/ac/cput/domain/Notification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/app.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/components/sidebar/sidebar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/components/sidebar/sidebar.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/pages/employer-candidate-profile/employer-candidate-profile.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/pages/employer-candidate-profile/employer-candidate-profile.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/pages/job-detail/job-detail.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/pages/job-detail/job-detail.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/pages/notifications/notifications.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/pages/notifications/notifications.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/pages/post-job/post-job.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/pages/post-job/post-job.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/services/notification.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/services/notification.service.ts" afterDir="false" />
-    </list>
+    <list default="true" id="aebe094b-23c6-46a9-b85d-712761dfde06" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,6 +18,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "PhumlaniMdlalo2"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/PhumlaniMdlalo2/CareerWise",
+    "accountId": "7532fbc7-4b8d-4f78-a20d-b14f124d3cc4"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 0
@@ -55,7 +50,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.Main.executor": "Run",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "Rebasing master",
+    "git-widget-placeholder": "master",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -115,5 +110,16 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

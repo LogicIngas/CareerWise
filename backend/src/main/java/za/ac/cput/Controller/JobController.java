@@ -1,7 +1,6 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.IJobService;
 import za.ac.cput.domain.Job;
@@ -26,21 +25,13 @@ public class JobController {
     }
 
     @GetMapping("/read/{id}")
-    public ResponseEntity<Job> read(@PathVariable String id) {
-        Job job = this.jobService.read(id);
-        if (job == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(job);
+    public Job read(@PathVariable String id) {
+        return this.jobService.read(id);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Job> update(@RequestBody Job job) {
-        Job updated = this.jobService.update(job);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
+    public Job update(@RequestBody Job job) {
+        return this.jobService.update(job);
     }
 
     @DeleteMapping("/delete/{id}")

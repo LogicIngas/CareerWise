@@ -3,7 +3,6 @@ package za.ac.cput.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,6 @@ import za.ac.cput.domain.JobSeeker;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/jobseekers")
@@ -28,41 +26,23 @@ public class JobSeekerController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody JobSeeker jobSeeker) {
-        JobSeeker created = this.service.create(jobSeeker);
-        if (created == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("message", "An account with this email already exists."));
-        }
-        return ResponseEntity.ok(created);
+    public JobSeeker create(@RequestBody JobSeeker jobSeeker) {
+        return this.service.create(jobSeeker);
     }
 
     @GetMapping("/read/{userId}")
-    public ResponseEntity<JobSeeker> read(@PathVariable String userId) {
-        JobSeeker jobSeeker = this.service.read(userId);
-        if (jobSeeker == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(jobSeeker);
+    public JobSeeker read(@PathVariable String userId) {
+        return this.service.read(userId);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<JobSeeker> update(@RequestBody JobSeeker jobSeeker) {
-        JobSeeker updated = this.service.updateProfile(jobSeeker);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
+    public JobSeeker update(@RequestBody JobSeeker jobSeeker) {
+        return this.service.updateProfile(jobSeeker);
     }
 
-    // NEW: PUT /api/jobseekers/profile
     @PutMapping("/profile")
-    public ResponseEntity<JobSeeker> updateProfile(@RequestBody JobSeeker jobSeeker) {
-        JobSeeker updated = this.service.updateProfile(jobSeeker);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
+    public JobSeeker updateProfile(@RequestBody JobSeeker jobSeeker) {
+        return this.service.updateProfile(jobSeeker);
     }
 
     @DeleteMapping("/delete/{userId}")
@@ -76,12 +56,8 @@ public class JobSeekerController {
     }
 
     @PostMapping(value = "/{userId}/resume", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<JobSeeker> uploadResume(@PathVariable String userId, @RequestParam("file") MultipartFile file) throws IOException {
-        JobSeeker updated = this.service.uploadResume(userId, file);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
+    public JobSeeker uploadResume(@PathVariable String userId, @RequestParam("file") MultipartFile file) throws IOException {
+        return this.service.uploadResume(userId, file);
     }
 
     @GetMapping("/{userId}/resume")
@@ -93,7 +69,6 @@ public class JobSeekerController {
         String filename = resource.getFilename() != null ? resource.getFilename() : "resume";
         String displayName = filename.startsWith(userId + "_") ? filename.substring(userId.length() + 1) : filename;
 
-        // Determine MIME type from extension so PDF opens inline in browser
         MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
         String lower = displayName.toLowerCase();
         if (lower.endsWith(".pdf")) {
@@ -117,12 +92,8 @@ public class JobSeekerController {
     }
 
     @PostMapping("/{userId}/view")
-    public ResponseEntity<JobSeeker> incrementProfileViews(@PathVariable String userId,
+    public JobSeeker incrementProfileViews(@PathVariable String userId,
             @RequestParam(required = false) String viewerCompany) {
-        JobSeeker updated = this.service.incrementProfileViews(userId, viewerCompany);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
+        return this.service.incrementProfileViews(userId, viewerCompany);
     }
 }

@@ -1,7 +1,6 @@
 package za.ac.cput.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.Service.ISavedJobsService;
 import za.ac.cput.domain.SavedJobs;
@@ -22,32 +21,17 @@ public class SavedJobsController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<SavedJobs> saveJob(@RequestBody(required = false) Map<String, String> body,
-            @RequestParam(required = false) String jobSeekerId,
-            @RequestParam(required = false) String jobId) {
-        String jsId = (body != null && body.containsKey("jobSeekerId")) ? body.get("jobSeekerId") : jobSeekerId;
-        String jId = (body != null && body.containsKey("jobId")) ? body.get("jobId")
-                : jobId;
-
-        if (jsId == null || jId == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        SavedJobs saved = this.savedJobsService.saveJob(jsId, jId);
-        if (saved == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(saved);
+    public SavedJobs saveJob(@RequestBody Map<String, String> body) {
+        String jsId = body.get("jobSeekerId");
+        String jId = body.get("jobId");
+        return this.savedJobsService.saveJob(jsId, jId);
     }
 
     @DeleteMapping("/unsave")
-    public boolean unsaveJob(@RequestBody(required = false) Map<String, String> body,
-            @RequestParam(required = false) String jobSeekerId,
-            @RequestParam(required = false) String jobId) {
-        String jsId = (body != null && body.containsKey("jobSeekerId")) ? body.get("jobSeekerId") : jobSeekerId;
-        String jId = (body != null && body.containsKey("jobId")) ? body.get("jobId")
-                : jobId;
-
+    public boolean unsaveJob(@RequestBody Map<String, String> body) {
+        String jsId = body.get("jobSeekerId");
+        String jId = body.get("jobId");
+        
         if (jsId == null || jId == null) {
             return false;
         }
