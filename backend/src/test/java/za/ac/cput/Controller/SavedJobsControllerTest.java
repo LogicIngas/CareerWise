@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -152,8 +153,14 @@ class SavedJobsControllerTest {
         assertNotNull(testJobSeeker);
         assertNotNull(testJob);
 
-        String url = BASE_URL + "unsave?jobSeekerId=" + testJobSeeker.getUserId() + "&jobId=" + testJob.getJobId();
-        ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Boolean.class);
+        Map<String, String> payload = Map.of(
+                "jobSeekerId", testJobSeeker.getUserId(),
+                "jobId", testJob.getJobId()
+        );
+
+        String url = BASE_URL + "unsave";
+        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(payload);
+        ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Boolean.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
