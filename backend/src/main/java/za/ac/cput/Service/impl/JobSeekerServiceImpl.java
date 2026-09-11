@@ -14,7 +14,10 @@ import za.ac.cput.domain.JobSeeker;
 import za.ac.cput.domain.Resume;
 import za.ac.cput.domain.Skill;
 import za.ac.cput.factory.ResumeFactory;
+import za.ac.cput.repository.IEducationRepository;
+import za.ac.cput.repository.IExperienceRepository;
 import za.ac.cput.repository.IJobSeekerRepository;
+import za.ac.cput.repository.ISkillRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,6 +26,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class JobSeekerServiceImpl implements IJobSeekerService {
@@ -32,11 +36,21 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 
     private final IJobSeekerRepository repository;
     private final INotificationService notificationService;
+    private final ISkillRepository skillRepository;
+    private final IEducationRepository educationRepository;
+    private final IExperienceRepository experienceRepository;
 
     @Autowired
-    public JobSeekerServiceImpl(IJobSeekerRepository repository, INotificationService notificationService) {
+    public JobSeekerServiceImpl(IJobSeekerRepository repository,
+            INotificationService notificationService,
+            ISkillRepository skillRepository,
+            IEducationRepository educationRepository,
+            IExperienceRepository experienceRepository) {
         this.repository = repository;
         this.notificationService = notificationService;
+        this.skillRepository = skillRepository;
+        this.educationRepository = educationRepository;
+        this.experienceRepository = experienceRepository;
     }
 
     @Override
@@ -62,7 +76,6 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
         return null;
     }
 
-    // NEW: Update profile with phone, location, skills, and educations
     @Override
     @Transactional
     public JobSeeker updateProfile(JobSeeker jobSeeker) {
@@ -88,24 +101,113 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
                 existing.setSummary(jobSeeker.getSummary());
 
             if (jobSeeker.getSkills() != null) {
-                existing.getSkills().clear();
-                for (Skill s : jobSeeker.getSkills()) {
-                    s.setJobSeeker(existing);
-                    existing.getSkills().add(s);
+                List<String> incomingIds = jobSeeker.getSkills().stream()
+                        .map(Skill::getSkillId)
+                        .filter(id -> id != null && !id.isBlank())
+                        .collect(Collectors.toList());
+
+                List<Skill> toRemove = existing.getSkills().stream()
+                        .filter(s -> !incomingIds.contains(s.getSkillId()))
+                        .collect(Collectors.toList());
+
+                existing.getSkills().removeAll(toRemove);
+                skillRepository.deleteAll(toRemove);
+
+                for (Skill incoming : jobSeeker.getSkills()) {
+                    incoming.setJobSeeker(existing);
+                    if (incoming.getSkillId() != null && incoming.getSkillId().isBlank()) {
+                        incoming.setSkillId(null);
+                    }
+                    if (incoming.getSkillId() != null) {
+                        existing.getSkills().stream()
+                                .filter(s -> s.getSkillId().equals(incoming.getSkillId()))
+                                .findFirst()
+                                .ifPresent(s -> {
+                                    s.setName(incoming.getName());
+                                    s.setCategory(incoming.getCategory());
+                                    s.setYearsOfExperience(incoming.getYearsOfExperience());
+                                    skillRepository.save(s);
+                                });
+                    } else {
+                        Skill saved = skillRepository.save(incoming);
+                        existing.getSkills().add(saved);
+                    }
                 }
             }
+
             if (jobSeeker.getEducations() != null) {
-                existing.getEducations().clear();
-                for (Education e : jobSeeker.getEducations()) {
-                    e.setJobSeeker(existing);
-                    existing.getEducations().add(e);
+                List<String> incomingIds = jobSeeker.getEducations().stream()
+                        .map(Education::getEducationId)
+                        .filter(id -> id != null && !id.isBlank())
+                        .collect(Collectors.toList());
+
+                List<Education> toRemove = existing.getEducations().stream()
+                        .filter(e -> !incomingIds.contains(e.getEducationId()))
+                        .collect(Collectors.toList());
+
+                existing.getEducations().removeAll(toRemove);
+                educationRepository.deleteAll(toRemove);
+
+                for (Education incoming : jobSeeker.getEducations()) {
+                    incoming.setJobSeeker(existing);
+                    if (incoming.getEducationId() != null && incoming.getEducationId().isBlank()) {
+                        incoming.setEducationId(null);
+                    }
+                    if (incoming.getEducationId() != null) {
+                        existing.getEducations().stream()
+                                .filter(e -> e.getEducationId().equals(incoming.getEducationId()))
+                                .findFirst()
+                                .ifPresent(e -> {
+                                    e.setInstitution(incoming.getInstitution());
+                                    e.setDegree(incoming.getDegree());
+                                    e.setFieldOfStudy(incoming.getFieldOfStudy());
+                                    e.setStartDate(incoming.getStartDate());
+                                    e.setEndDate(incoming.getEndDate());
+                                    e.setDescription(incoming.getDescription());
+                                    educationRepository.save(e);
+                                });
+                    } else {
+                        Education saved = educationRepository.save(incoming);
+                        existing.getEducations().add(saved);
+                    }
                 }
             }
+
             if (jobSeeker.getExperiences() != null) {
-                existing.getExperiences().clear();
-                for (Experience ex : jobSeeker.getExperiences()) {
-                    ex.setJobSeeker(existing);
-                    existing.getExperiences().add(ex);
+                List<String> incomingIds = jobSeeker.getExperiences().stream()
+                        .map(Experience::getExperienceId)
+                        .filter(id -> id != null && !id.isBlank())
+                        .collect(Collectors.toList());
+
+                List<Experience> toRemove = existing.getExperiences().stream()
+                        .filter(ex -> !incomingIds.contains(ex.getExperienceId()))
+                        .collect(Collectors.toList());
+
+                existing.getExperiences().removeAll(toRemove);
+                experienceRepository.deleteAll(toRemove);
+
+                for (Experience incoming : jobSeeker.getExperiences()) {
+                    incoming.setJobSeeker(existing);
+                    if (incoming.getExperienceId() != null && incoming.getExperienceId().isBlank()) {
+                        incoming.setExperienceId(null);
+                    }
+                    if (incoming.getExperienceId() != null) {
+                        existing.getExperiences().stream()
+                                .filter(ex -> ex.getExperienceId().equals(incoming.getExperienceId()))
+                                .findFirst()
+                                .ifPresent(ex -> {
+                                    ex.setJobTitle(incoming.getJobTitle());
+                                    ex.setCompany(incoming.getCompany());
+                                    ex.setLocation(incoming.getLocation());
+                                    ex.setStartDate(incoming.getStartDate());
+                                    ex.setEndDate(incoming.getEndDate());
+                                    ex.setDescription(incoming.getDescription());
+                                    experienceRepository.save(ex);
+                                });
+                    } else {
+                        Experience saved = experienceRepository.save(incoming);
+                        existing.getExperiences().add(saved);
+                    }
                 }
             }
             return repository.save(existing);
@@ -144,7 +246,8 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
                 ? originalName.substring(originalName.lastIndexOf('.') + 1).toLowerCase()
                 : "";
         if (!ALLOWED_RESUME_EXTENSIONS.contains(extension)) {
-            throw new IllegalArgumentException("Only PDF, DOC, and DOCX files are supported. Received extension: '" + extension + "' from file: '" + originalName + "'");
+            throw new IllegalArgumentException("Only PDF, DOC, and DOCX files are supported. Received extension: '"
+                    + extension + "' from file: '" + originalName + "'");
         }
 
         JobSeeker existing = repository.findById(userId).orElse(null);
@@ -218,8 +321,7 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
                 "PROFILE_VIEW",
                 "Profile viewed",
                 message,
-                null
-        );
+                null);
 
         return saved;
     }

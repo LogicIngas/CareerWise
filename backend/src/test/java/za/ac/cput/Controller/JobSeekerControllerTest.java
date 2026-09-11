@@ -7,7 +7,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import za.ac.cput.domain.JobSeeker;
 import za.ac.cput.factory.JobSeekerFactory;
@@ -36,16 +35,9 @@ class JobSeekerControllerTest {
     @Test
     @Order(1)
     void create() {
-        testJobSeeker = JobSeekerFactory.createJobSeeker(
-                "inga.dev@gmail.com",
-                "securePassword123",
-                "Inga",
-                "Mbobo",
-                "0712345678",
-                "Cape Town",
-                "Java Software Engineer",
-                "Passionate backend developer with 5 years of experience"
-        );
+        testJobSeeker = JobSeekerFactory.createJobSeeker("inga.dev@gmail.com", "securePassword123", "Inga", "Mbobo",
+                "0712345678", "Cape Town", "Java Software Engineer",
+                "Passionate backend developer with 5 years of experience");
 
         assertNotNull(testJobSeeker);
 
@@ -95,8 +87,7 @@ class JobSeekerControllerTest {
                 url,
                 HttpMethod.PUT,
                 requestEntity,
-                JobSeeker.class
-        );
+                JobSeeker.class);
 
         assertNotNull(response.getBody());
         testJobSeeker = response.getBody();

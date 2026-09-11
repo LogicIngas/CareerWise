@@ -82,7 +82,7 @@ class SavedJobsControllerTest {
         testJobSeeker = jobSeekerService.create(JobSeekerFactory.createJobSeeker(
                 "savedjob.seeker@gmail.com", "password123",
                 "Saver", "Seeker",
-                null, "0822223333",
+                "0822223333",
                 "Johannesburg",
                 "Analyst",
                 "Loves saving jobs"

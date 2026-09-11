@@ -4,10 +4,9 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import za.ac.cput.domain.JobSeeker;
 import za.ac.cput.domain.User;
 import za.ac.cput.factory.JobSeekerFactory;
-import za.ac.cput.repository.UserRepo;
+// import za.ac.cput.repository.UserRepo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,8 +18,8 @@ class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserRepo userRepo;
+    // @Autowired
+    // private UserRepo userRepo;
 
     private User testUser;
 
@@ -31,12 +30,10 @@ class UserServiceTest {
                 "myPass123",
                 "User",
                 "Service",
-                null,
                 "0844445555",
                 "Cape Town",
                 "Developer",
-                "Testing User Service"
-        );
+                "Testing User Service");
     }
 
     @Test
@@ -52,7 +49,7 @@ class UserServiceTest {
     @Order(2)
     void signUpThrowsExceptionForDuplicateEmail() {
         assertDoesNotThrow(() -> userService.signUp(testUser));
-        
+
         Exception exception = assertThrows(Exception.class, () -> userService.signUp(testUser));
         assertEquals("email already exists", exception.getMessage());
         System.out.println("Successfully prevented duplicate email signup");
@@ -74,7 +71,8 @@ class UserServiceTest {
     void loginThrowsExceptionForInvalidPassword() {
         assertDoesNotThrow(() -> userService.signUp(testUser));
 
-        Exception exception = assertThrows(Exception.class, () -> userService.login(testUser.getEmail(), "wrongPassword"));
+        Exception exception = assertThrows(Exception.class,
+                () -> userService.login(testUser.getEmail(), "wrongPassword"));
         assertEquals("Invalid password", exception.getMessage());
         System.out.println("Successfully rejected invalid password");
     }

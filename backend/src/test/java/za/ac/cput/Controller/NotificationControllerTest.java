@@ -47,7 +47,7 @@ class NotificationControllerTest {
         JobSeeker jobSeeker = jobSeekerService.create(JobSeekerFactory.createJobSeeker(
                 "test@gmail.com", "password123",
                 "Notif", "Tester",
-                null, "0855556666",
+                "0855556666",
                 "Cape Town",
                 "Developer",
                 "Test user for notifications"

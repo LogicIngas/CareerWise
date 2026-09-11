@@ -9,7 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import za.ac.cput.Service.INotificationService;
+
 import za.ac.cput.Service.impl.JobSeekerServiceImpl;
 import za.ac.cput.domain.Experience;
 import za.ac.cput.domain.JobSeeker;
@@ -49,7 +49,7 @@ class ExperienceControllerTest {
         testJobSeeker = jobSeekerService.create(JobSeekerFactory.createJobSeeker(
                 "test@gmail.com", "password123",
                 "Exp", "Tester",
-                null, "0833334444",
+                "0833334444",
                 "Cape Town",
                 "Software Developer",
                 "Experienced developer"
