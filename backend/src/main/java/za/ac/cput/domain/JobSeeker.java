@@ -32,7 +32,7 @@ public class JobSeeker extends User {
     @Builder.Default
     private List<Skill> skills = new ArrayList<>();
 
-    @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Experience> experiences = new ArrayList<>();
 

@@ -40,26 +40,24 @@ class ApplicationsServiceImplTest {
     @BeforeEach
     void setUp() {
         var employer = employerService.create(EmployerFactory.createEmployer(
-                "app.svc@gmail.com", "password", "Svc", "Employer", "AppSvcCorp", "IT"
-        ));
+                "app.svc@gmail.com", "password", "Svc", "Employer", "AppSvcCorp", "IT"));
 
         var jobEntity = JobFactory.createJob(
                 "Svc Engineer", "Desc", List.of("Skill"), List.of("Resp"),
-                "Cape Town", true, "50k", "Perm", LocalDate.of(2026, 12, 31)
-        );
+                "Cape Town", true, "50k", "Perm", LocalDate.of(2026, 12, 31));
         jobEntity.setEmployer(employer);
         testJob = jobService.create(jobEntity);
 
         testJobSeeker = jobSeekerService.create(JobSeekerFactory.createJobSeeker(
                 "app.svc.seeker@gmail.com", "password", "Svc", "Seeker",
-                null, "0811223344", "Cape Town", "Dev", "Summary"
-        ));
+                "0811223344", "Cape Town", "Dev", "Summary"));
     }
 
     @Test
     @Order(1)
     void apply() {
-        JobApplication applied = applicationsService.apply(testJobSeeker.getUserId(), testJob.getJobId(), "My application notes");
+        JobApplication applied = applicationsService.apply(testJobSeeker.getUserId(), testJob.getJobId(),
+                "My application notes");
         assertNotNull(applied);
         assertEquals("Applied", applied.getStatus());
         System.out.println("Applied successfully with ID: " + applied.getApplicationId());

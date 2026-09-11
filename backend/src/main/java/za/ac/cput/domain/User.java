@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "user")
+@Table(name = "`user`")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @NoArgsConstructor

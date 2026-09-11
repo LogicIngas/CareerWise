@@ -83,7 +83,7 @@ class JobApplicationControllerTest {
         testJobSeeker = jobSeekerService.create(JobSeekerFactory.createJobSeeker(
                 "apptest.seeker@gmail.com", "password123",
                 "App", "Seeker",
-                null, "0811112222",
+                "0811112222",
                 "Johannesburg",
                 "QA Tester",
                 "Passionate about quality"

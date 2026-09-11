@@ -111,6 +111,16 @@ import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
           <div class="bg-white rounded-2xl shadow-sm border border-stone-100 p-8">
             <h2 class="text-lg font-bold text-stone-900 mb-2">Skills</h2>
             <p class="text-xs text-stone-500 mb-4">Add skills that highlight your technical and domain expertise</p>
+            <div class="flex items-center gap-2 mb-4">
+              <span *ngIf="isSavingLists()" class="inline-flex items-center gap-1 text-xs text-stone-400">
+                <span class="w-3 h-3 border-2 border-stone-300 border-t-brand-500 rounded-full animate-spin"></span>
+                Saving...
+              </span>
+              <span *ngIf="justSavedLists() && !isSavingLists()" class="inline-flex items-center gap-1 text-xs text-brand-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                Saved
+              </span>
+            </div>
 
             <div class="flex gap-2 mb-4">
               <input
@@ -187,13 +197,23 @@ import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
                 <h2 class="text-lg font-bold text-stone-900">Education</h2>
                 <p class="text-xs text-stone-500 mt-0.5">Your academic credentials and degrees</p>
               </div>
-              <button
-                type="button"
-                (click)="showAddEduForm.set(!showAddEduForm())"
-                class="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                Add Education
-              </button>
+              <div class="flex items-center gap-3">
+                <span *ngIf="isSavingLists()" class="inline-flex items-center gap-1 text-xs text-stone-400">
+                  <span class="w-3 h-3 border-2 border-stone-300 border-t-brand-500 rounded-full animate-spin"></span>
+                  Saving...
+                </span>
+                <span *ngIf="justSavedLists() && !isSavingLists()" class="inline-flex items-center gap-1 text-xs text-brand-600 font-medium">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  Saved
+                </span>
+                <button
+                  type="button"
+                  (click)="showAddEduForm.set(!showAddEduForm())"
+                  class="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                  Add Education
+                </button>
+              </div>
             </div>
 
             <!-- New Education Form -->
@@ -257,13 +277,23 @@ import { SanitizeUrlPipe } from '../../pipes/sanitize-url.pipe';
                 <h2 class="text-lg font-bold text-stone-900">Work Experience</h2>
                 <p class="text-xs text-stone-500 mt-0.5">Your professional work history</p>
               </div>
-              <button
-                type="button"
-                (click)="showAddExpForm.set(!showAddExpForm())"
-                class="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                Add Experience
-              </button>
+              <div class="flex items-center gap-3">
+                <span *ngIf="isSavingLists()" class="inline-flex items-center gap-1 text-xs text-stone-400">
+                  <span class="w-3 h-3 border-2 border-stone-300 border-t-brand-500 rounded-full animate-spin"></span>
+                  Saving...
+                </span>
+                <span *ngIf="justSavedLists() && !isSavingLists()" class="inline-flex items-center gap-1 text-xs text-brand-600 font-medium">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  Saved
+                </span>
+                <button
+                  type="button"
+                  (click)="showAddExpForm.set(!showAddExpForm())"
+                  class="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                  Add Experience
+                </button>
+              </div>
             </div>
 
             <!-- New Experience Form -->
@@ -340,7 +370,9 @@ export class ProfileComponent implements OnInit {
   educationsList = signal<BackendEducation[]>([]);
   loading = signal(true);
   isSaving = false;
+  isSavingLists = signal(false);
   justSaved = signal(false);
+  justSavedLists = signal(false);
 
   resume = signal<{fileName: string; storedName: string} | null>(null);
   isUploadingResume = false;
@@ -438,7 +470,9 @@ export class ProfileComponent implements OnInit {
     if (!name) return;
     const current = this.skillsList();
     if (!current.some(s => s.name.toLowerCase() === name.toLowerCase())) {
-      this.skillsList.set([...current, { name, category: 'Technical', yearsOfExperience: 1 }]);
+      const updated = [...current, { name, category: 'Technical', yearsOfExperience: 1 }];
+      this.skillsList.set(updated);
+      this.persistLists(updated, this.educationsList(), this.experiencesList());
     }
     this.newSkillName = '';
   }
@@ -447,32 +481,91 @@ export class ProfileComponent implements OnInit {
     const list = [...this.skillsList()];
     list.splice(index, 1);
     this.skillsList.set(list);
+    this.persistLists(list, this.educationsList(), this.experiencesList());
   }
 
   addEducation() {
     if (!this.newEdu.degree.trim() || !this.newEdu.institution.trim()) return;
-    this.educationsList.set([...this.educationsList(), { ...this.newEdu }]);
+    const updated = [...this.educationsList(), { ...this.newEdu }];
+    this.educationsList.set(updated);
     this.newEdu = { institution: '', degree: '', fieldOfStudy: '', startDate: '', endDate: '', description: '' };
     this.showAddEduForm.set(false);
+    this.persistLists(this.skillsList(), updated, this.experiencesList());
   }
 
   removeEducation(index: number) {
     const list = [...this.educationsList()];
     list.splice(index, 1);
     this.educationsList.set(list);
+    this.persistLists(this.skillsList(), list, this.experiencesList());
   }
 
   addExperience() {
     if (!this.newExp.jobTitle.trim() || !this.newExp.company.trim()) return;
-    this.experiencesList.set([...this.experiencesList(), { ...this.newExp }]);
+    const updated = [...this.experiencesList(), { ...this.newExp }];
+    this.experiencesList.set(updated);
     this.newExp = { jobTitle: '', company: '', location: '', startDate: '', endDate: '', description: '' };
     this.showAddExpForm.set(false);
+    this.persistLists(this.skillsList(), this.educationsList(), updated);
   }
 
   removeExperience(index: number) {
     const list = [...this.experiencesList()];
     list.splice(index, 1);
     this.experiencesList.set(list);
+    this.persistLists(this.skillsList(), this.educationsList(), list);
+  }
+
+  /**
+   * Persists only the skills / educations / experiences lists to the backend
+   * without requiring the personal-info form to be valid.
+   *
+   * IMPORTANT: Education and Experience have LocalDate fields (startDate /
+   * endDate). Jackson cannot deserialize an empty string "" as a LocalDate —
+   * it throws a 400.  We therefore strip every empty-string date to undefined
+   * (which is omitted from the serialised JSON) before sending the payload.
+   */
+  private persistLists(
+    skills: BackendSkill[],
+    educations: BackendEducation[],
+    experiences: BackendExperience[]
+  ) {
+    const userId = this.auth.currentUser()?.userId;
+    if (!userId) return;
+
+    const cleanDate = (d?: string) => (d && d.trim() ? d.trim() : undefined);
+
+    const cleanedEducations: BackendEducation[] = educations.map(e => ({
+      ...e,
+      startDate: cleanDate(e.startDate),
+      endDate: cleanDate(e.endDate)
+    }));
+
+    const cleanedExperiences: BackendExperience[] = experiences.map(ex => ({
+      ...ex,
+      startDate: cleanDate(ex.startDate),
+      endDate: cleanDate(ex.endDate)
+    }));
+
+    this.isSavingLists.set(true);
+    const payload = { userId, skills, educations: cleanedEducations, experiences: cleanedExperiences };
+    this.jobSeekerService.updateProfile(payload).subscribe({
+      next: (res) => {
+        this.isSavingLists.set(false);
+        if (res) {
+          // Sync back the server-assigned IDs so subsequent saves are correct
+          this.skillsList.set(res.skills ?? skills);
+          this.educationsList.set(res.educations ?? educations);
+          this.experiencesList.set(res.experiences ?? experiences);
+        }
+        this.justSavedLists.set(true);
+        setTimeout(() => this.justSavedLists.set(false), 2500);
+      },
+      error: (err) => {
+        this.isSavingLists.set(false);
+        this.toast.error(err?.error?.message || 'Could not save changes. Please try again.');
+      }
+    });
   }
 
   onResumeSelected(event: Event) {

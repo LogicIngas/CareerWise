@@ -51,7 +51,7 @@ class SavedJobsServiceImplTest {
 
         testJobSeeker = jobSeekerService.create(JobSeekerFactory.createJobSeeker(
                 "saved.svc.seeker@gmail.com", "password", "Saved", "Seeker",
-                null, "0811223344", "Cape Town", "Analyst", "Summary"
+                "0811223344", "Cape Town", "Analyst", "Summary"
         ));
     }
 

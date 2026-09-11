@@ -42,7 +42,6 @@ class UserControllerTest {
                 "myPass123",
                 "User",
                 "Test",
-                null,
                 "0844445555",
                 "Cape Town",
                 "Developer",
