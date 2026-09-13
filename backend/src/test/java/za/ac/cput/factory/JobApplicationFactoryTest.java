@@ -29,9 +29,7 @@ class JobApplicationFactoryTest {
         assertEquals("Here are my notes for the application", application.getNotes());
         assertEquals("Applied", application.getStatus());
         assertNotNull(application.getAppliedDate());
-        
-        System.out.println("Built JobApplication successfully: " + application);
-    }
+}
 
     @Test
     void buildJobApplicationWithNullJobSeeker() {
@@ -45,8 +43,7 @@ class JobApplicationFactoryTest {
         );
 
         assertNull(application);
-        System.out.println("Null JobSeeker correctly prevented JobApplication creation.");
-    }
+}
     
     @Test
     void buildJobApplicationWithNullJob() {
@@ -60,6 +57,5 @@ class JobApplicationFactoryTest {
         );
 
         assertNull(application);
-        System.out.println("Null Job correctly prevented JobApplication creation.");
-    }
+}
 }

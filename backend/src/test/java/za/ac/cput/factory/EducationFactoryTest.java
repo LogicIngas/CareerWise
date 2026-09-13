@@ -22,8 +22,7 @@ class EducationFactoryTest {
         );
 
         assertNotNull(education);
-        System.out.println(education);
-    }
+}
 
     @Test
     void createEducationFails() {
@@ -38,6 +37,5 @@ class EducationFactoryTest {
         );
 
         assertNull(education);
-        System.out.println("Failed as expected - empty educationId");
-    }
+}
 }

@@ -43,8 +43,7 @@ class SkillControllerTest {
 
         assertNotNull(response.getBody());
         skill = response.getBody();
-        System.out.println("Created skill with ID: " + skill.getSkillId());
-    }
+}
 
     @Test
     @Order(2)
@@ -55,8 +54,7 @@ class SkillControllerTest {
         ResponseEntity<Skill> response = restTemplate.getForEntity(url, Skill.class);
 
         assertNotNull(response.getBody());
-        System.out.println("Retrieved skill: " + response.getBody().getName());
-    }
+}
 
     @Test
     @Order(3)
@@ -81,8 +79,7 @@ class SkillControllerTest {
 
         assertNotNull(response.getBody());
         skill = response.getBody();
-        System.out.println("Updated skill: " + skill.getName());
-    }
+}
 
     @Test
     @Order(4)
@@ -91,8 +88,7 @@ class SkillControllerTest {
         ResponseEntity<Skill[]> response = restTemplate.getForEntity(url, Skill[].class);
 
         assertNotNull(response.getBody());
-        System.out.println("Found " + response.getBody().length + " skills");
-    }
+}
 
     @Test
     @Order(5)
@@ -108,6 +104,5 @@ class SkillControllerTest {
         ResponseEntity<Skill> getResponse = restTemplate.getForEntity(readUrl, Skill.class);
 
         assertNull(getResponse.getBody());
-        System.out.println("Deleted skill with ID: " + skill.getSkillId());
-    }
+}
 }

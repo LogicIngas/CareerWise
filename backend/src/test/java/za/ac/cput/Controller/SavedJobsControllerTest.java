@@ -28,143 +28,135 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SavedJobsControllerTest {
 
-    @LocalServerPort
-    private int port;
+        @LocalServerPort
+        private int port;
 
-    private String BASE_URL;
+        private String BASE_URL;
 
-    private static SavedJobs testSavedJob;
-    private static JobSeeker testJobSeeker;
-    private static Job testJob;
+        // private static SavedJobs testSavedJob;
+        private static JobSeeker testJobSeeker;
+        private static Job testJob;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+        @Autowired
+        private TestRestTemplate restTemplate;
 
-    @Autowired
-    private EmployerServiceImpl employerService;
+        @Autowired
+        private EmployerServiceImpl employerService;
 
-    @Autowired
-    private JobSeekerServiceImpl jobSeekerService;
+        @Autowired
+        private JobSeekerServiceImpl jobSeekerService;
 
-    @BeforeEach
-    void setUp() {
-        BASE_URL = "http://localhost:" + port + "/api/saved-jobs/";
-    }
+        @BeforeEach
+        void setUp() {
+                BASE_URL = "http://localhost:" + port + "/api/saved-jobs/";
+        }
 
-    @Test
-    @Order(1)
-    void saveJob() {
-        var employer = employerService.create(EmployerFactory.createEmployer(
-                "savedjob.test@gmail.com", "password123",
-                "Save", "Employer",
-                "SaveCorp", "Finance"
-        ));
-        assertNotNull(employer);
+        @Test
+        @Order(1)
+        void saveJob() {
+                var employer = employerService.create(EmployerFactory.createEmployer(
+                                "savedjob.test@gmail.com", "password123",
+                                "Save", "Employer",
+                                "SaveCorp", "Finance"));
+                assertNotNull(employer);
 
-        var jobEntity = JobFactory.createJob(
-                "Financial Analyst",
-                "Analyze finance data",
-                List.of("Excel", "SQL"),
-                List.of("Reports"),
-                "Cape Town",
-                true,
-                "50 000",
-                "Contract",
-                LocalDate.of(2026, 12, 31)
-        );
-        jobEntity.setEmployer(employer);
+                var jobEntity = JobFactory.createJob(
+                                "Financial Analyst",
+                                "Analyze finance data",
+                                List.of("Excel", "SQL"),
+                                List.of("Reports"),
+                                "Cape Town",
+                                true,
+                                "50 000",
+                                "Contract",
+                                LocalDate.of(2026, 12, 31));
+                jobEntity.setEmployer(employer);
 
-        ResponseEntity<Job> jobResponse = restTemplate.postForEntity(
-                "http://localhost:" + port + "/api/jobs/create", jobEntity, Job.class);
-        assertNotNull(jobResponse.getBody());
-        testJob = jobResponse.getBody();
+                ResponseEntity<Job> jobResponse = restTemplate.postForEntity(
+                                "http://localhost:" + port + "/api/jobs/create", jobEntity, Job.class);
+                assertNotNull(jobResponse.getBody());
+                testJob = jobResponse.getBody();
 
-        testJobSeeker = jobSeekerService.create(JobSeekerFactory.createJobSeeker(
-                "savedjob.seeker@gmail.com", "password123",
-                "Saver", "Seeker",
-                "0822223333",
-                "Johannesburg",
-                "Analyst",
-                "Loves saving jobs"
-        ));
-        assertNotNull(testJobSeeker);
+                testJobSeeker = jobSeekerService.create(JobSeekerFactory.createJobSeeker(
+                                "savedjob.seeker@gmail.com", "password123",
+                                "Saver", "Seeker",
+                                "0822223333",
+                                "Johannesburg",
+                                "Analyst",
+                                "Loves saving jobs"));
+                assertNotNull(testJobSeeker);
 
-        Map<String, String> payload = Map.of(
-                "jobSeekerId", testJobSeeker.getUserId(),
-                "jobId", testJob.getJobId()
-        );
+                Map<String, String> payload = Map.of(
+                                "jobSeekerId", testJobSeeker.getUserId(),
+                                "jobId", testJob.getJobId());
 
-        String url = BASE_URL + "save";
-        ResponseEntity<SavedJobs> response = restTemplate.postForEntity(url, payload, SavedJobs.class);
+                String url = BASE_URL + "save";
+                ResponseEntity<SavedJobs> response = restTemplate.postForEntity(url, payload, SavedJobs.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertNotNull(response.getBody());
 
-        testSavedJob = response.getBody();
-        System.out.println("Saved Job with ID: " + testSavedJob.getSavedJobId());
-    }
+                // testSavedJob = response.getBody();
+        }
 
-    @Test
-    @Order(2)
-    void isJobSaved() {
-        assertNotNull(testJobSeeker);
-        assertNotNull(testJob);
+        @Test
+        @Order(2)
+        void isJobSaved() {
+                assertNotNull(testJobSeeker);
+                assertNotNull(testJob);
 
-        String url = BASE_URL + "is-saved?jobSeekerId=" + testJobSeeker.getUserId() + "&jobId=" + testJob.getJobId();
-        ResponseEntity<Boolean> response = restTemplate.getForEntity(url, Boolean.class);
+                String url = BASE_URL + "is-saved?jobSeekerId=" + testJobSeeker.getUserId() + "&jobId="
+                                + testJob.getJobId();
+                ResponseEntity<Boolean> response = restTemplate.getForEntity(url, Boolean.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody());
-        System.out.println("Job is saved: " + response.getBody());
-    }
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertTrue(response.getBody());
+        }
 
-    @Test
-    @Order(3)
-    void getSavedJobs() {
-        assertNotNull(testJobSeeker);
+        @Test
+        @Order(3)
+        void getSavedJobs() {
+                assertNotNull(testJobSeeker);
 
-        String url = BASE_URL + "jobseeker/" + testJobSeeker.getUserId();
-        ResponseEntity<SavedJobs[]> response = restTemplate.getForEntity(url, SavedJobs[].class);
+                String url = BASE_URL + "jobseeker/" + testJobSeeker.getUserId();
+                ResponseEntity<SavedJobs[]> response = restTemplate.getForEntity(url, SavedJobs[].class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertTrue(response.getBody().length > 0);
-        System.out.println("Found " + response.getBody().length + " saved jobs for job seeker");
-    }
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertNotNull(response.getBody());
+                assertTrue(response.getBody().length > 0);
+        }
 
-    @Test
-    @Order(4)
-    void getAll() {
-        String url = BASE_URL + "getAll";
-        ResponseEntity<SavedJobs[]> response = restTemplate.getForEntity(url, SavedJobs[].class);
+        @Test
+        @Order(4)
+        void getAll() {
+                String url = BASE_URL + "getAll";
+                ResponseEntity<SavedJobs[]> response = restTemplate.getForEntity(url, SavedJobs[].class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        System.out.println("Found " + response.getBody().length + " total saved jobs");
-    }
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertNotNull(response.getBody());
+        }
 
-    @Test
-    @Order(5)
-    void unsaveJob() {
-        assertNotNull(testJobSeeker);
-        assertNotNull(testJob);
+        @Test
+        @Order(5)
+        void unsaveJob() {
+                assertNotNull(testJobSeeker);
+                assertNotNull(testJob);
 
-        Map<String, String> payload = Map.of(
-                "jobSeekerId", testJobSeeker.getUserId(),
-                "jobId", testJob.getJobId()
-        );
+                Map<String, String> payload = Map.of(
+                                "jobSeekerId", testJobSeeker.getUserId(),
+                                "jobId", testJob.getJobId());
 
-        String url = BASE_URL + "unsave";
-        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(payload);
-        ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Boolean.class);
+                String url = BASE_URL + "unsave";
+                HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(payload);
+                ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity,
+                                Boolean.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody());
-        System.out.println("Unsaved job successfully.");
-    }
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertTrue(response.getBody());
+        }
 }

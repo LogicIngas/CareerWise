@@ -76,8 +76,7 @@ class ExperienceControllerTest {
         assertNotNull(response.getBody());
 
         testExperience = response.getBody();
-        System.out.println("Created Experience with ID: " + testExperience.getExperienceId());
-    }
+}
 
     @Test
     @Order(2)
@@ -90,9 +89,7 @@ class ExperienceControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Retrieved Experience: " + response.getBody().getJobTitle() + " at " + response.getBody().getCompany());
-    }
+}
 
     @Test
     @Order(3)
@@ -124,8 +121,7 @@ class ExperienceControllerTest {
         assertEquals("Senior Software Developer", response.getBody().getJobTitle());
 
         testExperience = response.getBody();
-        System.out.println("Updated Experience title: " + testExperience.getJobTitle());
-    }
+}
 
     @Test
     @Order(4)
@@ -136,9 +132,7 @@ class ExperienceControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Found " + response.getBody().length + " Experience records");
-    }
+}
 
     @Test
     @Order(5)
@@ -149,9 +143,7 @@ class ExperienceControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Found " + response.getBody().length + " experiences at TechCorp");
-    }
+}
 
     @Test
     @Order(6)
@@ -164,6 +156,5 @@ class ExperienceControllerTest {
 
         assertNotNull(response);
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        System.out.println("Deleted Experience with ID: " + testExperience.getExperienceId());
-    }
+}
 }

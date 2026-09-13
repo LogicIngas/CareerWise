@@ -63,8 +63,7 @@ class JobControllerTest {
                 false,
                 "60 000 - 80 000",
                 "Permanent",
-                LocalDate.of(2026, 12, 1)
-        );
+                LocalDate.of(2026, 12, 1));
 
         assertNotNull(testJob);
         testJob.setEmployer(testEmployer);
@@ -80,9 +79,6 @@ class JobControllerTest {
         assertNotNull(createdJob.getJobId());
 
         testJob = createdJob;
-
-        System.out.println("Created Job with ID: " + createdJob.getJobId());
-        System.out.println("Title: " + createdJob.getTitle());
     }
 
     @Test
@@ -100,8 +96,6 @@ class JobControllerTest {
 
         Job retrievedJob = response.getBody();
         assertNotNull(retrievedJob.getJobId());
-
-        System.out.println("Retrieved Job: " + retrievedJob.getTitle());
     }
 
     @Test
@@ -119,8 +113,7 @@ class JobControllerTest {
                 url,
                 HttpMethod.PUT,
                 requestEntity,
-                Job.class
-        );
+                Job.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -132,9 +125,6 @@ class JobControllerTest {
         assertEquals(JobStatus.CLOSED, updated.getStatus());
 
         testJob = updated;
-
-        System.out.println("Updated Job with ID: " + updated.getJobId());
-        System.out.println("New Location: " + updated.getLocation());
     }
 
     @Test
@@ -151,10 +141,8 @@ class JobControllerTest {
         assertNotNull(jobs);
         assertTrue(jobs.length > 0);
 
-        System.out.println("Found " + jobs.length + " Jobs in the system");
-        for (Job j : jobs) {
-            System.out.println(" - " + j.getTitle() + " (" + j.getJobId() + ")");
-        }
+        // for (Job j : jobs) {
+        // }
     }
 
     @Test
@@ -173,8 +161,6 @@ class JobControllerTest {
         for (Job j : jobs) {
             assertEquals(JobStatus.OPEN, j.getStatus());
         }
-
-        System.out.println("Found " + jobs.length + " open positions");
     }
 
     @Test
@@ -190,8 +176,6 @@ class JobControllerTest {
         Job[] jobs = response.getBody();
         assertNotNull(jobs);
         assertNotEquals(0, jobs.length);
-
-        System.out.println("Found " + jobs.length + " Jobs in Durban");
     }
 
     @Test
@@ -207,8 +191,6 @@ class JobControllerTest {
         Job[] jobs = response.getBody();
         assertNotNull(jobs);
         assertNotEquals(0, jobs.length);
-
-        System.out.println("Found " + jobs.length + " Permanent Jobs");
     }
 
     @Test
@@ -223,8 +205,6 @@ class JobControllerTest {
 
         Job[] jobs = response.getBody();
         assertNotNull(jobs);
-
-        System.out.println("Found " + jobs.length + " non-remote Jobs");
     }
 
     @Test
@@ -239,9 +219,6 @@ class JobControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(Boolean.TRUE, response.getBody());
-
-        System.out.println("Deleted Job with ID: " + testJob.getJobId());
-
         if (testEmployer != null) {
             employerService.delete(testEmployer.getUserId());
         }

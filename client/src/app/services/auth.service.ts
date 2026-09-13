@@ -213,7 +213,6 @@ export class AuthService {
     return new Error(err?.error?.message ?? 'Something went wrong. Please try again.');
   }
 
-  // NEW: changePassword
   changePassword(oldPassword: string, newPassword: string): Observable<boolean> {
     const user = this.currentUser();
     if (!user) return throwError(() => new Error('Not logged in'));

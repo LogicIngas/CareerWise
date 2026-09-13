@@ -21,8 +21,7 @@ class UserFactoryTest {
         );
 
         assertNotNull(user);
-        System.out.println("Passed as expected");
-    }
+}
 
     @Test
     void createUserEmptyEmail() {
@@ -37,7 +36,6 @@ class UserFactoryTest {
         );
 
         assertNull(user);
-        System.out.println("The email is null as expected");
-    }
+}
 
 }

@@ -63,7 +63,6 @@ export class JobSeekerService {
     return this.http.get<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/read/${userId}`);
   }
 
-  // NEW: updateProfile
   updateProfile(payload: Partial<BackendJobSeekerFull>): Observable<BackendJobSeekerFull | null> {
     return this.http.put<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/profile`, payload);
   }
