@@ -61,8 +61,7 @@ class SavedJobsServiceImplTest {
         SavedJobs savedJob = savedJobsService.saveJob(testJobSeeker.getUserId(), testJob.getJobId());
         assertNotNull(savedJob);
         assertNotNull(savedJob.getSavedJobId());
-        System.out.println("Saved job successfully with ID: " + savedJob.getSavedJobId());
-    }
+}
 
     @Test
     @Order(2)
@@ -71,8 +70,7 @@ class SavedJobsServiceImplTest {
 
         boolean isSaved = savedJobsService.isJobSaved(testJobSeeker.getUserId(), testJob.getJobId());
         assertTrue(isSaved);
-        System.out.println("isJobSaved returned true as expected.");
-    }
+}
 
     @Test
     @Order(3)
@@ -82,8 +80,7 @@ class SavedJobsServiceImplTest {
         List<SavedJobs> savedJobs = savedJobsService.getSavedJobs(testJobSeeker.getUserId());
         assertNotNull(savedJobs);
         assertFalse(savedJobs.isEmpty());
-        System.out.println("Found " + savedJobs.size() + " saved jobs for job seeker");
-    }
+}
 
     @Test
     @Order(4)
@@ -92,9 +89,7 @@ class SavedJobsServiceImplTest {
 
         boolean unsaved = savedJobsService.unsaveJob(testJobSeeker.getUserId(), testJob.getJobId());
         assertTrue(unsaved);
-        System.out.println("Unsaved job successfully.");
-
-        boolean isSaved = savedJobsService.isJobSaved(testJobSeeker.getUserId(), testJob.getJobId());
+boolean isSaved = savedJobsService.isJobSaved(testJobSeeker.getUserId(), testJob.getJobId());
         assertFalse(isSaved);
     }
 
@@ -106,8 +101,7 @@ class SavedJobsServiceImplTest {
         List<SavedJobs> all = savedJobsService.getAll();
         assertNotNull(all);
         assertFalse(all.isEmpty());
-        System.out.println("Found " + all.size() + " total saved jobs");
-    }
+}
 
     @Test
     @Order(6)
@@ -117,6 +111,5 @@ class SavedJobsServiceImplTest {
 
         boolean deleted = savedJobsService.delete(savedJob.getSavedJobId());
         assertTrue(deleted);
-        System.out.println("Deleted saved job with ID: " + savedJob.getSavedJobId());
-    }
+}
 }

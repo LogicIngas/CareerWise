@@ -74,8 +74,7 @@ class JobServiceImplTest {
         assertNotNull(created);
         assertNotNull(created.getJobId());
         generatedJobId = created.getJobId();
-        System.out.println("Created Job" + created);
-    }
+}
 
     @Test
     @Order(2)
@@ -83,8 +82,7 @@ class JobServiceImplTest {
         Job found = jobService.read(generatedJobId);
         assertNotNull(found);
         assertEquals(generatedJobId, found.getJobId());
-        System.out.println("Read: " + found);
-    }
+}
 
     @Test
     @Order(3)
@@ -102,8 +100,7 @@ class JobServiceImplTest {
 
         assertNotNull(result);
         assertEquals("Durban", result.getLocation());
-        System.out.println("Updated: " + result);
-    }
+}
 
     @Test
     @Order(4)
@@ -111,8 +108,7 @@ class JobServiceImplTest {
         List<Job> jobs = jobService.getAll();
         assertNotNull(jobs);
         assertFalse(jobs.isEmpty());
-        System.out.println("All jobs: " + jobs);
-    }
+}
 
     @Test
     @Order(5)
@@ -128,8 +124,7 @@ class JobServiceImplTest {
         assertNotNull(jobs);
         assertFalse(jobs.isEmpty());
         assertTrue(jobs.stream().allMatch(j -> j.getLocation().equals("Durban")));
-        System.out.println("Found by location: " + jobs);
-    }
+}
 
     @Test
     @Order(7)
@@ -138,8 +133,7 @@ class JobServiceImplTest {
         assertNotNull(jobs);
         assertFalse(jobs.isEmpty());
         assertTrue(jobs.stream().allMatch(j -> j.getEmploymentType().equals("Permanent")));
-        System.out.println("Found by Employment Type: " + jobs);
-    }
+}
 
     @Test
     @Order(8)
@@ -148,8 +142,7 @@ class JobServiceImplTest {
         assertNotNull(jobs);
         assertFalse(jobs.isEmpty());
         assertTrue(jobs.stream().allMatch(j -> j.getRemoteOption().equals(false)));
-        System.out.println("Found by Remote Option: " + jobs);
-    }
+}
 
     @Test
     @Order(9)

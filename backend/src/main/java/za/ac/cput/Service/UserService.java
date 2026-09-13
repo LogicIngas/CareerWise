@@ -33,11 +33,6 @@ public class UserService {
         return user;
     }
 
-    public User Login(String email, String Password) throws Exception {
-        return login(email, Password);
-    }
-
-    // NEW: changePassword
     public boolean changePassword(String userId, String oldPassword, String newPassword) throws Exception {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new Exception("User not found"));

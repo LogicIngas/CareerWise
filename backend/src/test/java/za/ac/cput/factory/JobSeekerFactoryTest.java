@@ -21,8 +21,7 @@ class JobSeekerFactoryTest {
         );
 
         assertNotNull(jobSeeker);
-        System.out.println(jobSeeker);
-    }
+}
 
     @Test
     void createJobSeekerInvalidEmail() {
@@ -38,7 +37,6 @@ class JobSeekerFactoryTest {
         );
 
         assertNull(jobSeeker); //is null? yes so pass the test
-        System.out.println("Failed as expected");
-    }
+}
 
 }

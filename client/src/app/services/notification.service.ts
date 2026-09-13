@@ -26,14 +26,7 @@ export class NotificationService {
   private apiBaseUrl = environment.apiBaseUrl;
 
 
-  /*
-   * Shared unread notification state.
-   *
-   * The Sidebar listens to this value.
-   *
-   * false = no red dot
-   * true  = show red dot
-   */
+  // Unread notification state for the sidebar badge
   private unreadSubject =
     new BehaviorSubject<boolean>(false);
 
@@ -89,11 +82,6 @@ export class NotificationService {
   }
 
 
-  /**
-   * Poll the backend for new notifications.
-   *
-   * The sidebar uses this every 5 seconds.
-   */
   startPolling(
     userId: string
   ): Observable<BackendNotification[]> {

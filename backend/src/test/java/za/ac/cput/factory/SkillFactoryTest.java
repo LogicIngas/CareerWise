@@ -12,14 +12,12 @@ class SkillFactoryTest {
         Skill skill = SkillFactory.createSkill("Python", "Technical Skill", 4);
 
         assertNotNull(skill);
-        System.out.println(skill);
-    }
+}
 
     @Test
     void createSkillFails() {
         Skill skill = SkillFactory.createSkill("", "Technical Skill", 4);
 
         assertNull(skill);
-        System.out.println("Failed as expected");
-    }
+}
 }

@@ -56,8 +56,7 @@ class UserControllerTest {
         assertNotNull(response.getBody());
         
         testUser = response.getBody();
-        System.out.println("Signed up user with ID: " + testUser.getUserId());
-    }
+}
 
     @Test
     @Order(2)
@@ -76,9 +75,7 @@ class UserControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("user.signup@gmail.com", response.getBody().getEmail());
-        
-        System.out.println("Logged in user successfully");
-    }
+}
 
     @Test
     @Order(3)
@@ -97,7 +94,5 @@ class UserControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody());
-        
-        System.out.println("Password changed successfully");
-    }
+}
 }

@@ -19,8 +19,7 @@ class EmployerFactoryTest {
         );
 
         assertNotNull(employer);
-        System.out.println(employer);
-    }
+}
 
     @Test
     void createEmployerEmptyCompanyName() {
@@ -34,6 +33,5 @@ class EmployerFactoryTest {
         );
 
         assertNull(employer);
-        System.out.println("Failed as expected");
-    }
+}
 }

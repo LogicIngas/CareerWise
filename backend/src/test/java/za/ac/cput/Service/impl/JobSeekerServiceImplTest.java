@@ -49,8 +49,6 @@ class JobSeekerServiceImplTest {
 
         JobSeeker created = jobSeekerService.create(jobSeeker);
         assertNotNull(created);
-        System.out.println("Created JobSeeker: " + created.getFirstName() + " " + created.getLastName());
-        System.out.println("ID: " + created.getUserId());
     }
 
     @Test
@@ -61,8 +59,7 @@ class JobSeekerServiceImplTest {
 
         JobSeeker found = jobSeekerService.read(saved.getUserId());
         assertNotNull(found);
-        System.out.println("Read JobSeeker: " + found.getFirstName());
-    }
+}
 
     @Test
     @Order(3)
@@ -84,8 +81,7 @@ class JobSeekerServiceImplTest {
 
         JobSeeker updated = jobSeekerService.update(updatedJobSeeker);
         assertNotNull(updated);
-        System.out.println("Updated JobSeeker: " + updated.getFirstName());
-    }
+}
 
     @Test
     @Order(4)
@@ -96,8 +92,7 @@ class JobSeekerServiceImplTest {
 
         boolean deleted = jobSeekerService.delete(saved.getUserId());
         assertTrue(deleted);
-        System.out.println("Deleted JobSeeker: " + saved.getUserId());
-    }
+}
 
     @Test
     @Order(5)
@@ -107,8 +102,7 @@ class JobSeekerServiceImplTest {
 
         List<JobSeeker> jobSeekers = jobSeekerService.getAll();
         assertNotNull(jobSeekers);
-        System.out.println("Found " + jobSeekers.size() + " JobSeekers");
-    }
+}
 
     @Test
     @Order(6)
@@ -118,16 +112,14 @@ class JobSeekerServiceImplTest {
 
         List<JobSeeker> found = jobSeekerService.getByEmail(saved.getEmail());
         assertNotNull(found);
-        System.out.println("Found JobSeeker with email: " + saved.getEmail());
-    }
+}
 
     @Test
     @Order(7)
     void getByEmailNotFound() {
         List<JobSeeker> found = jobSeekerService.getByEmail("doesnotexist@gmail.com");
         assertNotNull(found);
-        System.out.println("No JobSeeker found for email: doesnotexist@gmail.com");
-    }
+}
 
     @Test
     @Order(8)
@@ -147,7 +139,6 @@ class JobSeekerServiceImplTest {
 
         JobSeeker created = jobSeekerService.create(jobSeeker);
         assertNotNull(created);
-        System.out.println("Created JobSeeker ID: " + created.getUserId());
-    }
+}
 
 }

@@ -59,8 +59,7 @@ class EducationControllerTest {
         assertNotNull(response.getBody());
 
         testEducation = response.getBody();
-        System.out.println("Created Education with ID: " + testEducation.getEducationId());
-    }
+}
 
     @Test
     @Order(2)
@@ -73,9 +72,7 @@ class EducationControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Retrieved Education: " + response.getBody().getDegree() + " at " + response.getBody().getInstitution());
-    }
+}
 
     @Test
     @Order(3)
@@ -107,8 +104,7 @@ class EducationControllerTest {
         assertEquals("Bachelor of Science", response.getBody().getDegree());
 
         testEducation = response.getBody();
-        System.out.println("Updated Education degree: " + testEducation.getDegree());
-    }
+}
 
     @Test
     @Order(4)
@@ -119,9 +115,7 @@ class EducationControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Found " + response.getBody().length + " Education records");
-    }
+}
 
     @Test
     @Order(5)
@@ -132,9 +126,7 @@ class EducationControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Found " + response.getBody().length + " educations at CPUT");
-    }
+}
 
     @Test
     @Order(6)
@@ -145,9 +137,7 @@ class EducationControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Found " + response.getBody().length + " Bachelor of Science degrees");
-    }
+}
 
     @Test
     @Order(7)
@@ -160,6 +150,5 @@ class EducationControllerTest {
 
         assertNotNull(response);
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        System.out.println("Deleted Education with ID: " + testEducation.getEducationId());
-    }
+}
 }

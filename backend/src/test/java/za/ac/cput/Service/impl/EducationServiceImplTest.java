@@ -47,8 +47,7 @@ class EducationServiceImplTest {
 
         Education created = educationService.create(testEducation);
         assertNotNull(created);
-        System.out.println("Created Education: " + created.getInstitution());
-    }
+}
 
     @Test
     @Order(2)
@@ -59,8 +58,7 @@ class EducationServiceImplTest {
         Education read = educationService.read(saved.getEducationId());
         assertNotNull(read);
         assertEquals(saved.getEducationId(), read.getEducationId());
-        System.out.println("Read Education: " + read.getDegree());
-    }
+}
 
     @Test
     @Order(3)
@@ -81,8 +79,7 @@ class EducationServiceImplTest {
         Education updated = educationService.update(updatedEducation);
         assertNotNull(updated);
         assertEquals("Honours in Computer Science", updated.getDegree());
-        System.out.println("Updated Education degree: " + updated.getDegree());
-    }
+}
 
     @Test
     @Order(7)
@@ -92,8 +89,7 @@ class EducationServiceImplTest {
 
         boolean deleted = educationService.delete(saved.getEducationId());
         assertTrue(deleted);
-        System.out.println("Deleted Education with ID: " + saved.getEducationId());
-    }
+}
 
     @Test
     @Order(5)
@@ -102,8 +98,7 @@ class EducationServiceImplTest {
         List<Education> all = educationService.getAll();
         assertNotNull(all);
         assertFalse(all.isEmpty());
-        System.out.println("Found " + all.size() + " educations");
-    }
+}
 
     @Test
     @Order(6)
@@ -112,8 +107,7 @@ class EducationServiceImplTest {
         List<Education> found = educationService.findByInstitution("University of Cape Town");
         assertNotNull(found);
         assertFalse(found.isEmpty());
-        System.out.println("Found " + found.size() + " educations at UCT");
-    }
+}
 
     @Test
     @Order(4)
@@ -122,6 +116,5 @@ class EducationServiceImplTest {
         List<Education> found = educationService.findByDegree("Bachelor of Science");
         assertNotNull(found);
         assertFalse(found.isEmpty());
-        System.out.println("Found " + found.size() + " BSc educations");
-    }
+}
 }

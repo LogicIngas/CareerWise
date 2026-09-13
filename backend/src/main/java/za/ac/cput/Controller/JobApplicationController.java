@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping({"/api/applications", "/api/job-applications"})
+@RequestMapping("/api/applications")
 @CrossOrigin(origins = "*")
 public class JobApplicationController {
 
@@ -33,10 +33,6 @@ public class JobApplicationController {
         return this.applicationService.getApplications(jobSeekerId);
     }
 
-    @GetMapping("/getApplications/{jobSeekerId}")
-    public List<JobApplication> getApplicationsAlt(@PathVariable String jobSeekerId) {
-        return this.applicationService.getApplications(jobSeekerId);
-    }
 
     @GetMapping("/job/{jobId}")
     public List<JobApplication> getJobApplications(@PathVariable String jobId) {
