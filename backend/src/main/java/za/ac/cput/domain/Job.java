@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-// @Table(name = "jobs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
