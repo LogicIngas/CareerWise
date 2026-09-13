@@ -327,56 +327,6 @@ Applications
 </a>
 
 
-<!-- ================= MESSAGES ================= -->
-
-<a
-routerLink="/messages"
-
-routerLinkActive="bg-brand-50 text-brand-800 font-semibold shadow-[inset_2px_0_0_0_var(--color-brand-600)]"
-
-class="flex
-items-center
-gap-3
-pl-3
-pr-3
-py-2.5
-rounded-r-lg
-text-stone-600
-hover:bg-stone-50
-hover:translate-x-0.5
-transition-all
-text-sm">
-
-<!-- Message Icon -->
-
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-width="18"
-height="18"
-viewBox="0 0 24 24"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-stroke-linejoin="round">
-
-<path
-  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8
-8.5 8.5 0 0 1-7.6 4.7
-8.38 8.38 0 0 1-3.8-.9
-L3 21l1.9-5.7
-a8.38 8.38 0 0 1-.9-3.8
-8.5 8.5 0 0 1 4.7-7.6
-8.38 8.38 0 0 1 3.8-.9h.5
-a8.48 8.48 0 0 1 8 8v.5z"/>
-
-</svg>
-
-Messages
-
-</a>
-
-
 <!-- ================= NOTIFICATIONS ================= -->
 
 <a
@@ -396,7 +346,6 @@ hover:bg-stone-50
 hover:translate-x-0.5
 transition-all
 text-sm">
-
 
 <!-- Bell -->
 
@@ -659,56 +608,6 @@ stroke-linejoin="round">
   </svg>
 
 Company Profile
-
-</a>
-
-
-<!-- ================= MESSAGES ================= -->
-
-<a
-routerLink="/messages"
-
-routerLinkActive="bg-brand-50 text-brand-800 font-semibold shadow-[inset_2px_0_0_0_var(--color-brand-600)]"
-
-class="flex
-items-center
-gap-3
-pl-3
-pr-3
-py-2.5
-rounded-r-lg
-text-stone-600
-hover:bg-stone-50
-hover:translate-x-0.5
-transition-all
-text-sm">
-
-<!-- Message Icon -->
-
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-width="18"
-height="18"
-viewBox="0 0 24 24"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-stroke-linejoin="round">
-
-<path
-  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8
-8.5 8.5 0 0 1-7.6 4.7
-8.38 8.38 0 0 1-3.8-.9
-L3 21l1.9-5.7
-a8.38 8.38 0 0 1-.9-3.8
-8.5 8.5 0 0 1 4.7-7.6
-8.38 8.38 0 0 1 3.8-.9h.5
-a8.48 8.48 0 0 1 8 8v.5z"/>
-
-</svg>
-
-Messages
 
 </a>
 

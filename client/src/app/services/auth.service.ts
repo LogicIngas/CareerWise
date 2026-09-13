@@ -140,8 +140,13 @@ export class AuthService {
 
   login(email: string, password: string): Observable<AuthUser> {
     const body: LoginPayload = { email, password };
-    return this.http.post<BackendUser>(`${this.apiBaseUrl}/users/login`, body).pipe(
-      switchMap(loggedInUser => this.resolveRole(loggedInUser)),
+    return this.http.post<BackendUser | null>(`${this.apiBaseUrl}/users/login`, body).pipe(
+      switchMap(loggedInUser => {
+        if (!loggedInUser) {
+          return throwError(() => new Error('Incorrect email or password.'));
+        }
+        return this.resolveRole(loggedInUser);
+      }),
       map(user => {
         this.setUser(user);
         return user;
@@ -158,8 +163,8 @@ export class AuthService {
   // The base /api/users/login response has no role field — role is implied
   // by which JOINED-inheritance subclass table the account lives in. Probe
   // both role-specific read endpoints to find which one has the account.
-  // Both probes return 404 when the id belongs to the other role, so map
-  // those to a null result and keep probing.
+  // Both probes return null (HTTP 200, empty body) when the id belongs to
+  // the other role, so a null result means keep probing.
   private resolveRole(user: BackendUser): Observable<AuthUser> {
     return this.http.get<BackendJobSeeker | null>(`${this.apiBaseUrl}/jobseekers/read/${user.userId}`).pipe(
       catchError(() => of(null)),
@@ -199,11 +204,8 @@ export class AuthService {
   }
 
   private normalizeError(err: any): Error {
-    // 401 covers both "wrong password" and "unknown email" — always show the
-    // same generic message so the API response doesn't reveal which emails
-    // are registered, even though the backend uses distinct messages.
-    if (err?.status === 401) {
-      return new Error('Incorrect email or password.');
+    if (err instanceof Error) {
+      return err;
     }
     if (err?.status === 0) {
       return new Error("Can't reach the server. Please try again.");

@@ -1,7 +1,7 @@
 
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError, BehaviorSubject, interval } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, BehaviorSubject, interval } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
@@ -147,7 +147,7 @@ export class NotificationService {
   }
 
 
-  /**
+/**
    * Mark one notification as read.
    */
   markAsRead(
@@ -157,15 +157,9 @@ export class NotificationService {
     return this.http
       .put<BackendNotification | null>(
         `${this.apiBaseUrl}/notifications/${notificationId}/read`,
-{}
-)
-.pipe(
-    catchError(
-        err => this.nullIfNotFound(err)
-    )
-);
-
-}
+        {}
+      );
+  }
 
 
 /**
@@ -179,24 +173,6 @@ markAllAsRead(
       `${this.apiBaseUrl}/notifications/user/${userId}/read-all`,
       {}
   );
-
-}
-
-
-/**
- * Convert a 404 response into null.
- */
-private nullIfNotFound(
-    err: HttpErrorResponse
-): Observable<never> | Observable<null> {
-
-  if (err.status === 404) {
-
-  return of(null);
-
-}
-
-return throwError(() => err);
 
 }
 

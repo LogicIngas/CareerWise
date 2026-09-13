@@ -1,7 +1,7 @@
 
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import {
   JobSeekerService,
@@ -233,50 +233,6 @@ r="3"/>
 </div>
 
 </div>
-
-
-<!-- ================= MESSAGE BUTTON ================= -->
-
-<button
-type="button"
-(click)="openMessages(c)"
-class="w-full
-py-2.5
-px-4
-bg-stone-900
-hover:bg-stone-800
-text-white
-rounded-xl
-text-sm
-font-semibold
-transition-all
-shadow-sm
-flex
-items-center
-justify-center
-gap-2">
-
-<svg
-xmlns="http://www.w3.org/2000/svg"
-width="17"
-height="17"
-viewBox="0 0 24 24"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-stroke-linecap="round"
-stroke-linejoin="round">
-
-<path
-  d="M21 15a4 4 0 0 1-4 4H8l-5 3V7
-a4 4 0 0 1 4-4h10
-a4 4 0 0 1 4 4z"/>
-
-</svg>
-
-Message Applicant
-
-</button>
 
 
 <!-- Resume button -->
@@ -667,8 +623,6 @@ export class EmployerCandidateProfileComponent implements OnInit {
 
   private route = inject(ActivatedRoute);
 
-  private router = inject(Router);
-
   private jobSeekerService = inject(JobSeekerService);
 
   private auth = inject(AuthService);
@@ -733,36 +687,7 @@ export class EmployerCandidateProfileComponent implements OnInit {
         viewerCompany
       )
       .subscribe();
-
-  }
-
-
-  /**
-   * Open the Messages page for this applicant.
-   */
-  openMessages(candidate: BackendJobSeekerFull): void {
-
-    const name =
-      `${candidate.firstName ?? ''} ${candidate.lastName ?? ''}`
-        .trim() || 'Applicant';
-
-
-    const role =
-      candidate.headline || 'Applicant';
-
-
-    this.router.navigate(
-      ['/messages'],
-      {
-        queryParams: {
-          userId: candidate.userId,
-          name,
-          role
-        }
-      }
-    );
-
-  }
+}
 
 
   initials(c: BackendJobSeekerFull): string {
