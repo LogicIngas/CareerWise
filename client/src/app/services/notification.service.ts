@@ -1,7 +1,7 @@
 
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError, BehaviorSubject, interval } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, BehaviorSubject, interval } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
@@ -25,18 +25,12 @@ export class NotificationService {
 
   private apiBaseUrl = environment.apiBaseUrl;
 
-
-  // Unread notification state for the sidebar badge
   private unreadSubject =
     new BehaviorSubject<boolean>(false);
 
   unread$ =
     this.unreadSubject.asObservable();
 
-
-  /**
-   * Get all notifications belonging to a user.
-   */
   getForUser(
     userId: string
   ): Observable<BackendNotification[]> {
@@ -48,11 +42,6 @@ export class NotificationService {
   }
 
 
-  /**
-   * Check whether the user has unread notifications.
-   *
-   * This is used when the application starts.
-   */
   checkUnread(userId: string): void {
 
     this.getForUser(userId).subscribe({
@@ -107,10 +96,6 @@ export class NotificationService {
 
   }
 
-
-  /**
-   * Update the shared unread state.
-   */
   updateUnreadStatus(
     notifications: BackendNotification[]
   ): void {
@@ -125,19 +110,13 @@ export class NotificationService {
   }
 
 
-  /**
-   * Remove the red dot.
-   */
+
   clearUnread(): void {
 
     this.unreadSubject.next(false);
 
   }
 
-
-  /**
-   * Mark one notification as read.
-   */
   markAsRead(
     notificationId: string
   ): Observable<BackendNotification | null> {
@@ -145,20 +124,12 @@ export class NotificationService {
     return this.http
       .put<BackendNotification | null>(
         `${this.apiBaseUrl}/notifications/${notificationId}/read`,
-{}
-)
-.pipe(
-    catchError(
-        err => this.nullIfNotFound(err)
-    )
-);
-
-}
+        {}
+      );
+  }
 
 
-/**
- * Mark all notifications as read.
- */
+
 markAllAsRead(
     userId: string
 ): Observable<number> {
@@ -167,24 +138,6 @@ markAllAsRead(
       `${this.apiBaseUrl}/notifications/user/${userId}/read-all`,
       {}
   );
-
-}
-
-
-/**
- * Convert a 404 response into null.
- */
-private nullIfNotFound(
-    err: HttpErrorResponse
-): Observable<never> | Observable<null> {
-
-  if (err.status === 404) {
-
-  return of(null);
-
-}
-
-return throwError(() => err);
 
 }
 

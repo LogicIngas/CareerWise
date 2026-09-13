@@ -8,7 +8,6 @@ import { ApplicationService } from '../../services/application.service';
 import { SavedJobService } from '../../services/saved-job.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
-import { ChatService } from '../../services/chat.service';
 
 import { Job } from '../../models/models';
 
@@ -774,10 +773,6 @@ export class JobDetailComponent
       inject(ToastService);
 
 
-  private chatService =
-      inject(ChatService);
-
-
   job =
       signal<Job | null>(null);
 
@@ -880,10 +875,6 @@ export class JobDetailComponent
         this.job();
 
 
-    const raw =
-        this.rawJob();
-
-
     if (!job) {
 
       return;
@@ -934,35 +925,8 @@ export class JobDetailComponent
             }
 
 
-            /*
-             * ============================================
-             * ACTIVATE COMPANY CHAT
-             * ============================================
-             */
-
-            const companyId =
-                raw?.employer?.userId;
-
-
-            const companyName =
-                raw?.employer?.companyName ||
-                job.company;
-
-
-            if (companyId) {
-
-              this.chatService
-                  .activateCompanyChat(
-                      companyId,
-                      companyName,
-                      job.title
-                  );
-
-            }
-
-
             this.toast.success(
-                'Application submitted successfully. Company chat activated.'
+                'Application submitted successfully.'
             );
 
           },

@@ -90,19 +90,6 @@ export const routes: Routes = [
       },
 
       // =========================
-      // MESSAGES
-      // =========================
-
-      {
-        path: 'messages',
-        canActivate: [roleGuard('candidate', 'employer')],
-        loadComponent: () =>
-          import('./pages/messages/messages.component')
-            .then(m => m.MessagesComponent),
-        title: 'Messages | CareerWise'
-      },
-
-      // =========================
       // CANDIDATE PROFILE
       // =========================
 

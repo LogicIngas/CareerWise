@@ -10,7 +10,7 @@ import java.util.List;
 public interface IJobSeekerService extends IService<JobSeeker, String> {
     List<JobSeeker> getAll();
     List<JobSeeker> getByEmail(String email);
-    JobSeeker updateProfile(JobSeeker jobSeeker); // NEW
+    JobSeeker updateProfile(JobSeeker jobSeeker); 
     JobSeeker uploadResume(String userId, MultipartFile file) throws IOException;
     Resource loadResume(String userId);
     boolean deleteResume(String userId) throws IOException;
