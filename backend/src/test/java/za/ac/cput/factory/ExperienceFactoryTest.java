@@ -22,8 +22,7 @@ class ExperienceFactoryTest {
         );
 
         assertNotNull(experience);
-        System.out.println(experience);
-    }
+}
 
     @Test
     void createExperienceFails() {
@@ -38,7 +37,6 @@ class ExperienceFactoryTest {
         );
 
         assertNull(experience); //
-        System.out.println("Failed as expected - empty experienceId");
-    }
+}
 
 }

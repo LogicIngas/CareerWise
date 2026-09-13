@@ -48,8 +48,7 @@ class EmployerControllerTest {
         assertNotNull(response.getBody());
         employer = response.getBody();
         assertNotNull(employer.getUserId());
-        System.out.println("Created employer with ID: " + employer.getUserId());
-    }
+}
 
     @Test
     @Order(2)
@@ -60,8 +59,7 @@ class EmployerControllerTest {
         ResponseEntity<Employer> response = restTemplate.getForEntity(url, Employer.class);
 
         assertNotNull(response.getBody());
-        System.out.println("Retrieved employer: " + response.getBody().getCompanyName());
-    }
+}
 
     @Test
     @Order(3)
@@ -89,8 +87,7 @@ class EmployerControllerTest {
 
         assertNotNull(response.getBody());
         employer = response.getBody();
-        System.out.println("Updated employer: " + employer.getCompanyName());
-    }
+}
 
     @Test
     @Order(4)
@@ -99,8 +96,7 @@ class EmployerControllerTest {
         ResponseEntity<Employer[]> response = restTemplate.getForEntity(url, Employer[].class);
 
         assertNotNull(response.getBody());
-        System.out.println("Found " + response.getBody().length + " employers");
-    }
+}
 
     @Test
     @Order(5)
@@ -115,6 +111,5 @@ class EmployerControllerTest {
         ResponseEntity<Employer> getResponse = restTemplate.getForEntity(readUrl, Employer.class);
 
         assertNull(getResponse.getBody());
-        System.out.println("Deleted employer with ID: " + employer.getUserId());
-    }
+}
 }

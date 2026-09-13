@@ -40,8 +40,7 @@ class wSkillServiceImpTest {
 
         Skill created = skillService.create(testSkill);
         assertNotNull(created);
-        System.out.println("Create passed");
-    }
+}
 
     @Test
     @Order(2)
@@ -51,8 +50,7 @@ class wSkillServiceImpTest {
 
         Skill found = skillService.read(saved.getSkillId());
         assertNotNull(found);
-        System.out.println("Read passed");
-    }
+}
 
     @Test
     @Order(3)
@@ -70,8 +68,7 @@ class wSkillServiceImpTest {
 
         Skill result = skillService.update(updated);
         assertNotNull(result);
-        System.out.println("Update passed");
-    }
+}
 
     @Test
     @Order(4)
@@ -82,6 +79,5 @@ class wSkillServiceImpTest {
 
         boolean deleted = skillService.delete(saved.getSkillId());
         assertTrue(deleted);
-        System.out.println("Delete passed");
-    }
+}
 }

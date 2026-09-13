@@ -105,8 +105,7 @@ class JobApplicationControllerTest {
         assertNotNull(response.getBody());
 
         testApplication = response.getBody();
-        System.out.println("Created JobApplication with ID: " + testApplication.getApplicationId());
-    }
+}
 
     @Test
     @Order(2)
@@ -119,9 +118,7 @@ class JobApplicationControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Retrieved application with status: " + response.getBody().getStatus());
-    }
+}
 
     @Test
     @Order(3)
@@ -135,9 +132,7 @@ class JobApplicationControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().length > 0);
-
-        System.out.println("Found " + response.getBody().length + " applications for job seeker");
-    }
+}
 
     @Test
     @Order(4)
@@ -150,9 +145,7 @@ class JobApplicationControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Found " + response.getBody().length + " applications for job ID: " + testJob.getJobId());
-    }
+}
 
     @Test
     @Order(5)
@@ -179,8 +172,7 @@ class JobApplicationControllerTest {
         assertEquals("Reviewed", response.getBody().getStatus());
 
         testApplication = response.getBody();
-        System.out.println("Updated application status to: " + testApplication.getStatus());
-    }
+}
 
     @Test
     @Order(6)
@@ -191,9 +183,7 @@ class JobApplicationControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        System.out.println("Found " + response.getBody().length + " total job applications");
-    }
+}
 
     @Test
     @Order(7)
@@ -206,6 +196,5 @@ class JobApplicationControllerTest {
 
         assertNotNull(response);
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        System.out.println("Deleted application with ID: " + testApplication.getApplicationId());
-    }
+}
 }

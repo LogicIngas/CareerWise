@@ -30,7 +30,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 
       <!-- Visual side -->
       <div class="hidden lg:block relative bg-brand-800 bg-grain overflow-hidden">
-        <img src="https://picsum.photos/seed/careerwise-auth/1200/1600" alt="" class="absolute inset-0 w-full h-full object-cover opacity-25" />
+        <div class="absolute inset-0" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f2942 40%, #0a1f35 100%); opacity: 0.95;"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-brand-900 via-brand-900/60 to-brand-900/10"></div>
         <div class="relative z-10 h-full flex flex-col justify-end p-12 xl:p-16">
           <p class="text-2xl font-medium text-white leading-snug mb-8 max-w-md">Everything you need to search smarter and hire faster — all in one place.</p>

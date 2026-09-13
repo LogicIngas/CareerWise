@@ -23,9 +23,7 @@ class SavedJobsFactoryTest {
         assertEquals(jobSeeker, savedJob.getJobSeeker());
         assertEquals(job, savedJob.getJob());
         assertNotNull(savedJob.getSavedAt());
-        
-        System.out.println("Built SavedJobs successfully: " + savedJob);
-    }
+}
 
     @Test
     void buildSavedJobWithNullJobSeeker() {
@@ -35,8 +33,7 @@ class SavedJobsFactoryTest {
         SavedJobs savedJob = SavedJobsFactory.buildSavedJob(null, job);
 
         assertNull(savedJob);
-        System.out.println("Null JobSeeker correctly prevented SavedJobs creation.");
-    }
+}
     
     @Test
     void buildSavedJobWithNullJob() {
@@ -46,6 +43,5 @@ class SavedJobsFactoryTest {
         SavedJobs savedJob = SavedJobsFactory.buildSavedJob(jobSeeker, null);
 
         assertNull(savedJob);
-        System.out.println("Null Job correctly prevented SavedJobs creation.");
-    }
+}
 }

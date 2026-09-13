@@ -25,8 +25,7 @@ class JobFactoryTest {
         );
 
         assertNotNull(job);
-        System.out.println(job);
-    }
+}
 
     @Test
     void createJobFails() {
@@ -43,6 +42,5 @@ class JobFactoryTest {
         );
 
         assertNull(job);
-        System.out.println("Failed as expected");
-    }
+}
 }

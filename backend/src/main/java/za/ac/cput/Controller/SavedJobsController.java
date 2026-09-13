@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping({ "/api/saved-jobs", "/api/savedjobs" })
+@RequestMapping("/api/saved-jobs")
 @CrossOrigin(origins = "*")
 public class SavedJobsController {
 
@@ -44,10 +44,6 @@ public class SavedJobsController {
         return this.savedJobsService.getSavedJobs(jobSeekerId);
     }
 
-    @GetMapping("/getSavedJobs/{jobSeekerId}")
-    public List<SavedJobs> getSavedJobsByPath(@PathVariable String jobSeekerId) {
-        return this.savedJobsService.getSavedJobs(jobSeekerId);
-    }
 
     @GetMapping("/is-saved")
     public boolean isJobSaved(@RequestParam String jobSeekerId, @RequestParam String jobId) {

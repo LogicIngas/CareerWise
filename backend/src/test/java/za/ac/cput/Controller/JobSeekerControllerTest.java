@@ -48,9 +48,7 @@ class JobSeekerControllerTest {
 
         JobSeeker createdJobSeeker = response.getBody();
         testJobSeeker = createdJobSeeker;
-
-        System.out.println("Created JobSeeker with ID: " + createdJobSeeker.getUserId());
-    }
+}
 
     @Test
     @Order(2)
@@ -61,8 +59,7 @@ class JobSeekerControllerTest {
         ResponseEntity<JobSeeker> response = restTemplate.getForEntity(url, JobSeeker.class);
 
         assertNotNull(response.getBody());
-        System.out.println("Retrieved JobSeeker: " + response.getBody().getFirstName());
-    }
+}
 
     @Test
     @Order(3)
@@ -91,8 +88,7 @@ class JobSeekerControllerTest {
 
         assertNotNull(response.getBody());
         testJobSeeker = response.getBody();
-        System.out.println("Updated JobSeeker: " + response.getBody().getFirstName());
-    }
+}
 
     @Test
     @Order(4)
@@ -101,8 +97,7 @@ class JobSeekerControllerTest {
         ResponseEntity<JobSeeker[]> response = restTemplate.getForEntity(url, JobSeeker[].class);
 
         assertNotNull(response.getBody());
-        System.out.println("Found " + response.getBody().length + " JobSeekers");
-    }
+}
 
     @Test
     @Order(5)
@@ -114,6 +109,5 @@ class JobSeekerControllerTest {
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class);
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        System.out.println("Deleted JobSeeker with ID: " + testJobSeeker.getUserId());
-    }
+}
 }

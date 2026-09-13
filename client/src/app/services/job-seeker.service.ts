@@ -66,7 +66,6 @@ export class JobSeekerService {
       .pipe(catchError(err => this.nullIfNotFound(err)));
   }
 
-  // NEW: updateProfile
   updateProfile(payload: Partial<BackendJobSeekerFull>): Observable<BackendJobSeekerFull | null> {
     return this.http
       .put<BackendJobSeekerFull | null>(`${this.apiBaseUrl}/jobseekers/profile`, payload)

@@ -28,9 +28,7 @@ class ResumeFactoryTest {
         assertEquals(1024000L, resume.getFileSize());
         assertEquals(jobSeeker, resume.getJobSeeker());
         assertNotNull(resume.getResumeId());
-        
-        System.out.println("Built Resume successfully: " + resume);
-    }
+}
 
     @Test
     void createResumeWithEmptyFileName() {
@@ -46,8 +44,7 @@ class ResumeFactoryTest {
         );
 
         assertNull(resume);
-        System.out.println("Empty file name correctly prevented Resume creation.");
-    }
+}
     
     @Test
     void createResumeWithInvalidFileSize() {
@@ -63,6 +60,5 @@ class ResumeFactoryTest {
         );
 
         assertNull(resume);
-        System.out.println("Invalid file size correctly prevented Resume creation.");
-    }
+}
 }

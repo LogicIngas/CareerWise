@@ -35,7 +35,7 @@ class ApplicationsServiceImplTest {
 
     private Job testJob;
     private JobSeeker testJobSeeker;
-    private JobApplication testApplication;
+    // private JobApplication testApplication;
 
     @BeforeEach
     void setUp() {
@@ -60,8 +60,7 @@ class ApplicationsServiceImplTest {
                 "My application notes");
         assertNotNull(applied);
         assertEquals("Applied", applied.getStatus());
-        System.out.println("Applied successfully with ID: " + applied.getApplicationId());
-        testApplication = applied;
+        // testApplication = applied;
     }
 
     @Test
@@ -73,7 +72,6 @@ class ApplicationsServiceImplTest {
         JobApplication read = applicationsService.read(applied.getApplicationId());
         assertNotNull(read);
         assertEquals(applied.getApplicationId(), read.getApplicationId());
-        System.out.println("Read application with status: " + read.getStatus());
     }
 
     @Test
@@ -84,7 +82,6 @@ class ApplicationsServiceImplTest {
         List<JobApplication> apps = applicationsService.getApplications(testJobSeeker.getUserId());
         assertNotNull(apps);
         assertFalse(apps.isEmpty());
-        System.out.println("Found " + apps.size() + " applications for job seeker");
     }
 
     @Test
@@ -95,7 +92,6 @@ class ApplicationsServiceImplTest {
         List<JobApplication> apps = applicationsService.getJobApplications(testJob.getJobId());
         assertNotNull(apps);
         assertFalse(apps.isEmpty());
-        System.out.println("Found " + apps.size() + " applications for job");
     }
 
     @Test
@@ -107,7 +103,6 @@ class ApplicationsServiceImplTest {
         JobApplication updated = applicationsService.updateStatus(applied.getApplicationId(), "Rejected");
         assertNotNull(updated);
         assertEquals("Rejected", updated.getStatus());
-        System.out.println("Updated application status to: " + updated.getStatus());
     }
 
     @Test
@@ -118,7 +113,6 @@ class ApplicationsServiceImplTest {
 
         boolean deleted = applicationsService.delete(applied.getApplicationId());
         assertTrue(deleted);
-        System.out.println("Deleted application with ID: " + applied.getApplicationId());
     }
 
     @Test
@@ -128,6 +122,5 @@ class ApplicationsServiceImplTest {
         List<JobApplication> all = applicationsService.getAll();
         assertNotNull(all);
         assertFalse(all.isEmpty());
-        System.out.println("Found " + all.size() + " total applications");
     }
 }
